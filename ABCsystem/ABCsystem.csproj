@@ -115,12 +115,6 @@
     <Compile Include="Core\ImageSpace.cs" />
     <Compile Include="Core\InspStage.cs" />
     <Compile Include="Core\PreviewImage.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Grab\GrabModel.cs" />
     <Compile Include="Grab\HikRobotCam.cs" />
     <Compile Include="Grab\WebCam.cs" />
@@ -330,6 +324,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UIControl\PatternImageEditor.resx">
       <DependentUpon>PatternImageEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UIControl\RangeTrackbar.resx">
+      <DependentUpon>RangeTrackbar.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="log4net.config" />
     <None Include="packages.config" />

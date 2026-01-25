@@ -37,9 +37,10 @@
             // 
             this.ClientSize = new System.Drawing.Size(789, 482);
             this.Controls.Add(this.tabPropControl);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Name = "PropertiesForm";
             this.Text = "PropertiesForm";
-           this.ResumeLayout(false);
+            this.ResumeLayout(false);
 
         }
 

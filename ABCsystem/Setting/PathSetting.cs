@@ -74,5 +74,25 @@ namespace ABCsystem4.Setting
         {
             SaveSetting();
         }
+
+        private void lbImageDir_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtImageDir_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtModelDir_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbModelDir_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

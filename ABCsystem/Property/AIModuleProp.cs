@@ -107,5 +107,10 @@ namespace ABCsystem.Property
 
             _engineType = engineType;
         }
+
+        private void txtAIModelPath_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace ABCsystem
             //_dockPanel.Dock = DockStyle.Fill; 상단 코드와 동일
             Controls.Add(_dockPanel);
 
-            _dockPanel.Theme = new VS2015BlueTheme();
+            _dockPanel.Theme = new VS2015DarkTheme();
 
             LoadDockingWindows();
 

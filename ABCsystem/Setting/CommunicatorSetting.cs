@@ -53,5 +53,40 @@ namespace ABCsystem.Setting
         {
             SaveSetting();
         }
+
+        private void CommunicatorSetting_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void laIpAddr_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtIpAddr_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbCommType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbCommType_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbMachine_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtMachine_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

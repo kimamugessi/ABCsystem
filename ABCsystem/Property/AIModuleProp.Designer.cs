@@ -38,32 +38,38 @@
             // cbAIModelType
             // 
             this.cbAIModelType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAIModelType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.cbAIModelType.FormattingEnabled = true;
             this.cbAIModelType.Items.AddRange(new object[] {
             "Segmentation(SEG)",
             "Detection(DET)",
             "Classification(CLS)"});
-            this.cbAIModelType.Location = new System.Drawing.Point(23, 30);
+            this.cbAIModelType.Location = new System.Drawing.Point(18, 30);
+            this.cbAIModelType.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbAIModelType.Name = "cbAIModelType";
-            this.cbAIModelType.Size = new System.Drawing.Size(348, 26);
+            this.cbAIModelType.Size = new System.Drawing.Size(279, 26);
             this.cbAIModelType.TabIndex = 1;
             this.cbAIModelType.SelectedIndexChanged += new System.EventHandler(this.cbAIModelType_SelectedIndexChanged);
             // 
             // txtAIModelPath
             // 
-            this.txtAIModelPath.Location = new System.Drawing.Point(23, 74);
+            this.txtAIModelPath.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.txtAIModelPath.Location = new System.Drawing.Point(18, 75);
+            this.txtAIModelPath.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.txtAIModelPath.Multiline = true;
             this.txtAIModelPath.Name = "txtAIModelPath";
-            this.txtAIModelPath.Size = new System.Drawing.Size(348, 39);
+            this.txtAIModelPath.Size = new System.Drawing.Size(279, 39);
             this.txtAIModelPath.TabIndex = 2;
             this.txtAIModelPath.Visible = false;
+            this.txtAIModelPath.TextChanged += new System.EventHandler(this.txtAIModelPath_TextChanged);
             // 
             // btnInspAI
             // 
-            this.btnInspAI.Location = new System.Drawing.Point(23, 248);
-            this.btnInspAI.Margin = new System.Windows.Forms.Padding(4);
+            this.btnInspAI.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnInspAI.Location = new System.Drawing.Point(18, 248);
+            this.btnInspAI.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnInspAI.Name = "btnInspAI";
-            this.btnInspAI.Size = new System.Drawing.Size(127, 39);
+            this.btnInspAI.Size = new System.Drawing.Size(102, 39);
             this.btnInspAI.TabIndex = 6;
             this.btnInspAI.Text = "AI 검사";
             this.btnInspAI.UseVisualStyleBackColor = true;
@@ -71,10 +77,11 @@
             // 
             // btnLoadModel
             // 
-            this.btnLoadModel.Location = new System.Drawing.Point(23, 192);
-            this.btnLoadModel.Margin = new System.Windows.Forms.Padding(4);
+            this.btnLoadModel.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnLoadModel.Location = new System.Drawing.Point(18, 192);
+            this.btnLoadModel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnLoadModel.Name = "btnLoadModel";
-            this.btnLoadModel.Size = new System.Drawing.Size(127, 39);
+            this.btnLoadModel.Size = new System.Drawing.Size(102, 39);
             this.btnLoadModel.TabIndex = 5;
             this.btnLoadModel.Text = "모델 로딩";
             this.btnLoadModel.UseVisualStyleBackColor = true;
@@ -82,10 +89,11 @@
             // 
             // btnSelAIModel
             // 
-            this.btnSelAIModel.Location = new System.Drawing.Point(23, 138);
-            this.btnSelAIModel.Margin = new System.Windows.Forms.Padding(4);
+            this.btnSelAIModel.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnSelAIModel.Location = new System.Drawing.Point(18, 138);
+            this.btnSelAIModel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSelAIModel.Name = "btnSelAIModel";
-            this.btnSelAIModel.Size = new System.Drawing.Size(131, 39);
+            this.btnSelAIModel.Size = new System.Drawing.Size(105, 39);
             this.btnSelAIModel.TabIndex = 4;
             this.btnSelAIModel.Text = "AI모델 선택";
             this.btnSelAIModel.UseVisualStyleBackColor = true;
@@ -93,15 +101,17 @@
             // 
             // AIModuleProp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnInspAI);
             this.Controls.Add(this.btnLoadModel);
             this.Controls.Add(this.btnSelAIModel);
             this.Controls.Add(this.txtAIModelPath);
             this.Controls.Add(this.cbAIModelType);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "AIModuleProp";
-            this.Size = new System.Drawing.Size(390, 520);
+            this.Size = new System.Drawing.Size(312, 519);
             this.ResumeLayout(false);
             this.PerformLayout();
 

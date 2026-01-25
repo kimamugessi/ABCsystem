@@ -39,25 +39,32 @@
             // 
             // txtMachine
             // 
-            this.txtMachine.Location = new System.Drawing.Point(82, 9);
+            this.txtMachine.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.txtMachine.Location = new System.Drawing.Point(94, 13);
+            this.txtMachine.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtMachine.Name = "txtMachine";
-            this.txtMachine.Size = new System.Drawing.Size(142, 21);
+            this.txtMachine.Size = new System.Drawing.Size(162, 26);
             this.txtMachine.TabIndex = 13;
+            this.txtMachine.TextChanged += new System.EventHandler(this.txtMachine_TextChanged);
             // 
             // lbMachine
             // 
             this.lbMachine.AutoSize = true;
-            this.lbMachine.Location = new System.Drawing.Point(12, 12);
+            this.lbMachine.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbMachine.Location = new System.Drawing.Point(14, 18);
             this.lbMachine.Name = "lbMachine";
-            this.lbMachine.Size = new System.Drawing.Size(41, 12);
+            this.lbMachine.Size = new System.Drawing.Size(47, 18);
             this.lbMachine.TabIndex = 12;
             this.lbMachine.Text = "설비명";
+            this.lbMachine.Click += new System.EventHandler(this.lbMachine_Click);
             // 
             // btnApply
             // 
-            this.btnApply.Location = new System.Drawing.Point(149, 89);
+            this.btnApply.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnApply.Location = new System.Drawing.Point(170, 134);
+            this.btnApply.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(75, 23);
+            this.btnApply.Size = new System.Drawing.Size(86, 35);
             this.btnApply.TabIndex = 11;
             this.btnApply.Text = "적용";
             this.btnApply.UseVisualStyleBackColor = true;
@@ -65,41 +72,51 @@
             // 
             // txtIpAddr
             // 
-            this.txtIpAddr.Location = new System.Drawing.Point(82, 62);
+            this.txtIpAddr.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.txtIpAddr.Location = new System.Drawing.Point(94, 93);
+            this.txtIpAddr.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtIpAddr.Name = "txtIpAddr";
-            this.txtIpAddr.Size = new System.Drawing.Size(142, 21);
+            this.txtIpAddr.Size = new System.Drawing.Size(162, 26);
             this.txtIpAddr.TabIndex = 10;
+            this.txtIpAddr.TextChanged += new System.EventHandler(this.txtIpAddr_TextChanged);
             // 
             // cbCommType
             // 
             this.cbCommType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCommType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.cbCommType.FormattingEnabled = true;
-            this.cbCommType.Location = new System.Drawing.Point(82, 36);
+            this.cbCommType.Location = new System.Drawing.Point(94, 54);
+            this.cbCommType.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cbCommType.Name = "cbCommType";
-            this.cbCommType.Size = new System.Drawing.Size(142, 20);
+            this.cbCommType.Size = new System.Drawing.Size(162, 26);
             this.cbCommType.TabIndex = 9;
+            this.cbCommType.SelectedIndexChanged += new System.EventHandler(this.cbCommType_SelectedIndexChanged);
             // 
             // laIpAddr
             // 
             this.laIpAddr.AutoSize = true;
-            this.laIpAddr.Location = new System.Drawing.Point(12, 65);
+            this.laIpAddr.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.laIpAddr.Location = new System.Drawing.Point(14, 98);
             this.laIpAddr.Name = "laIpAddr";
-            this.laIpAddr.Size = new System.Drawing.Size(44, 12);
+            this.laIpAddr.Size = new System.Drawing.Size(49, 18);
             this.laIpAddr.TabIndex = 8;
             this.laIpAddr.Text = "IP 주소";
+            this.laIpAddr.Click += new System.EventHandler(this.laIpAddr_Click);
             // 
             // lbCommType
             // 
             this.lbCommType.AutoSize = true;
-            this.lbCommType.Location = new System.Drawing.Point(12, 39);
+            this.lbCommType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbCommType.Location = new System.Drawing.Point(14, 59);
             this.lbCommType.Name = "lbCommType";
-            this.lbCommType.Size = new System.Drawing.Size(53, 12);
+            this.lbCommType.Size = new System.Drawing.Size(60, 18);
             this.lbCommType.TabIndex = 7;
             this.lbCommType.Text = "통신타입";
+            this.lbCommType.Click += new System.EventHandler(this.lbCommType_Click);
             // 
             // CommunicatorSetting
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.txtMachine);
             this.Controls.Add(this.lbMachine);
@@ -108,8 +125,11 @@
             this.Controls.Add(this.cbCommType);
             this.Controls.Add(this.laIpAddr);
             this.Controls.Add(this.lbCommType);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "CommunicatorSetting";
-            this.Size = new System.Drawing.Size(236, 128);
+            this.Size = new System.Drawing.Size(270, 192);
+            this.Load += new System.EventHandler(this.CommunicatorSetting_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

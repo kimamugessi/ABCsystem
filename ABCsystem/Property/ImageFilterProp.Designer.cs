@@ -33,20 +33,23 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(35, 28);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox1.Location = new System.Drawing.Point(28, 28);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(255, 26);
+            this.comboBox1.Size = new System.Drawing.Size(205, 26);
             this.comboBox1.TabIndex = 0;
             // 
             // ImageFilterProp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.comboBox1);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "ImageFilterProp";
-            this.Size = new System.Drawing.Size(529, 425);
+            this.Size = new System.Drawing.Size(423, 426);
             this.ResumeLayout(false);
 
         }

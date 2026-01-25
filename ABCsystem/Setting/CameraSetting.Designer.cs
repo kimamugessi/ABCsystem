@@ -38,10 +38,11 @@
             // 
             // btnApply
             // 
-            this.btnApply.Location = new System.Drawing.Point(183, 105);
-            this.btnApply.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnApply.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnApply.Location = new System.Drawing.Point(158, 110);
+            this.btnApply.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(130, 39);
+            this.btnApply.Size = new System.Drawing.Size(104, 39);
             this.btnApply.TabIndex = 5;
             this.btnApply.Text = "적용";
             this.btnApply.UseVisualStyleBackColor = true;
@@ -50,54 +51,61 @@
             // cbCameraType
             // 
             this.cbCameraType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCameraType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.cbCameraType.FormattingEnabled = true;
-            this.cbCameraType.Location = new System.Drawing.Point(111, 9);
-            this.cbCameraType.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbCameraType.Location = new System.Drawing.Point(101, 17);
+            this.cbCameraType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbCameraType.Name = "cbCameraType";
-            this.cbCameraType.Size = new System.Drawing.Size(200, 26);
+            this.cbCameraType.Size = new System.Drawing.Size(161, 26);
             this.cbCameraType.TabIndex = 4;
+            this.cbCameraType.SelectedIndexChanged += new System.EventHandler(this.cbCameraType_SelectedIndexChanged);
             // 
             // lbCameraType
             // 
             this.lbCameraType.AutoSize = true;
-            this.lbCameraType.Location = new System.Drawing.Point(4, 14);
-            this.lbCameraType.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbCameraType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbCameraType.Location = new System.Drawing.Point(13, 21);
             this.lbCameraType.Name = "lbCameraType";
-            this.lbCameraType.Size = new System.Drawing.Size(104, 18);
+            this.lbCameraType.Size = new System.Drawing.Size(77, 18);
             this.lbCameraType.TabIndex = 3;
-            this.lbCameraType.Text = "카메라 종료";
+            this.lbCameraType.Text = "카메라 종류";
+            this.lbCameraType.Click += new System.EventHandler(this.lbCameraType_Click);
             // 
             // lbExposure
             // 
             this.lbExposure.AutoSize = true;
-            this.lbExposure.Location = new System.Drawing.Point(4, 52);
-            this.lbExposure.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbExposure.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbExposure.Location = new System.Drawing.Point(13, 59);
             this.lbExposure.Name = "lbExposure";
-            this.lbExposure.Size = new System.Drawing.Size(80, 18);
+            this.lbExposure.Size = new System.Drawing.Size(60, 18);
             this.lbExposure.TabIndex = 3;
             this.lbExposure.Text = "노출시간";
+            this.lbExposure.Click += new System.EventHandler(this.lbExposure_Click);
             // 
             // tbExposure
             // 
-            this.tbExposure.Location = new System.Drawing.Point(110, 50);
-            this.tbExposure.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbExposure.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.tbExposure.Location = new System.Drawing.Point(100, 56);
+            this.tbExposure.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tbExposure.Name = "tbExposure";
-            this.tbExposure.Size = new System.Drawing.Size(151, 28);
+            this.tbExposure.Size = new System.Drawing.Size(122, 26);
             this.tbExposure.TabIndex = 6;
+            this.tbExposure.TextChanged += new System.EventHandler(this.tbExposure_TextChanged);
             // 
             // lbExpUnit
             // 
             this.lbExpUnit.AutoSize = true;
-            this.lbExpUnit.Location = new System.Drawing.Point(271, 54);
-            this.lbExpUnit.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbExpUnit.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbExpUnit.Location = new System.Drawing.Point(229, 60);
             this.lbExpUnit.Name = "lbExpUnit";
-            this.lbExpUnit.Size = new System.Drawing.Size(33, 18);
+            this.lbExpUnit.Size = new System.Drawing.Size(27, 18);
             this.lbExpUnit.TabIndex = 3;
             this.lbExpUnit.Text = "ms";
+            this.lbExpUnit.Click += new System.EventHandler(this.lbExpUnit_Click);
             // 
             // CameraSetting
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tbExposure);
             this.Controls.Add(this.btnApply);
@@ -105,9 +113,11 @@
             this.Controls.Add(this.lbExpUnit);
             this.Controls.Add(this.lbExposure);
             this.Controls.Add(this.lbCameraType);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CameraSetting";
-            this.Size = new System.Drawing.Size(354, 184);
+            this.Size = new System.Drawing.Size(283, 164);
+            this.Load += new System.EventHandler(this.CameraSetting_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
