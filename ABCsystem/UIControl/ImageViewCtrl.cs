@@ -110,7 +110,13 @@ namespace ABCsystem.UIControl
         private Rectangle _screenSelectedRect = Rectangle.Empty;
 
         private Size _extSize = new Size(0, 0);
-        
+
+
+        private bool _drawLineEnabled = false; //라인 그리기 활성화 여부(20260125)
+        private DiagramEntity _lineRoi1 = null; //라인 그리기 대상 ROI1(20260125)
+        private DiagramEntity _lineRoi2 = null; //라인 그리기 대상 ROI2(20260125)
+
+
         //팝업 메뉴
         private ContextMenuStrip _contextMenu;
 
@@ -126,6 +132,7 @@ namespace ABCsystem.UIControl
             _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
             _contextMenu.Items.Add("Teaching", null, OnTeachingClicked);
             _contextMenu.Items.Add("Unlock", null, OnUnlockClicked);
+            _contextMenu.Items.Add("DrawLine", null, OnDrawLineClicked); //라인 그리기 메뉴 추가(20260125)
 
             MouseWheel += new MouseEventHandler(ImageViewCCtrl_MouseWheel);
         }
@@ -282,6 +289,35 @@ namespace ABCsystem.UIControl
                     e.Graphics.DrawImage(Canvas, 0, 0); // 캔버스를 UserControl 화면에 표시
                 }
             }
+            DrawLineBetweenROIs(e.Graphics);    //라인 그리기 함수 호출(20260125)
+        }
+
+
+        public void DrawLineBetweenROIs(Graphics g) //라인 그리기 함수(20260125)
+        {
+            if (!_drawLineEnabled || _lineRoi1 == null || _lineRoi2 == null)
+                return;
+
+            var roi1 = _lineRoi1.EntityROI;
+            var roi2 = _lineRoi2.EntityROI;
+
+            float x1 = roi1.X + roi1.Width / 2f;
+            float y1 = roi1.Y + roi1.Height / 2f;
+
+            float x2 = roi2.X + roi2.Width / 2f;
+            float y2 = roi2.Y + roi2.Height / 2f;
+
+            PointF p1 = VirtualToScreen(new PointF(x1, y1));
+            PointF p2 = VirtualToScreen(new PointF(x2, y2));
+
+            using (Pen pen = new Pen(Color.Lime, 2f))
+            {
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.DrawLine(pen, p1, p2);
+            }
+
+            g.FillEllipse(Brushes.Red, p1.X - 4, p1.Y - 4, 8, 8);
+            g.FillEllipse(Brushes.Red, p2.X - 4, p2.Y - 4, 8, 8);
         }
         private void DrawDiagram(Graphics g)
         {
@@ -1141,6 +1177,21 @@ namespace ABCsystem.UIControl
             if (window == null) return;
 
             _selEntity.IsHold = false;
+        }
+
+        private void OnDrawLineClicked(object sender, EventArgs e) // Draw Line 버튼 누를 시(20260125)
+        {
+            if (_multiSelectedEntities.Count != 2)
+            {
+                MessageBox.Show("ROI 두 개를 선택한 후 사용하세요.");
+                return;
+            }
+
+            _lineRoi1 = _multiSelectedEntities[0];
+            _lineRoi2 = _multiSelectedEntities[1];
+            _drawLineEnabled = true;
+
+            Invalidate(); // 다시 그리기 → OnPaint → DrawLineBetweenROIs 호출됨
         }
 
         private void DeleteSelEntity()
