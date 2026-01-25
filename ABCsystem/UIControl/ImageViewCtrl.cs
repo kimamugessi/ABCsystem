@@ -295,29 +295,29 @@ namespace ABCsystem.UIControl
 
         public void DrawLineBetweenROIs(Graphics g) //라인 그리기 함수(20260125)
         {
-            if (!_drawLineEnabled || _lineRoi1 == null || _lineRoi2 == null)
+            if (!_drawLineEnabled || _lineRoi1 == null || _lineRoi2 == null)    //라인 그리기 비활성화 또는 ROI가 설정되지 않은 경우 리턴
                 return;
 
-            var roi1 = _lineRoi1.EntityROI;
-            var roi2 = _lineRoi2.EntityROI;
+            var roi1 = _lineRoi1.EntityROI; //라인 그리기 대상 ROI1
+            var roi2 = _lineRoi2.EntityROI; //라인 그리기 대상 ROI2
 
-            float x1 = roi1.X + roi1.Width / 2f;
-            float y1 = roi1.Y + roi1.Height / 2f;
+            float x1 = roi1.X + roi1.Width / 2f;    //ROI1 중심 좌표 계산
+            float y1 = roi1.Y + roi1.Height / 2f;   //ROI1 중심 좌표 계산
 
-            float x2 = roi2.X + roi2.Width / 2f;
-            float y2 = roi2.Y + roi2.Height / 2f;
+            float x2 = roi2.X + roi2.Width / 2f;    //ROI2 중심 좌표 계산
+            float y2 = roi2.Y + roi2.Height / 2f;   //ROI2 중심 좌표 계산
 
-            PointF p1 = VirtualToScreen(new PointF(x1, y1));
-            PointF p2 = VirtualToScreen(new PointF(x2, y2));
+            PointF p1 = VirtualToScreen(new PointF(x1, y1));    //화면 좌표로 변환
+            PointF p2 = VirtualToScreen(new PointF(x2, y2));    //화면 좌표로 변환
 
-            using (Pen pen = new Pen(Color.Lime, 2f))
+            using (Pen pen = new Pen(Color.Lime, 2f))   //라인 그리기
             {
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.DrawLine(pen, p1, p2);
+                g.SmoothingMode = SmoothingMode.AntiAlias;  //안티앨리어싱 설정(선, 원, 글자 등 가장자리를 부드럽게 보이기 위함)
+                g.DrawLine(pen, p1, p2);    //라인 그리기
             }
 
-            g.FillEllipse(Brushes.Red, p1.X - 4, p1.Y - 4, 8, 8);
-            g.FillEllipse(Brushes.Red, p2.X - 4, p2.Y - 4, 8, 8);
+            g.FillEllipse(Brushes.Red, p1.X - 4, p1.Y - 4, 8, 8);   //ROI1 중심점 표시
+            g.FillEllipse(Brushes.Red, p2.X - 4, p2.Y - 4, 8, 8);   //ROI2 중심점 표시
         }
         private void DrawDiagram(Graphics g)
         {
@@ -1187,7 +1187,7 @@ namespace ABCsystem.UIControl
                 return;
             }
 
-            _lineRoi1 = _multiSelectedEntities[0];
+            _lineRoi1 = _multiSelectedEntities[0]; 
             _lineRoi2 = _multiSelectedEntities[1];
             _drawLineEnabled = true;
 
