@@ -134,6 +134,7 @@ namespace ABCsystem.UIControl
             _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
             _contextMenu.Items.Add("Teaching", null, OnTeachingClicked);
             _contextMenu.Items.Add("Unlock", null, OnUnlockClicked);
+            _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
             _contextMenu.Items.Add("DrawHeightLine", null, OnDrawHeightLineClicked); 
             
 
@@ -355,7 +356,7 @@ namespace ABCsystem.UIControl
                 g.DrawLine(pen, sStart, sEnd);
             }
 
-            // 선택 사항: ROI3의 중심점도 표시해주면 좋습니다.
+            // 선택 사항: ROI3의 중심점 표시
             g.FillEllipse(Brushes.Yellow, sStart.X - 4, sStart.Y - 4, 8, 8);
 
             float pixelLength = Math.Abs(vEnd.Y - vStart.Y);    // Math.Abs : 절대값 반환
@@ -579,11 +580,11 @@ namespace ABCsystem.UIControl
         {
             _extSize.Width = _extSize.Height = 0;
 
-            if (_selEntity is null)
+            if (_selEntity == null)
                 return;
 
             InspWindow window = _selEntity.LinkedWindow;
-            if (window is null)
+            if (window == null)
                 return;
 
             MatchAlgorithm matchAlgo = (MatchAlgorithm)window.FindInspAlgorithm(InspectType.InspMatch);
@@ -731,7 +732,7 @@ namespace ABCsystem.UIControl
                     {
                         foreach (var entity in _multiSelectedEntities)
                         {
-                            if (entity is null || entity.IsHold)
+                            if (entity == null || entity.IsHold)
                                 continue;
 
                             Rectangle rect = entity.EntityROI;

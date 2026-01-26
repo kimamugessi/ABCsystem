@@ -112,7 +112,7 @@ namespace ABCsystem
         }
         private string GetMdoelTitle(Model curModel)
         {
-            if (curModel is null)
+            if (curModel == null)
                 return "";
 
             string modelName = curModel.ModelName;

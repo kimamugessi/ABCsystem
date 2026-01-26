@@ -114,7 +114,7 @@ namespace ABCsystem
                     else if (uc is MatchInspProp matchProp)
                     {
                         MatchAlgorithm matchAlgo = (MatchAlgorithm)window.FindInspAlgorithm(InspectType.InspMatch);
-                        if (matchAlgo is null)
+                        if (matchAlgo == null)
                             continue;
 
                         window.PatternLearn();

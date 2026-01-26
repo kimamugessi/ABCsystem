@@ -78,7 +78,7 @@ namespace ABCsystem.Sequence
 
         public bool Connect()
         {
-            if (_clinet is null)
+            if (_clinet == null)
                 return false;
 
             return _clinet.Connect();

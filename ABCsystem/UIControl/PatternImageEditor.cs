@@ -97,7 +97,7 @@ namespace ABCsystem.UIControl
         //–––––––––––– internal helpers ––––––––––––
         private void AdjustLayout()
         {
-            if (listThumbnail is null)
+            if (listThumbnail == null)
                 return;
 
             // set tile size so that caption fits below thumbnail

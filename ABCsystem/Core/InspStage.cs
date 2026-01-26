@@ -328,7 +328,7 @@ namespace ABCsystem.Core
             var propForm = MainForm.GetDockForm<PropertiesForm>();
             if (propForm != null)
             {
-                if (inspWindow is null)
+                if (inspWindow == null)
                 {
                     propForm.ResetProperty();
                     return;
@@ -343,7 +343,7 @@ namespace ABCsystem.Core
         public void AddInspWindow(InspWindowType windowType, Rect rect)
         {
             InspWindow inspWindow = _model.AddInspWindow(windowType);
-            if (inspWindow is null)
+            if (inspWindow == null)
                 return;
 
             inspWindow.WindowArea = rect;
@@ -363,7 +363,7 @@ namespace ABCsystem.Core
         public bool AddInspWindow(InspWindow sourceWindow, OpenCvSharp.Point offset)
         {
             InspWindow cloneWindow = sourceWindow.Clone(offset);
-            if (cloneWindow is null)
+            if (cloneWindow == null)
                 return false;
 
             if (!_model.AddInspWindow(cloneWindow))
@@ -508,7 +508,7 @@ namespace ABCsystem.Core
             if (imageChannel != eImageChannel.None)
                 SelImageChannel = imageChannel;
 
-            if (Global.Inst.InspStage.ImageSpace is null)
+            if (Global.Inst.InspStage.ImageSpace == null)
                 return null;
 
             return Global.Inst.InspStage.ImageSpace.GetBitmap(SelBufferIndex, SelImageChannel);
@@ -664,7 +664,7 @@ namespace ABCsystem.Core
 
         public bool VirtualGrab()
         {
-            if (_imageLoader is null)
+            if (_imageLoader == null)
                 return false;
 
             string imagePath = _imageLoader.GetNextImagePath();

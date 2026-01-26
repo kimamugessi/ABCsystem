@@ -84,7 +84,7 @@ namespace ABCsystem
 
             foreach (InspWindow window in model.InspWindowList)
             {
-                if (window is null)
+                if (window == null)
                     continue;
 
                 string uid = window.UID;

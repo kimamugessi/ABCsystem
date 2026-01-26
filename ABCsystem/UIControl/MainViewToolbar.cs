@@ -153,7 +153,7 @@ namespace ABCsystem.UIControl
 
         private void SelectChannel(string name)
         {
-            if (_dropDownButton is null)
+            if (_dropDownButton == null)
                 return;
 
             // 메뉴 항목에서 이름이 일치하는 항목 찾기
