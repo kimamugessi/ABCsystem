@@ -14,7 +14,8 @@ namespace ABCsystem.Core
         InspMatch,
         InspFilter,
         InspAIModule,
-        InspCount
+        InspCount,
+        InspEdge //song
     }
 
     //#10_INSPWINDOW#4 InspWindow 정의

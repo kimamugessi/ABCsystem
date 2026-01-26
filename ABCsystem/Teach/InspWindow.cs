@@ -137,8 +137,12 @@ namespace ABCsystem.Teach
                 case InspectType.InspBinary:
                     inspAlgo = new BlobAlgorithm();
                     break;
-                    case InspectType.InspMatch:
+                case InspectType.InspMatch:
                     inspAlgo = new MatchAlgorithm();
+                    break;
+                //song
+                case InspectType.InspEdge:
+                    inspAlgo = new EdgeAlgorithm();
                     break;
             }
 

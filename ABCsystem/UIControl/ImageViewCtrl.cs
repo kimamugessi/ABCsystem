@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
+using ABCsystem.Teach;
+using ABCsystem.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,9 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABCsystem.Algorithm;
-using ABCsystem.Core;
-using ABCsystem.Teach;
 
 namespace ABCsystem.UIControl
 {
@@ -411,6 +412,41 @@ namespace ABCsystem.UIControl
                     lineColor = Color.Red;
                 else if (rectInfo.decision == DecisionType.Good)
                     lineColor = Color.LightGreen;
+
+                //song : 점 표시
+                if (rectInfo.UsePoint)
+                {
+                    PointF screenPt = VirtualToScreen(
+                        new PointF(rectInfo.point.X, rectInfo.point.Y)
+                    );
+
+                    float r = Math.Max(4.0f, 6.0f * _curZoom);
+
+                    using (Brush b = new SolidBrush(lineColor))
+                    {
+                        g.FillEllipse(
+                            b,
+                            screenPt.X - r,
+                            screenPt.Y - r,
+                            r * 2,
+                            r * 2
+                        );
+                    }
+
+                    // 텍스트(선택)
+                    if (!string.IsNullOrEmpty(rectInfo.info))
+                    {
+                        DrawText(
+                            g,
+                            rectInfo.info,
+                            new PointF(screenPt.X + r, screenPt.Y),
+                            12.0f * _curZoom,
+                            lineColor
+                        );
+                    }
+
+                    continue;
+                }
 
                 Rectangle rect = new Rectangle(rectInfo.rect.X, rectInfo.rect.Y, rectInfo.rect.Width, rectInfo.rect.Height);
                 Rectangle screenRect = VirtualToScreen(rect);
@@ -987,11 +1023,45 @@ namespace ABCsystem.UIControl
         //#8_INSPECT_BINARY#17 화면에 보여줄 영역 정보를 표시하기 위해, 위치 입력 받는 함수
         public void AddRect(List<DrawInspectInfo> rectInfos)
         {
-            lock(_lock)
+            //song
+            if (rectInfos == null) rectInfos = new List<DrawInspectInfo>();
+
+            if (this.InvokeRequired)
             {
-                _rectInfos = rectInfos;
-                Invalidate();
+                this.BeginInvoke(new Action(() => AddRect(rectInfos)));
+                return;
             }
+
+            //song : 원하는 것만 남기기
+            // 엣지 점: UsePoint == true
+            // BaseROI: (예시) inspectType == InspectType.InspNone 이면서 rect가 유효한 것
+            // BaseROI가 어떤 inspectType/decision으로 들어오는지에 따라 조건을 조정해야 함
+            var filtered = rectInfos.Where(x =>
+                x.UsePoint == true || (
+                x.UsePoint == false &&
+                x.inspectType == InspectType.InspBinary &&
+                x.decision == DecisionType.Info &&
+                string.IsNullOrEmpty(x.info) &&
+                x.rect.Width > 0 && x.rect.Height > 0)
+            ).ToList();
+
+            lock (_lock)
+            {
+                //_rectInfos.Clear(); //song
+                // song : filtered만 "교체"되게 (windowId + inspectType 단위)
+                var groups = filtered.GroupBy(x => new { x.windowId, x.inspectType });
+
+                foreach (var g in groups)
+                {
+                    _rectInfos.RemoveAll(old =>
+                        old.windowId == g.Key.windowId &&
+                        old.inspectType == g.Key.inspectType);
+
+                    _rectInfos.AddRange(g);
+                }
+            }
+
+            Invalidate();   //오버레이 다시 그리기 요청
         }
 
         public void SetInspResultCount(InspectResultCount inspectResultCount)

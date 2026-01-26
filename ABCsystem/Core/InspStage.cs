@@ -325,6 +325,9 @@ namespace ABCsystem.Core
         {
             _selectedInspWindow = inspWindow;
 
+            //song
+            Global.Inst.CurTeachWindow = inspWindow;
+
             var propForm = MainForm.GetDockForm<PropertiesForm>();
             if (propForm != null)
             {

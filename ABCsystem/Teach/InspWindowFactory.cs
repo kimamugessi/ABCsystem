@@ -59,6 +59,7 @@ namespace ABCsystem.Teach
                 case InspWindowType.Base:
                     inspWindow.AddInspAlgorithm(InspectType.InspMatch);
                     inspWindow.AddInspAlgorithm(InspectType.InspBinary);
+                    inspWindow.AddInspAlgorithm(InspectType.InspEdge); //song
                     break;
                 case InspWindowType.Body:
                     inspWindow.AddInspAlgorithm(InspectType.InspMatch);
