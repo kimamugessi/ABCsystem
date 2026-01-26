@@ -31,6 +31,7 @@ namespace ABCsystem
             imageViewer.DiagramEntityEvent += ImageViewer_DiagramEntityEvent;
 
             mainViewToolbar.ButtonChanged += Toolbar_ButtonChanged;
+
         }
 
         private void ImageViewer_DiagramEntityEvent(object sender, DiagramEntityEventArgs e)
@@ -41,6 +42,15 @@ namespace ABCsystem
                 case EntityActionType.Select:
                     Global.Inst.InspStage.SelectInspWindow(e.InspWindow);
                     imageViewer.Focus();
+                    if (e.InspWindow != null)
+                    {
+                        // 모델 트리 폼을 찾아서 노드 선택 함수 호출
+                        ModelTreeForm treeForm = MainForm.GetDockForm<ModelTreeForm>();
+                        if (treeForm != null)
+                        {
+                            treeForm.SelectNodeByUid(e.InspWindow.UID);
+                        }
+                    }
                     break;
                 case EntityActionType.Inspect:
                     UpdateDiagramEntity();

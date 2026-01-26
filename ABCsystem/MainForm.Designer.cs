@@ -56,53 +56,53 @@
             this.imageSaveToolStripMenuItem});
             this.fileToolStripMenuItem.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163635F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(60, 29);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // modelNewMenuItem
             // 
             this.modelNewMenuItem.Name = "modelNewMenuItem";
-            this.modelNewMenuItem.Size = new System.Drawing.Size(191, 24);
+            this.modelNewMenuItem.Size = new System.Drawing.Size(270, 34);
             this.modelNewMenuItem.Text = "Model New";
             this.modelNewMenuItem.Click += new System.EventHandler(this.modelNewMenuItem_Click);
             // 
             // modelOpenMenuItem
             // 
             this.modelOpenMenuItem.Name = "modelOpenMenuItem";
-            this.modelOpenMenuItem.Size = new System.Drawing.Size(191, 24);
+            this.modelOpenMenuItem.Size = new System.Drawing.Size(270, 34);
             this.modelOpenMenuItem.Text = "Model Open";
             this.modelOpenMenuItem.Click += new System.EventHandler(this.modelOpenMenuItem_Click);
             // 
             // modelSaveMenuItem
             // 
             this.modelSaveMenuItem.Name = "modelSaveMenuItem";
-            this.modelSaveMenuItem.Size = new System.Drawing.Size(191, 24);
+            this.modelSaveMenuItem.Size = new System.Drawing.Size(270, 34);
             this.modelSaveMenuItem.Text = "Model Save";
             this.modelSaveMenuItem.Click += new System.EventHandler(this.modelSaveMenuItem_Click);
             // 
             // modelSaveAsMenuItem
             // 
             this.modelSaveAsMenuItem.Name = "modelSaveAsMenuItem";
-            this.modelSaveAsMenuItem.Size = new System.Drawing.Size(191, 24);
+            this.modelSaveAsMenuItem.Size = new System.Drawing.Size(270, 34);
             this.modelSaveAsMenuItem.Text = "Model Save As";
             this.modelSaveAsMenuItem.Click += new System.EventHandler(this.modelSaveAsMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(188, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(267, 6);
             // 
             // imageOpenToolStripMenuItem
             // 
             this.imageOpenToolStripMenuItem.Name = "imageOpenToolStripMenuItem";
-            this.imageOpenToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
-            this.imageOpenToolStripMenuItem.Text = "image Open";
+            this.imageOpenToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
+            this.imageOpenToolStripMenuItem.Text = "Image Open";
             this.imageOpenToolStripMenuItem.Click += new System.EventHandler(this.imageOpenToolStripMenuItem_Click_1);
             // 
             // imageSaveToolStripMenuItem
             // 
             this.imageSaveToolStripMenuItem.Name = "imageSaveToolStripMenuItem";
-            this.imageSaveToolStripMenuItem.Size = new System.Drawing.Size(191, 24);
+            this.imageSaveToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.imageSaveToolStripMenuItem.Text = "Image Save";
             // 
             // MainMenu
@@ -116,7 +116,7 @@
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
             this.MainMenu.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-            this.MainMenu.Size = new System.Drawing.Size(1432, 28);
+            this.MainMenu.Size = new System.Drawing.Size(1432, 35);
             this.MainMenu.TabIndex = 0;
             this.MainMenu.Text = "menuStrip1";
             // 
@@ -126,13 +126,13 @@
             this.setupToolStripMenuItem1});
             this.setupToolStripMenuItem.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163635F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-            this.setupToolStripMenuItem.Size = new System.Drawing.Size(59, 22);
+            this.setupToolStripMenuItem.Size = new System.Drawing.Size(79, 29);
             this.setupToolStripMenuItem.Text = "Setup";
             // 
             // setupToolStripMenuItem1
             // 
             this.setupToolStripMenuItem1.Name = "setupToolStripMenuItem1";
-            this.setupToolStripMenuItem1.Size = new System.Drawing.Size(206, 24);
+            this.setupToolStripMenuItem1.Size = new System.Drawing.Size(183, 34);
             this.setupToolStripMenuItem1.Text = "Setup";
             this.setupToolStripMenuItem1.Click += new System.EventHandler(this.SetupMenuItem_Click);
             // 
@@ -142,20 +142,20 @@
             this.cycleModeMenuItem});
             this.inspectToolStripMenuItem.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163635F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.inspectToolStripMenuItem.Name = "inspectToolStripMenuItem";
-            this.inspectToolStripMenuItem.Size = new System.Drawing.Size(68, 22);
+            this.inspectToolStripMenuItem.Size = new System.Drawing.Size(91, 29);
             this.inspectToolStripMenuItem.Text = "Inspect";
             // 
             // cycleModeMenuItem
             // 
             this.cycleModeMenuItem.CheckOnClick = true;
             this.cycleModeMenuItem.Name = "cycleModeMenuItem";
-            this.cycleModeMenuItem.Size = new System.Drawing.Size(206, 24);
+            this.cycleModeMenuItem.Size = new System.Drawing.Size(234, 34);
             this.cycleModeMenuItem.Text = "Cycle Mode";
             this.cycleModeMenuItem.Click += new System.EventHandler(this.cycleModeMenuItem_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1432, 796);
             this.Controls.Add(this.MainMenu);

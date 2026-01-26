@@ -116,6 +116,8 @@ namespace ABCsystem.UIControl
         private DiagramEntity _lineRoi1 = null; //라인 그리기 대상 ROI1(20260125)
         private DiagramEntity _lineRoi2 = null; //라인 그리기 대상 ROI2(20260125)
 
+        private DiagramEntity _lineRoi3 = null; // 수직선의 기준이 될 새 ROI
+        private bool _drawVerticalEnabled = false; // 수직선 그리기 활성화 여부
 
         //팝업 메뉴
         private ContextMenuStrip _contextMenu;
@@ -132,7 +134,8 @@ namespace ABCsystem.UIControl
             _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
             _contextMenu.Items.Add("Teaching", null, OnTeachingClicked);
             _contextMenu.Items.Add("Unlock", null, OnUnlockClicked);
-            _contextMenu.Items.Add("DrawLine", null, OnDrawLineClicked); //라인 그리기 메뉴 추가(20260125)
+            _contextMenu.Items.Add("DrawHeightLine", null, OnDrawHeightLineClicked); 
+            
 
             MouseWheel += new MouseEventHandler(ImageViewCCtrl_MouseWheel);
         }
@@ -289,36 +292,88 @@ namespace ABCsystem.UIControl
                     e.Graphics.DrawImage(Canvas, 0, 0); // 캔버스를 UserControl 화면에 표시
                 }
             }
-            DrawLineBetweenROIs(e.Graphics);    //라인 그리기 함수 호출(20260125)
+            DrawHeightLine(e.Graphics); // 새 수직선 (ROI3 기준) 
         }
 
-
-        public void DrawLineBetweenROIs(Graphics g) //라인 그리기 함수(20260125)
+        public void DrawHeightLine(Graphics g)
         {
-            if (!_drawLineEnabled || _lineRoi1 == null || _lineRoi2 == null)    //라인 그리기 비활성화 또는 ROI가 설정되지 않은 경우 리턴
+            if (!_drawVerticalEnabled || _lineRoi1 == null || _lineRoi2 == null || _lineRoi3 == null)
                 return;
 
-            var roi1 = _lineRoi1.EntityROI; //라인 그리기 대상 ROI1
-            var roi2 = _lineRoi2.EntityROI; //라인 그리기 대상 ROI2
+            // --- 1. 가상 좌표(Virtual) 단계에서 모든 기하학적 계산 수행 ---
 
-            float x1 = roi1.X + roi1.Width / 2f;    //ROI1 중심 좌표 계산
-            float y1 = roi1.Y + roi1.Height / 2f;   //ROI1 중심 좌표 계산
+            // ROI1, 2, 3의 중심점(가상 좌표) 가져오기
+            PointF vP1 = GetCenter(_lineRoi1.EntityROI);
+            PointF vP2 = GetCenter(_lineRoi2.EntityROI);
+            PointF vP3 = GetCenter(_lineRoi3.EntityROI);
 
-            float x2 = roi2.X + roi2.Width / 2f;    //ROI2 중심 좌표 계산
-            float y2 = roi2.Y + roi2.Height / 2f;   //ROI2 중심 좌표 계산
+            // 새 ROI(vP3.X) 위치에서의 기준선 Y값(targetY) 계산
+            float targetY;
+            float dx = vP2.X - vP1.X;
 
-            PointF p1 = VirtualToScreen(new PointF(x1, y1));    //화면 좌표로 변환
-            PointF p2 = VirtualToScreen(new PointF(x2, y2));    //화면 좌표로 변환
-
-            using (Pen pen = new Pen(Color.Lime, 2f))   //라인 그리기
+            if (Math.Abs(dx) > 0.0001f) // 기준선이 수평선이 아닐 경우
             {
-                g.SmoothingMode = SmoothingMode.AntiAlias;  //안티앨리어싱 설정(선, 원, 글자 등 가장자리를 부드럽게 보이기 위함)
-                g.DrawLine(pen, p1, p2);    //라인 그리기
+                // 선의 기울기(m) = dy / dx
+                float slope = (vP2.Y - vP1.Y) / dx;
+                // y - y1 = m(x - x1) => y = y1 + m(x - x1)
+                targetY = vP1.Y + slope * (vP3.X - vP1.X);
+            }
+            else
+            {
+                // 기준선이 수직(dx=0)일 경우 계산 불가하므로 p1의 Y값 사용
+                targetY = vP1.Y;
             }
 
-            g.FillEllipse(Brushes.Red, p1.X - 4, p1.Y - 4, 8, 8);   //ROI1 중심점 표시
-            g.FillEllipse(Brushes.Red, p2.X - 4, p2.Y - 4, 8, 8);   //ROI2 중심점 표시
+            // 수직선의 가상 좌표 시작점과 끝점
+            PointF vStart = vP3;
+            PointF vEnd = new PointF(vP3.X, targetY);
+
+            // --- 2. 화면 좌표(Screen)로 변환 ---
+
+            PointF sP1 = VirtualToScreen(vP1);
+            PointF sP2 = VirtualToScreen(vP2);
+            PointF sStart = VirtualToScreen(vStart);
+            PointF sEnd = VirtualToScreen(vEnd);
+
+            // --- 3. 그리기 수행 ---
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // [1] ROI1 - ROI2 기준선 (연두색)
+            using (Pen pen = new Pen(Color.Lime, 2f))
+            {
+                g.DrawLine(pen, sP1, sP2);
+            }
+
+            // [2] ROI1, ROI2 중심점 표시 (빨간색 점)
+            g.FillEllipse(Brushes.Red, sP1.X - 4, sP1.Y - 4, 8, 8);
+            g.FillEllipse(Brushes.Red, sP2.X - 4, sP2.Y - 4, 8, 8);
+
+            // [3] ROI3에서 기준선으로 내려가는 수직선 (하늘색)
+            using (Pen pen = new Pen(Color.Cyan, 2f))
+            {
+                g.DrawLine(pen, sStart, sEnd);
+            }
+
+            // 선택 사항: ROI3의 중심점도 표시해주면 좋습니다.
+            g.FillEllipse(Brushes.Yellow, sStart.X - 4, sStart.Y - 4, 8, 8);
+
+            float pixelLength = Math.Abs(vEnd.Y - vStart.Y);    // Math.Abs : 절대값 반환
+
+            string distanceText = $"{pixelLength:F2} px"; // 소수점 둘째자리까지 F : Fixed-point(고정 소수점)
+            Font font = new Font("Arial", 10, FontStyle.Bold);
+            PointF textPos = new PointF(sEnd.X + 5, (sStart.Y + sEnd.Y) / 2); // 선의 중간 지점 우측
+
+            g.DrawString(distanceText, font, Brushes.Red, textPos);
         }
+
+        // 중심점 계산 헬퍼 함수
+        private PointF GetCenter(Rectangle rect)
+        {
+            return new PointF(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
+        }
+
+
         private void DrawDiagram(Graphics g)
         {
             //#10_INSPWINDOW#18 ROI 그리기
@@ -1153,6 +1208,7 @@ namespace ABCsystem.UIControl
         private void OnDeleteClicked(object sender, EventArgs e)
         {
             DeleteSelEntity();
+
         }
 
         private void OnTeachingClicked(object sender, EventArgs e)
@@ -1179,20 +1235,22 @@ namespace ABCsystem.UIControl
             _selEntity.IsHold = false;
         }
 
-        private void OnDrawLineClicked(object sender, EventArgs e) // Draw Line 버튼 누를 시(20260125)
+        private void OnDrawHeightLineClicked(object sender, EventArgs e)
         {
-            if (_multiSelectedEntities.Count != 2)
+            if (_multiSelectedEntities.Count != 3)
             {
-                MessageBox.Show("ROI 두 개를 선택한 후 사용하세요.");
+                MessageBox.Show("ROI 세 개를 선택하세요. (1,2번: 기준선, 3번: 수직선 기준)");
                 return;
             }
 
-            _lineRoi1 = _multiSelectedEntities[0]; 
+            _lineRoi1 = _multiSelectedEntities[0];
             _lineRoi2 = _multiSelectedEntities[1];
-            _drawLineEnabled = true;
+            _lineRoi3 = _multiSelectedEntities[2]; // 새 ROI
+            _drawVerticalEnabled = true;
 
-            Invalidate(); // 다시 그리기 → OnPaint → DrawLineBetweenROIs 호출됨
+            Invalidate();
         }
+
 
         private void DeleteSelEntity()
         {
@@ -1203,16 +1261,40 @@ namespace ABCsystem.UIControl
 
             if (selected.Count > 0)
             {
-                DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.DeleteList, selected));
-                return;
-            }
+                // 1. 다중 선택된 항목 중 선 그리기와 관련된 ROI가 있는지 확인하고 초기화
+                foreach (var entity in _multiSelectedEntities)
+                {
+                    CheckAndResetLineRois(entity);
+                }
 
-            if (_selEntity != null)
+                DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.DeleteList, selected));
+            }
+            else if (_selEntity != null)
             {
                 InspWindow linkedWindow = _selEntity.LinkedWindow;
                 if (linkedWindow == null) return;
 
+                // 2. 단일 선택된 항목이 선 그리기와 관련된 ROI인지 확인하고 초기화
+                CheckAndResetLineRois(_selEntity);
+
                 DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.Delete, linkedWindow));
+            }
+
+            // 삭제 후 화면 갱신
+            Invalidate();
+        }
+
+        // 선 관련 변수를 초기화하는 헬퍼 메서드
+        private void CheckAndResetLineRois(DiagramEntity target)    //ROI 삭제시, 선 그리기 관련 ROI인지 확인하고 초기화
+        {
+            // 삭제되는 ROI가 선을 구성하는 ROI 중 하나라면 모든 선 정보 초기화
+            if (target == _lineRoi1 || target == _lineRoi2 || target == _lineRoi3)
+            {
+                _lineRoi1 = null;
+                _lineRoi2 = null;
+                _lineRoi3 = null;
+                _drawVerticalEnabled = false; // 수직선 그리기 비활성화
+                                              // 만약 다른 플래그를 쓰신다면 그것도 여기서 false 처리하세요.
             }
         }
 

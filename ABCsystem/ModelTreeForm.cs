@@ -95,5 +95,38 @@ namespace ABCsystem
 
             tvModelTree.ExpandAll();
         }
+
+        public void SelectNodeByUid(string uid) //트리뷰에서 UID로 노드 선택
+        {
+            if (string.IsNullOrEmpty(uid)) return;
+
+            // 1. 트리뷰의 모든 노드 중에서 검색 (재귀 방식)
+            TreeNode[] nodes = tvModelTree.Nodes.Find(uid, true); // UpdateDiagramEntity에서 노드 추가 시 name을 uid로 안했다면 아래 루프 사용
+
+            // 만약 Find로 안 찾아진다면 (Name을 지정 안 했을 경우)
+            if (nodes.Length == 0)
+            {
+                foreach (TreeNode root in tvModelTree.Nodes)
+                {
+                    foreach (TreeNode child in root.Nodes)
+                    {
+                        if (child.Text == uid)
+                        {
+                            tvModelTree.SelectedNode = child;
+                            child.EnsureVisible();
+                            tvModelTree.Focus(); // 이게 있어야 트리가 선택된 게 보임
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                tvModelTree.SelectedNode = nodes[0];
+                nodes[0].EnsureVisible();
+                tvModelTree.Focus();
+            }
+        }
+
     }
 }

@@ -108,7 +108,7 @@
             this.label1.Location = new System.Drawing.Point(75, 68);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 18);
+            this.label1.Size = new System.Drawing.Size(48, 25);
             this.label1.TabIndex = 3;
             this.label1.Text = "촬상";
             // 
@@ -120,7 +120,7 @@
             this.label2.Location = new System.Drawing.Point(153, 68);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 18);
+            this.label2.Size = new System.Drawing.Size(50, 25);
             this.label2.TabIndex = 3;
             this.label2.Text = "LIVE";
             this.label2.Click += new System.EventHandler(this.label2_Click);
@@ -132,7 +132,7 @@
             this.label3.Location = new System.Drawing.Point(15, 133);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 19);
+            this.label3.Size = new System.Drawing.Size(50, 26);
             this.label3.TabIndex = 3;
             this.label3.Text = "검사";
             this.label3.Click += new System.EventHandler(this.label3_Click);
@@ -145,7 +145,7 @@
             this.label4.Location = new System.Drawing.Point(75, 152);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(34, 18);
+            this.label4.Size = new System.Drawing.Size(48, 25);
             this.label4.TabIndex = 3;
             this.label4.Text = "시작";
             this.label4.Click += new System.EventHandler(this.label4_Click);
@@ -158,7 +158,7 @@
             this.label5.Location = new System.Drawing.Point(153, 152);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(34, 18);
+            this.label5.Size = new System.Drawing.Size(48, 25);
             this.label5.TabIndex = 3;
             this.label5.Text = "중지";
             this.label5.Click += new System.EventHandler(this.label5_Click);
@@ -170,13 +170,13 @@
             this.label6.Location = new System.Drawing.Point(15, 49);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(37, 19);
+            this.label6.Size = new System.Drawing.Size(50, 26);
             this.label6.TabIndex = 3;
             this.label6.Text = "사진";
             // 
             // RunForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 203);
             this.Controls.Add(this.label5);
