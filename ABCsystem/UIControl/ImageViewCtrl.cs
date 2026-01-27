@@ -297,6 +297,28 @@ namespace ABCsystem.UIControl
             DrawHeightLine(e.Graphics); // 새 수직선 (ROI3 기준) 
         }
 
+        private PointF GetEdgePoint(DiagramEntity entity)
+        {
+            // 1. 엔티티에 연결된 InspWindow 확인
+            if (entity?.LinkedWindow != null)
+            {
+                // 2. InspWindow 내의 알고리즘 목록에서 EdgeAlgorithm 추출
+                // (InspWindow 클래스 정의에 따라 AlgorithmList 또는 InspAlgorithmList일 수 있습니다)
+                var edgeAlgo = entity.LinkedWindow.AlgorithmList // <-- 에러 시 변수명 확인 필요
+                    .OfType<EdgeAlgorithm>()
+                    .FirstOrDefault();
+
+                if (edgeAlgo != null && edgeAlgo.IsInspected)
+                {
+                    var pt = edgeAlgo.FoundEdgePoint; // EdgeAlgorithm.cs에 추가한 public property
+                    if (pt.X >= 0 && pt.Y >= 0)
+                        return new PointF(pt.X, pt.Y);
+                }
+            }
+            // 실패 시 기본 ROI 중앙점 반환 (Fallback)
+            return GetCenter(entity.EntityROI);
+        }
+
         public void DrawHeightLine(Graphics g)
         {
             if (!_drawVerticalEnabled || _lineRoi1 == null || _lineRoi2 == null || _lineRoi3 == null)
@@ -305,9 +327,9 @@ namespace ABCsystem.UIControl
             // --- 1. 가상 좌표(Virtual) 단계에서 모든 기하학적 계산 수행 ---
 
             // ROI1, 2, 3의 중심점(가상 좌표) 가져오기
-            PointF vP1 = GetCenter(_lineRoi1.EntityROI);
-            PointF vP2 = GetCenter(_lineRoi2.EntityROI);
-            PointF vP3 = GetCenter(_lineRoi3.EntityROI);
+            PointF vP1 = GetEdgePoint(_lineRoi1);
+            PointF vP2 = GetEdgePoint(_lineRoi2);
+            PointF vP3 = GetEdgePoint(_lineRoi3);
 
             // 새 ROI(vP3.X) 위치에서의 기준선 Y값(targetY) 계산
             float targetY;

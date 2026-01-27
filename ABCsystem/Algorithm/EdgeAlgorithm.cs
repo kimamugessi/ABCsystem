@@ -20,6 +20,7 @@ namespace ABCsystem.Algorithm
         public int EdgeThreshold { get; set; } = 30;
 
         // 라인별로 픽킹된 엣지 수 (라인당 1개씩)
+        [XmlIgnore]
         public int OutEdgeCount { get; private set; } = 0;
 
         // 픽킹된 점들의 bounding box(ROI 전체좌표계 기준). 디버그/참고용.
@@ -36,6 +37,8 @@ namespace ABCsystem.Algorithm
         // 엣지 윤곽선 시각화용 점 표시 간격 (1: 모든 엣지 점 표시, 5: 5픽셀마다 1점 표시)
         public int DrawStride { get; set; } = 1;
 
+        [XmlIgnore]
+        public OpenCvSharp.Point2f FoundEdgePoint => _edgePoint;
         // 스캔 방향 : 라인별 "첫 엣지"를 찾는 탐색 방향
         public enum ScanDirection
         {
