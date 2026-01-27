@@ -1,4 +1,10 @@
-﻿using System;
+﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
+using ABCsystem.Property;
+using ABCsystem.Teach;
+using ABCsystem.Util;
+using OpenCvSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,17 +13,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABCsystem.Algorithm;
-using ABCsystem.Core;
-using ABCsystem.Property;
-using ABCsystem.Teach;
-using OpenCvSharp;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace ABCsystem
 {
     public partial class PropertiesForm : DockContent
     {
+        //song
+        private InspWindow _curWindow;
+
         //속성탭을 관리하기 위한 딕셔너리
         Dictionary<string, TabPage> _allTabs = new Dictionary<string, TabPage>();
         public PropertiesForm()
@@ -80,6 +84,17 @@ namespace ABCsystem
                     AIModuleProp aiModuleProp = new AIModuleProp();
                     curProp = aiModuleProp;
                     break;
+                //song
+                case InspectType.InspEdge:
+                    {
+                        EdgeProp edgeProp = new EdgeProp();
+
+                        // 버튼 클릭 이벤트 연결
+                        edgeProp.InspectEdgeClicked += InspectEdgeRequested;
+
+                        curProp = edgeProp;
+                        break;
+                    }
                 default:
                     MessageBox.Show("유효하지 않은 옵션입니다.");
                     return null;
@@ -87,17 +102,43 @@ namespace ABCsystem
             return curProp;
         }
 
+        //song : EdgeProp의 InspectEdgeClicked 이벤트가 호출할 함수
+        private void InspectEdgeRequested()
+        {
+            var win = Global.Inst.CurTeachWindow;
+            SLogger.Write($"[EDGE_BTN] Clicked. win={(win == null ? "null" : win.UID)}");
+
+            if (win == null) return;
+
+            var edgeAlgo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
+            if (edgeAlgo != null && edgeAlgo.EdgeThreshold <= 0)
+                edgeAlgo.EdgeThreshold = 30;   // 임시 기본 임계값. ROI 명암에 따라 조정해야함. 지금 흑백에선 30 ㄱㅊ
+            SLogger.Write($"[EDGE_BTN] edgeAlgo={(edgeAlgo == null ? "null" : "ok")} " + $"thr={(edgeAlgo?.EdgeThreshold.ToString() ?? "-")} " + $"scanDir={(edgeAlgo == null ? "-" : edgeAlgo.ScanDir.ToString())}");
+
+
+
+            Global.Inst.InspStage.InspWorker.TryInspect(win, InspectType.InspEdge);
+            Global.Inst.InspStage.RedrawMainView();
+        }
+
         public void ShowProperty(InspWindow window)
         {
-            foreach(InspAlgorithm algo in window.AlgorithmList)
+            Global.Inst.CurTeachWindow = window; //song
+
+            foreach (InspAlgorithm algo in window.AlgorithmList)
             {
                 LoadOptionControl(algo.InspectType);
             }
+
+            //song : 탭 만든 뒤 실제 알고리즘 값 연결
+            UpdateProperty(window);
         }
 
         public void ResetProperty() {  tabPropControl.TabPages.Clear(); }
         public void UpdateProperty(InspWindow window)
         {
+            Global.Inst.CurTeachWindow = window; //song
+
             if (window == null) return;
             foreach (TabPage tabPage in tabPropControl.TabPages)
             {
@@ -120,6 +161,14 @@ namespace ABCsystem
                         window.PatternLearn();
 
                         matchProp.SetAlgorithm(matchAlgo);
+                    }
+                    //song
+                    else if (uc is EdgeProp edgeProp)
+                    {
+                        EdgeAlgorithm edgeAlgo = (EdgeAlgorithm)window.FindInspAlgorithm(InspectType.InspEdge);
+                        if (edgeAlgo == null) continue;
+
+                        edgeProp.SetAlgorithm(window, edgeAlgo);
                     }
                 }
             }

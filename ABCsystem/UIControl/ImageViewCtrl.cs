@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
+using ABCsystem.Teach;
+using ABCsystem.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,9 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABCsystem.Algorithm;
-using ABCsystem.Core;
-using ABCsystem.Teach;
 
 namespace ABCsystem.UIControl
 {
@@ -503,6 +504,44 @@ namespace ABCsystem.UIControl
                     lineColor = Color.Red;
                 else if (rectInfo.decision == DecisionType.Good)
                     lineColor = Color.LightGreen;
+                else if (rectInfo.decision == DecisionType.Info)
+                    lineColor = Color.Yellow; // 엣지 윤곽선 추출
+
+                //song : 점 표시
+                if (rectInfo.UsePoint)
+                {
+                    PointF screenPt = VirtualToScreen(
+                        new PointF(rectInfo.point.X, rectInfo.point.Y)
+                    );
+
+                    //float r = Math.Max(4.0f, 6.0f * _curZoom);
+
+                    float r;
+                    if (rectInfo.decision == DecisionType.Info)
+                    {
+                        // 노란 점(윤곽용): 작게 + 줌 따라가되 너무 안 커지게
+                        r = Math.Max(1.5f, 2.0f * _curZoom);
+                        r = Math.Min(r, 4.0f); // 상한(너무 커지는거 방지)
+                    }
+                    else
+                    {
+                        // 대표점(초록/기타): 기존 유지
+                        r = Math.Max(4.0f, 6.0f * _curZoom);
+                    }
+
+                    using (Brush b = new SolidBrush(lineColor))
+                    {
+                        g.FillEllipse(b, screenPt.X - r, screenPt.Y - r, r * 2, r * 2);
+                    }
+
+                    // 텍스트 - Info(노란 윤곽점)는 텍스트 표시 안 함
+                    if (!string.IsNullOrEmpty(rectInfo.info) && rectInfo.decision != DecisionType.Info)
+                    {
+                        DrawText(g, rectInfo.info, new PointF(screenPt.X + r, screenPt.Y), 12.0f * _curZoom, lineColor);
+                    }
+
+                    continue;
+                }
 
                 Rectangle rect = new Rectangle(rectInfo.rect.X, rectInfo.rect.Y, rectInfo.rect.Width, rectInfo.rect.Height);
                 Rectangle screenRect = VirtualToScreen(rect);
@@ -1079,11 +1118,45 @@ namespace ABCsystem.UIControl
         //#8_INSPECT_BINARY#17 화면에 보여줄 영역 정보를 표시하기 위해, 위치 입력 받는 함수
         public void AddRect(List<DrawInspectInfo> rectInfos)
         {
-            lock(_lock)
+            //song
+            if (rectInfos == null) rectInfos = new List<DrawInspectInfo>();
+
+            if (this.InvokeRequired)
             {
-                _rectInfos = rectInfos;
-                Invalidate();
+                this.BeginInvoke(new Action(() => AddRect(rectInfos)));
+                return;
             }
+
+            //song : 원하는 것만 남기기
+            // 엣지 점: UsePoint == true
+            // BaseROI: (예시) inspectType == InspectType.InspNone 이면서 rect가 유효한 것
+            // BaseROI가 어떤 inspectType/decision으로 들어오는지에 따라 조건을 조정해야 함
+            var filtered = rectInfos.Where(x =>
+                x.UsePoint == true || (
+                x.UsePoint == false &&
+                x.inspectType == InspectType.InspBinary &&
+                x.decision == DecisionType.Info &&
+                string.IsNullOrEmpty(x.info) &&
+                x.rect.Width > 0 && x.rect.Height > 0)
+            ).ToList();
+
+            lock (_lock)
+            {
+                //_rectInfos.Clear(); //song
+                // song : filtered만 "교체"되게 (windowId + inspectType 단위)
+                var groups = filtered.GroupBy(x => new { x.windowId, x.inspectType });
+
+                foreach (var g in groups)
+                {
+                    _rectInfos.RemoveAll(old =>
+                        old.windowId == g.Key.windowId &&
+                        old.inspectType == g.Key.inspectType);
+
+                    _rectInfos.AddRange(g);
+                }
+            }
+
+            Invalidate();   //오버레이 다시 그리기 요청
         }
 
         public void SetInspResultCount(InspectResultCount inspectResultCount)
@@ -1171,13 +1244,18 @@ namespace ABCsystem.UIControl
             base.OnKeyUp(e);
         }
 
-        public void ResetEntity()
+        public void ResetEntity(bool clearResults = true)
         {
             lock (_lock)
             {
-                _diagramEntityList.Clear();
-                _rectInfos.Clear();
+                _diagramEntityList.Clear(); //// ROI(도형) 제거
+
+                if (clearResults)
+                    _rectInfos.Clear(); // 검사 결과(엣지 점, Rect 등) 제거 여부
+                //_rectInfos.Clear();
+
                 _selEntity = null;
+                _multiSelectedEntities?.Clear();  // ROI를 리셋할 때 “선택 상태 메모리”가 남아서 UI가 꼬이는 걸 막기 위한 안전장치
             }
             Invalidate();
         }

@@ -125,7 +125,9 @@ namespace ABCsystem
 
         public void UpdateDiagramEntity()
         {
-            imageViewer.ResetEntity();
+            //imageViewer.ResetEntity();
+            // ROI(엔티티)만 새로 그리되, 검사 결과(_rectInfos)는 유지
+            imageViewer.ResetEntity(clearResults: false);
 
             Model model = Global.Inst.InspStage.CurModel;
             List<DiagramEntity> diagramEntityList = new List<DiagramEntity>();

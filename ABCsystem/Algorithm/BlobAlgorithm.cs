@@ -65,6 +65,8 @@ namespace ABCsystem.Algorithm
         {
             InspectType = InspectType.InspBinary;
             BinThreshold = new BinaryThreshold(100, 200, false);
+
+            IsUse = false;  // 검사 사용 안함
         }
 
         public override InspAlgorithm Clone()   /*검사 알고리즘 복제 함수*/

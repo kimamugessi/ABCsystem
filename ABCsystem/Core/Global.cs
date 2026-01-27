@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ABCsystem.Teach;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,9 @@ namespace ABCsystem.Core
         {
             get { return _stage; }
         }
+
+        //song : 현재 선택된 ROI 기억
+        public InspWindow CurTeachWindow { get; set; }
 
 
         public Global()

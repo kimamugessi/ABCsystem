@@ -68,6 +68,8 @@ namespace ABCsystem.Inspect
             int ngCnt = 0;
             foreach (var inspWindow in inspWindowList)
             {
+                if (inspWindow == null) continue; //song
+
                 totalCnt++;
 
                 if (inspWindow.IsDefect())
@@ -82,8 +84,10 @@ namespace ABCsystem.Inspect
                     okCnt++;
                 }
 
-                DisplayResult(inspWindow, InspectType.InspNone);
+                //DisplayResult(inspWindow, InspectType.InspNone); //song
             }
+            //song 모든 window의 결과를 한 번에 합쳐서 그리기(기존 ROI 결과 유지)
+            DisplayResultAll(inspWindowList, InspectType.InspNone);
 
             if (totalCnt > 0)
             {
@@ -104,7 +108,11 @@ namespace ABCsystem.Inspect
 
                 _inspectBoard.Inspect(inspObj);
 
-                DisplayResult(inspObj, inspType);
+                //DisplayResult(inspObj, inspType); //song
+
+                // song : Camera Viewer처럼 전체 ROI 결과를 다시 그리기
+                Model curMode = Global.Inst.InspStage.CurModel;
+                DisplayResultAll(curMode.InspWindowList, InspectType.InspNone);
             }
             else
             {
@@ -141,10 +149,55 @@ namespace ABCsystem.Inspect
             {
                 //검사 영역 초기화
                 inspAlgo.TeachRect = windowArea;
-                inspAlgo.InspRect = windowArea;
+                inspAlgo.InspRect = windowArea;  // ROI 갱신
 
                 Mat srcImage = Global.Inst.InspStage.GetMat(0, inspAlgo.ImageChannel);
                 inspAlgo.SetInspData(srcImage);
+            }
+
+            return true;
+        }
+
+        //song
+        // 여러 InspWindow의 결과를 한 번에 모아서 cameraForm에 출력한다.
+        // (AddRect 내부에서 Clear가 발생하더라도 "전체 결과"를 다시 넣기 때문에 점이 유지됨)
+        private bool DisplayResultAll(List<InspWindow> windows, InspectType inspType)
+        {
+            if (windows == null)
+                return false;
+
+            List<DrawInspectInfo> totalArea = new List<DrawInspectInfo>();
+
+            for (int winIndex = 0; winIndex < windows.Count; winIndex++)
+            {
+                var win = windows[winIndex];
+                if (win == null) continue;
+
+                List<InspAlgorithm> inspAlgorithmList = win.AlgorithmList;
+                foreach (var algorithm in inspAlgorithmList)
+                {
+                    if (algorithm.InspectType != inspType && inspType != InspectType.InspNone)
+                        continue;
+
+                    List<DrawInspectInfo> resultArea;
+                    int resultCnt = algorithm.GetResultRect(out resultArea);
+                    if (resultCnt > 0 && resultArea != null)
+                    {
+                        // 각 결과에 windowId 주입 (ROI 식별)
+                        foreach (var di in resultArea)
+                        {
+                            di.windowId = winIndex;   // 또는 win.Id 같은 게 있으면 그걸로
+                        }
+
+                        totalArea.AddRange(resultArea);
+                    }
+                }
+            }
+
+            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            if (cameraForm != null)
+            {
+                cameraForm.AddRect(totalArea);
             }
 
             return true;
