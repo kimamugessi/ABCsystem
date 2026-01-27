@@ -113,7 +113,7 @@ namespace ABCsystem
             var edgeAlgo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
             if (edgeAlgo != null && edgeAlgo.EdgeThreshold <= 0)
                 edgeAlgo.EdgeThreshold = 30;   // 임시 기본 임계값. ROI 명암에 따라 조정해야함. 지금 흑백에선 30 ㄱㅊ
-            SLogger.Write($"[EDGE_BTN] edgeAlgo={(edgeAlgo == null ? "null" : "ok")} thr={(edgeAlgo?.EdgeThreshold.ToString() ?? "-")} mode={(edgeAlgo == null ? "-" : edgeAlgo.PointMode.ToString())}");
+            SLogger.Write($"[EDGE_BTN] edgeAlgo={(edgeAlgo == null ? "null" : "ok")} " + $"thr={(edgeAlgo?.EdgeThreshold.ToString() ?? "-")} " + $"scanDir={(edgeAlgo == null ? "-" : edgeAlgo.ScanDir.ToString())}");
 
 
 

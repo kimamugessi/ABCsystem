@@ -84,9 +84,9 @@ namespace ABCsystem.Inspect
                     okCnt++;
                 }
 
-                //DisplayResult(inspWindow, InspectType.InspNone); //sssong
+                //DisplayResult(inspWindow, InspectType.InspNone); //song
             }
-            // sssong 모든 window의 결과를 한 번에 합쳐서 그리기(기존 ROI 결과 유지)
+            //song 모든 window의 결과를 한 번에 합쳐서 그리기(기존 ROI 결과 유지)
             DisplayResultAll(inspWindowList, InspectType.InspNone);
 
             if (totalCnt > 0)
@@ -108,9 +108,9 @@ namespace ABCsystem.Inspect
 
                 _inspectBoard.Inspect(inspObj);
 
-                //DisplayResult(inspObj, inspType); //sssong
+                //DisplayResult(inspObj, inspType); //song
 
-                // sssong Camera Viewer처럼 전체 ROI 결과를 다시 그리기
+                // song : Camera Viewer처럼 전체 ROI 결과를 다시 그리기
                 Model curMode = Global.Inst.InspStage.CurModel;
                 DisplayResultAll(curMode.InspWindowList, InspectType.InspNone);
             }
@@ -149,14 +149,7 @@ namespace ABCsystem.Inspect
             {
                 //검사 영역 초기화
                 inspAlgo.TeachRect = windowArea;
-                //inspAlgo.InspRect = windowArea; //sssong
-
-                // sssong InspRect가 아직 설정되지 않은 경우에만 초기화
-                // (Rect.Empty 사용 가능하면 그게 더 깔끔하지만, 안전하게 Width/Height로 판단)
-                if (inspAlgo.InspRect.Width <= 0 || inspAlgo.InspRect.Height <= 0)
-                {
-                    inspAlgo.InspRect = windowArea;
-                }
+                inspAlgo.InspRect = windowArea;  // ROI 갱신
 
                 Mat srcImage = Global.Inst.InspStage.GetMat(0, inspAlgo.ImageChannel);
                 inspAlgo.SetInspData(srcImage);
@@ -165,7 +158,7 @@ namespace ABCsystem.Inspect
             return true;
         }
 
-        //sssong
+        //song
         // 여러 InspWindow의 결과를 한 번에 모아서 cameraForm에 출력한다.
         // (AddRect 내부에서 Clear가 발생하더라도 "전체 결과"를 다시 넣기 때문에 점이 유지됨)
         private bool DisplayResultAll(List<InspWindow> windows, InspectType inspType)
@@ -190,7 +183,7 @@ namespace ABCsystem.Inspect
                     int resultCnt = algorithm.GetResultRect(out resultArea);
                     if (resultCnt > 0 && resultArea != null)
                     {
-                        // [ADDED] 각 결과에 windowId 주입 (ROI 식별)
+                        // 각 결과에 windowId 주입 (ROI 식별)
                         foreach (var di in resultArea)
                         {
                             di.windowId = winIndex;   // 또는 win.Id 같은 게 있으면 그걸로

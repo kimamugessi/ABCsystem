@@ -1,21 +1,13 @@
 ﻿using ABCsystem.Algorithm;
 using ABCsystem.Teach;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ABCsystem.Property
 {
-    //sssong : 엣지 검사 Tab
     public partial class EdgeProp : UserControl
     {
-        // Inspect Edge 버튼 클릭 이벤트(외부(PropertiesForm)에서 구독)
+        // Inspect Edge 버튼 클릭 이벤트 (PropertiesForm 에서 구독)
         public event Action InspectEdgeClicked;
 
         private InspWindow _win;
