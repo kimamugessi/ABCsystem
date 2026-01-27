@@ -40,7 +40,7 @@ namespace ABCsystem.Core
             if (_orinalImage == null)
                 return;
 
-            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            var cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm == null)
                 return;
 

@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+
 
 namespace ABCsystem
 {
-    public partial class RunForm: DockContent
+    public partial class RunForm: Form
     {
         public RunForm()
         {

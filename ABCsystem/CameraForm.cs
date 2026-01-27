@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+
 using System.IO;
 using ABCsystem.Core;
 using OpenCvSharp;
@@ -19,7 +19,7 @@ using ABCsystem.Util;
 namespace ABCsystem
 {
     //public partial class CameraForm: Form
-    public partial class CameraForm : DockContent
+    public partial class CameraForm : Form
     {
         eImageChannel _currentImageChannel = eImageChannel.Gray;
         public CameraForm()

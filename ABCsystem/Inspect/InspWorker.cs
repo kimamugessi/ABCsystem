@@ -87,7 +87,7 @@ namespace ABCsystem.Inspect
 
             if (totalCnt > 0)
             {
-                var cameraForm = MainForm.GetDockForm<CameraForm>();
+                var cameraForm = FormManager.GetForm<CameraForm>();
                 if (cameraForm != null)
                 {
                     cameraForm.SetInspResultCount(totalCnt, okCnt, ngCnt);
@@ -112,7 +112,7 @@ namespace ABCsystem.Inspect
                 RunInspect(out isDefect);
             }
 
-            ResultForm resultForm = MainForm.GetDockForm<ResultForm>();
+            ResultForm resultForm = FormManager.GetForm<ResultForm>();
             if (resultForm != null)
             {
                 if (inspObj != null)
@@ -176,7 +176,7 @@ namespace ABCsystem.Inspect
             if (totalArea.Count > 0)
             {
                 //찾은 위치를 이미지상에서 표시
-                var cameraForm = MainForm.GetDockForm<CameraForm>();
+                var cameraForm = FormManager.GetForm<CameraForm>();
                 if (cameraForm != null)
                 {
                     cameraForm.AddRect(totalArea);

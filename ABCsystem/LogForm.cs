@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ABCsystem.Util;
-using WeifenLuo.WinFormsUI.Docking;
+
 
 namespace ABCsystem
 {
-    public partial class LogForm : DockContent
+    public partial class LogForm : Form
     {
         public LogForm()
         {

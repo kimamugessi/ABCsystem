@@ -12,11 +12,11 @@ using ABCsystem.Core;
 using ABCsystem.Property;
 using ABCsystem.Teach;
 using OpenCvSharp;
-using WeifenLuo.WinFormsUI.Docking;
+
 
 namespace ABCsystem
 {
-    public partial class PropertiesForm : DockContent
+    public partial class PropertiesForm : Form
     {
         //속성탭을 관리하기 위한 딕셔너리
         Dictionary<string, TabPage> _allTabs = new Dictionary<string, TabPage>();

@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+
 using ABCsystem.Inspect;
 using BrightIdeasSoftware;
 using ABCsystem.Teach;
 
 namespace ABCsystem
 {
-    public partial class ResultForm : DockContent
+    public partial class ResultForm : Form
     {
         //검사 결과를 보여주기 위한 컨트롤 추가
         private SplitContainer _splitContainer;
@@ -213,7 +213,7 @@ namespace ABCsystem
 
             if (result.ResultRectList != null)
             {
-                CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+                CameraForm cameraForm = FormManager.GetForm<CameraForm>();
                 if (cameraForm != null)
                 {
                     cameraForm.AddRect(result.ResultRectList);

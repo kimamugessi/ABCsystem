@@ -12,76 +12,29 @@ using ABCsystem.Setting;
 using ABCsystem.Teach;
 using ABCsystem.Util;
 using ABCsystem4.Setting;
-using WeifenLuo.WinFormsUI.Docking;
-//using WeifenLuo.WinFormsUI.ThemeVS2015;
 
 namespace ABCsystem
 {
     public partial class MainForm : Form
     {
-        private static DockPanel _dockPanel;
-
         public MainForm()
         {
             InitializeComponent();
-
-            _dockPanel = new DockPanel
-            {
-                Dock = DockStyle.Fill
-            };
-            //_dockPanel = new DockPanel();
-            //_dockPanel.Dock = DockStyle.Fill; 상단 코드와 동일
-            Controls.Add(_dockPanel);
-
-            _dockPanel.Theme = new VS2015BlueTheme();
-
-            LoadDockingWindows();
-
+            
             Global.Inst.Initialize();
 
             LoadSetting();
         }
-
-        private void LoadDockingWindows()
-        {
-            _dockPanel.AllowEndUserDocking = false;
-            //아래의 각 폼의 부모를 DockContent로 설정
-            var cameraForm = new CameraForm();
-            cameraForm.Show(_dockPanel, DockState.Document); //첫번째 Form은  Document로 기본적으로 설정 해야함
-
-            var resultForm = new ResultForm();
-            resultForm.Show(cameraForm.Pane, DockAlignment.Bottom, 0.3);  // _____.Show(기준, 위치, 크기); 
-
-            //var stat = new StatisticForm();
-            //stat.Show(_dockPanel, DockState.DockRight);
-
-            var propForm = new PropertiesForm();
-            propForm.Show(_dockPanel, DockState.DockRight); //propForm, stat 위치값 동일 -> 겹쳐진 형태
-
-            var modelTreeWindow=new ModelTreeForm();
-            modelTreeWindow.Show(resultForm.Pane, DockAlignment.Right, 0.4);
-
-            var runWindow = new RunForm();
-            runWindow.Show(modelTreeWindow.Pane, null);
-
-            var logForm = new LogForm();
-            logForm.Show(propForm.Pane, DockAlignment.Bottom, 0.3);
-
-        }
+        bool menuExpand = false;
+       
         private void LoadSetting()
         {
-            cycleModeMenuItem.Checked = SettingXml.Inst.CycleMode;
-        }
-        //시범으로 작성
-        public static T GetDockForm<T>() where T : DockContent
-        {
-            var findForm = _dockPanel.Contents.OfType<T>().FirstOrDefault();
-            return findForm;
+           // cycleModeMenuItem.Checked = SettingXml.Inst.CycleMode;
         }
 
         private void imageOpenToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            CameraForm cameraForm = GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm == null) return;
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -182,8 +135,34 @@ namespace ABCsystem
 
         private void cycleModeMenuItem_Click(object sender, EventArgs e)
         {
-            bool isChecked = cycleModeMenuItem.Checked;
-            SettingXml.Inst.CycleMode = isChecked;
+           // bool isChecked = cycleModeMenuItem.Checked;
+          //  SettingXml.Inst.CycleMode = isChecked;
+        }
+        private void menuTransition_Tick(object sender, EventArgs e)
+        {
+            if (menuExpand == false)
+            {
+                menuContainer.Height += 10;
+                if (menuContainer.Height >= 301)
+                {
+                    menuTransition.Stop();
+                    menuExpand = true;
+                }
+            }
+            else
+            {
+                menuContainer.Height -= 10;
+                if(menuContainer.Height < 53)
+                {
+                    menuTransition.Stop();
+                    menuExpand=false;
+                }
+            }
+        }
+
+        private void Inspection_Click(object sender, EventArgs e)
+        {
+            menuTransition.Start();
         }
     }
 }
