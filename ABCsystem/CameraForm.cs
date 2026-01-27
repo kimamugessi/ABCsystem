@@ -40,15 +40,30 @@ namespace ABCsystem
             switch (e.ActionType)
             {
                 case EntityActionType.Select:
-                    // 1. 이미지 뷰어에서 현재 선택된 모든 엔티티의 UID 리스트 가져오기
-                    // (ImageViewCtrl의 _multiSelectedEntities를 활용하거나 EventArgs에 리스트가 있다면 사용)
+                    // 1. 선택된 UID 리스트 가져오기
                     var selectedUids = imageViewer.GetSelectedUids();
 
-                    // 2. MainForm을 통해 ModelTreeForm의 노드들을 선택 표시
+                    // 2. 트리 폼 강조 표시 (기존 코드)
                     var modelTreeForm = MainForm.GetDockForm<ModelTreeForm>();
-                    if (modelTreeForm != null)
+                    modelTreeForm?.SelectNodesByUids(selectedUids);
+
+                    // ★ 3. [보완] 속성창(PropertiesForm) 데이터 즉시 갱신 ★
+                    if (selectedUids.Count > 0)
                     {
-                        modelTreeForm.SelectNodesByUids(selectedUids);
+                        string firstUid = selectedUids[0];
+                        var model = Global.Inst.InspStage.CurModel;
+                        var selectedWin = model.InspWindowList.FirstOrDefault(w => w.UID == firstUid);
+
+                        if (selectedWin != null)
+                        {
+                            var propForm = MainForm.GetDockForm<PropertiesForm>();
+                            if (propForm != null)
+                            {
+                                // PropertiesForm에 이미 구현되어 있는 ShowProperty를 호출하면
+                                // 내부적으로 UpdateProperty가 실행되어 EdgeProp의 타겟 알고리즘이 바뀝니다.
+                                propForm.ShowProperty(selectedWin);
+                            }
+                        }
                     }
                     break;
                 case EntityActionType.Inspect:
