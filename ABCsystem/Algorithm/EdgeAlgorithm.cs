@@ -52,6 +52,11 @@ namespace ABCsystem.Algorithm
         // 노이즈로 인해 extreme이 1~2px 튀는 현상 완화
         public int ExtremeTol { get; set; } = 1;
 
+        // 세로 스캔(↑/↓)에서 대표점 Y 기준
+        // true  : 엣지 라인의 중앙값 사용 (권장, 방향 무관)
+        // false : 스캔 방향에 따른 extreme(Y) 사용
+        public bool UseCenterYOnVertical { get; set; } = true;
+
         public EdgeAlgorithm()
         {
             InspectType = InspectType.InspEdge;
@@ -65,6 +70,7 @@ namespace ABCsystem.Algorithm
             cloneAlgo.EdgeThreshold = this.EdgeThreshold;
             cloneAlgo.ScanDir = this.ScanDir;
             cloneAlgo.ExtremeTol = this.ExtremeTol;
+            cloneAlgo.UseCenterYOnVertical = this.UseCenterYOnVertical;
 
             return cloneAlgo;
         }
@@ -76,6 +82,7 @@ namespace ABCsystem.Algorithm
             EdgeThreshold = src.EdgeThreshold;
             ScanDir = src.ScanDir;
             ExtremeTol = src.ExtremeTol;
+            UseCenterYOnVertical = src.UseCenterYOnVertical;
 
             return true;
         }
@@ -291,28 +298,45 @@ namespace ABCsystem.Algorithm
             }
             else
             {
-                // ↓면 가장 작은 y, ↑면 가장 큰 y
-                int extremeY = IsForward ? ys.Min() : ys.Max();
+                // 세로 스캔(↓/↑)
+                // x 라인마다 "첫 엣지"가 1개씩 픽킹되므로, 픽킹 점들이 엣지 라인을 따라 분포
+                // 대표점은 엣지 라인의 중앙 x에서의 y로 잡는 것이 방향/노이즈에 덜 민감
 
-                // extremeY 근처 x는 median(좌우 쏠림 방지)
-                var xsNear = new List<int>();
-                for (int i = 0; i < ys.Count; i++)
+                // 대표 X = 전체 픽킹 점들의 중앙값
+                float xCenter = Median(xs);
+                int xCenterInt = (int)(xCenter + 0.5f);
+
+                // 대표 Y 후보: xCenter 근처 점들의 y를 모은다
+                int tolX = 2; // y를 수집하기 위한 허용 오차(px). 필요하면 1~3 정도로 조절
+                var ysNearX = new List<int>();
+
+                for (int i = 0; i < xs.Count; i++)
                 {
-                    if (IsForward)
-                    {
-                        if (ys[i] <= extremeY + tol) xsNear.Add(xs[i]);
-                    }
-                    else
-                    {
-                        if (ys[i] >= extremeY - tol) xsNear.Add(xs[i]);
-                    }
+                    if (Math.Abs(xs[i] - xCenterInt) <= tolX)
+                        ysNearX.Add(ys[i]);
                 }
 
-                if (xsNear.Count == 0)
-                    return InvalidPoint;
+                if (ysNearX.Count == 0)
+                {
+                    // 혹시 중앙 근처에 점이 없으면 전체 y의 중앙값으로 fallback
+                    ysNearX = ys;
+                }
 
-                float xMed = Median(xsNear);
-                return new Point2f(roi.X + xMed, roi.Y + extremeY);
+                float yValue;
+
+                if (UseCenterYOnVertical)
+                {
+                    // 중앙 y(혹은 중앙 x 부근 y 중앙값) 추출
+                    yValue = Median(ysNearX);
+                }
+                else
+                {
+                    // 기존 방식 extremeY 사용
+                    int extremeY = IsForward ? ys.Min() : ys.Max();
+                    yValue = extremeY;
+                }
+
+                return new Point2f(roi.X + xCenter, roi.Y + yValue);
             }
         }
 
