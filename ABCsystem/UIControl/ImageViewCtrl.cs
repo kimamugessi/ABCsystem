@@ -316,7 +316,8 @@ namespace ABCsystem.UIControl
                 }
             }
             // 실패 시 기본 ROI 중앙점 반환 (Fallback)
-            return GetCenter(entity.EntityROI);
+            float centerX = entity.EntityROI.X + (entity.EntityROI.Width / 2f);
+            return new PointF(centerX, 0);
         }
 
         public void DrawHeightLine(Graphics g)
