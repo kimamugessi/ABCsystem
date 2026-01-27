@@ -1298,7 +1298,14 @@ namespace ABCsystem.UIControl
                                               // 만약 다른 플래그를 쓰신다면 그것도 여기서 false 처리하세요.
             }
         }
-
+        public List<string> GetSelectedUids()
+        {
+            // _multiSelectedEntities에 담긴 모든 엔티티의 UID를 리스트로 추출
+            return _multiSelectedEntities
+                   .Where(e => e.LinkedWindow != null)
+                   .Select(e => e.LinkedWindow.UID)
+                   .ToList();
+        }
 
     }
     #region EventArgs

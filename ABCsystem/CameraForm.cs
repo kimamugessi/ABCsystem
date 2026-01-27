@@ -40,16 +40,15 @@ namespace ABCsystem
             switch (e.ActionType)
             {
                 case EntityActionType.Select:
-                    Global.Inst.InspStage.SelectInspWindow(e.InspWindow);
-                    imageViewer.Focus();
-                    if (e.InspWindow != null)
+                    // 1. 이미지 뷰어에서 현재 선택된 모든 엔티티의 UID 리스트 가져오기
+                    // (ImageViewCtrl의 _multiSelectedEntities를 활용하거나 EventArgs에 리스트가 있다면 사용)
+                    var selectedUids = imageViewer.GetSelectedUids();
+
+                    // 2. MainForm을 통해 ModelTreeForm의 노드들을 선택 표시
+                    var modelTreeForm = MainForm.GetDockForm<ModelTreeForm>();
+                    if (modelTreeForm != null)
                     {
-                        // 모델 트리 폼을 찾아서 노드 선택 함수 호출
-                        ModelTreeForm treeForm = MainForm.GetDockForm<ModelTreeForm>();
-                        if (treeForm != null)
-                        {
-                            treeForm.SelectNodeByUid(e.InspWindow.UID);
-                        }
+                        modelTreeForm.SelectNodesByUids(selectedUids);
                     }
                     break;
                 case EntityActionType.Inspect:
@@ -248,6 +247,31 @@ namespace ABCsystem
 
             this.FormClosed -= CameraForm_FormClosed;
         }
+    public void SelectRoiByUid(string uid)
+{
+    // 1. 모델에서 데이터 찾기
+    var model = Global.Inst.InspStage.CurModel;
+    if (model == null) return;
 
+    var window = model.InspWindowList.FirstOrDefault(w => w.UID == uid);
+
+    if (window != null)
+    {
+        // 2. 중요: UI 스레드에서 실행되도록 보장 (반응이 없는 경우 대비)
+        if (this.InvokeRequired)
+        {
+            this.Invoke(new MethodInvoker(() => SelectRoiByUid(uid)));
+            return;
+        }
+
+        // 3. ImageViewCtrl의 선택 로직 호출
+        // 이 메서드가 내부적으로 _multiSelectedEntities에 추가하고 Invalidate()를 호출합니다.
+        imageViewer.SelectDiagramEntity(window);
+
+        // 4. 추가 확인: 강제로 포커스를 주고 다시 그리기를 한 번 더 호출
+        imageViewer.Focus();
+        imageViewer.Invalidate(); 
+    }
+}
     }
 }

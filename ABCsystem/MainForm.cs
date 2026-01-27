@@ -61,6 +61,11 @@ namespace ABCsystem
             var modelTreeWindow=new ModelTreeForm();
             modelTreeWindow.Show(resultForm.Pane, DockAlignment.Right, 0.4);
 
+
+            modelTreeWindow.OnRoiSelectedFromTree += (uid) => {
+                cameraForm.SelectRoiByUid(uid);
+            };
+
             var runWindow = new RunForm();
             runWindow.Show(modelTreeWindow.Pane, null);
 

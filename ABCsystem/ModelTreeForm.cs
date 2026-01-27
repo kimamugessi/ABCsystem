@@ -17,6 +17,7 @@ namespace ABCsystem
     {
         //개별 트리 노트에서 팝업 메뉴 보이기를 위한 메뉴
         private ContextMenuStrip _contextMenu;
+        public event Action<string> OnRoiSelectedFromTree;
 
         public ModelTreeForm()
         {
@@ -24,6 +25,14 @@ namespace ABCsystem
 
             //초기 트리 노트의 기본값은 "Root"
             tvModelTree.Nodes.Add("Root");
+
+            tvModelTree.AfterSelect += (s, e) => {
+                if (e.Node != null && e.Node.Parent != null) // 자식 노드(UID)인 경우에만
+                {
+                    // 신호를 밖으로 던집니다.
+                    OnRoiSelectedFromTree?.Invoke(e.Node.Text);
+                }
+            };
 
             // 컨텍스트 메뉴 초기화
             _contextMenu = new ContextMenuStrip();
@@ -96,15 +105,20 @@ namespace ABCsystem
             tvModelTree.ExpandAll();
         }
 
-        public void SelectNodeByUid(string uid) //트리뷰에서 UID로 노드 선택
+
+        // ModelTreeForm.cs
+
+        public void SelectNodesByUids(List<string> uids)
         {
-            if (string.IsNullOrEmpty(uid)) return;
+            if (uids == null) return;
 
-            // 1. 트리뷰의 모든 노드 중에서 검색 (재귀 방식)
-            TreeNode[] nodes = tvModelTree.Nodes.Find(uid, true); // UpdateDiagramEntity에서 노드 추가 시 name을 uid로 안했다면 아래 루프 사용
+            tvModelTree.BeginUpdate(); // 화면 깜빡임 방지
 
-            // 만약 Find로 안 찾아진다면 (Name을 지정 안 했을 경우)
-            if (nodes.Length == 0)
+            // 1. 기존에 강조된 모든 노드 초기화 (색상 초기화)
+            ResetNodeStyles(tvModelTree.Nodes);
+
+            // 2. 전달받은 UID 리스트에 해당하는 노드들 강조
+            foreach (string uid in uids)
             {
                 foreach (TreeNode root in tvModelTree.Nodes)
                 {
@@ -112,19 +126,25 @@ namespace ABCsystem
                     {
                         if (child.Text == uid)
                         {
-                            tvModelTree.SelectedNode = child;
+                            child.BackColor = Color.DodgerBlue; // 강조 색상
+                            child.ForeColor = Color.White;
                             child.EnsureVisible();
-                            tvModelTree.Focus(); // 이게 있어야 트리가 선택된 게 보임
-                            return;
                         }
                     }
                 }
             }
-            else
+
+            tvModelTree.EndUpdate();
+        }
+
+        // 노드 스타일 초기화 함수
+        private void ResetNodeStyles(TreeNodeCollection nodes)
+        {
+            foreach (TreeNode node in nodes)
             {
-                tvModelTree.SelectedNode = nodes[0];
-                nodes[0].EnsureVisible();
-                tvModelTree.Focus();
+                node.BackColor = Color.Empty;
+                node.ForeColor = Color.Empty;
+                if (node.Nodes.Count > 0) ResetNodeStyles(node.Nodes);
             }
         }
 
