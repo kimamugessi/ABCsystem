@@ -375,10 +375,8 @@ namespace ABCsystem.UIControl
             g.FillEllipse(Brushes.Red, sP2.X - 4, sP2.Y - 4, 8, 8);
 
             // [3] ROI3에서 기준선으로 내려가는 수직선 (하늘색)
-            using (Pen pen = new Pen(Color.Cyan, 2f))
-            {
-                g.DrawLine(pen, sStart, sEnd);
-            }
+
+            
 
             // 선택 사항: ROI3의 중심점 표시
             g.FillEllipse(Brushes.Yellow, sStart.X - 4, sStart.Y - 4, 8, 8);
@@ -388,8 +386,32 @@ namespace ABCsystem.UIControl
             string distanceText = $"{pixelLength:F2} px"; // 소수점 둘째자리까지 F : Fixed-point(고정 소수점)
             Font font = new Font("Arial", 10, FontStyle.Bold);
             PointF textPos = new PointF(sEnd.X + 5, (sStart.Y + sEnd.Y) / 2); // 선의 중간 지점 우측
+            if (pixelLength > 370&&pixelLength<390) //정상 제품일 경우
+            {
+                g.DrawString(distanceText, font, Brushes.Lime, textPos);
+                using (Pen pen = new Pen(Color.Lime, 2f))
+                {
+                    g.DrawLine(pen, sStart, sEnd);
+                }
+            }
+            else if(pixelLength > 500)  //뚜껑이 없는 경우
+            {
+                g.DrawString(distanceText, font, Brushes.Red, textPos);
+                using (Pen pen = new Pen(Color.Red, 2f))
+                {
+                    g.DrawLine(pen, sStart, sEnd);
+                }
+            }
+            else    //뚜껑 체결 문제 제품일 경우
+            {
+                g.DrawString(distanceText, font, Brushes.Red, textPos);
+                using (Pen pen = new Pen(Color.Red, 2f))
+                {
+                    g.DrawLine(pen, sStart, sEnd);
+                }
+            }
 
-            g.DrawString(distanceText, font, Brushes.Red, textPos);
+
         }
 
         // 중심점 계산 헬퍼 함수
