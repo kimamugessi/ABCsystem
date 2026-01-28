@@ -123,7 +123,6 @@
             this.label2.Size = new System.Drawing.Size(50, 25);
             this.label2.TabIndex = 3;
             this.label2.Text = "LIVE";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
@@ -135,7 +134,6 @@
             this.label3.Size = new System.Drawing.Size(50, 26);
             this.label3.TabIndex = 3;
             this.label3.Text = "검사";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label4
             // 
@@ -148,7 +146,6 @@
             this.label4.Size = new System.Drawing.Size(48, 25);
             this.label4.TabIndex = 3;
             this.label4.Text = "시작";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label5
             // 
@@ -161,7 +158,6 @@
             this.label5.Size = new System.Drawing.Size(48, 25);
             this.label5.TabIndex = 3;
             this.label5.Text = "중지";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // label6
             // 
