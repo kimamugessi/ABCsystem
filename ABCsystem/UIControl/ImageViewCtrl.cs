@@ -114,10 +114,7 @@ namespace ABCsystem.UIControl
 
 
         private bool _drawLineEnabled = false; //라인 그리기 활성화 여부(20260125)
-        private DiagramEntity _lineRoi1 = null; //라인 그리기 대상 ROI1(20260125)
-        private DiagramEntity _lineRoi2 = null; //라인 그리기 대상 ROI2(20260125)
-
-        private DiagramEntity _lineRoi3 = null; // 수직선의 기준이 될 새 ROI
+        private List<DiagramEntity[]> _heightLineList = new List<DiagramEntity[]>();
         private bool _drawVerticalEnabled = false; // 수직선 그리기 활성화 여부
 
         //팝업 메뉴
@@ -322,96 +319,90 @@ namespace ABCsystem.UIControl
 
         public void DrawHeightLine(Graphics g)
         {
-            if (!_drawVerticalEnabled || _lineRoi1 == null || _lineRoi2 == null || _lineRoi3 == null)
-                return;
-
-            // --- 1. 가상 좌표(Virtual) 단계에서 모든 기하학적 계산 수행 ---
-
-            // ROI1, 2, 3의 중심점(가상 좌표) 가져오기
-            PointF vP1 = GetEdgePoint(_lineRoi1);
-            PointF vP2 = GetEdgePoint(_lineRoi2);
-            PointF vP3 = GetEdgePoint(_lineRoi3);
-
-            // 새 ROI(vP3.X) 위치에서의 기준선 Y값(targetY) 계산
-            float targetY;
-            float dx = vP2.X - vP1.X;
-
-            if (Math.Abs(dx) > 0.0001f) // 기준선이 수평선이 아닐 경우
-            {
-                // 선의 기울기(m) = dy / dx
-                float slope = (vP2.Y - vP1.Y) / dx;
-                // y - y1 = m(x - x1) => y = y1 + m(x - x1)
-                targetY = vP1.Y + slope * (vP3.X - vP1.X);
-            }
-            else
-            {
-                // 기준선이 수직(dx=0)일 경우 계산 불가하므로 p1의 Y값 사용
-                targetY = vP1.Y;
-            }
-
-            // 수직선의 가상 좌표 시작점과 끝점
-            PointF vStart = vP3;
-            PointF vEnd = new PointF(vP3.X, targetY);
-
-            // --- 2. 화면 좌표(Screen)로 변환 ---
-
-            PointF sP1 = VirtualToScreen(vP1);
-            PointF sP2 = VirtualToScreen(vP2);
-            PointF sStart = VirtualToScreen(vStart);
-            PointF sEnd = VirtualToScreen(vEnd);
-
-            // --- 3. 그리기 수행 ---
+            if (!_drawVerticalEnabled || _heightLineList.Count == 0) return;
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
-
-            // [1] ROI1 - ROI2 기준선 (연두색)
-            using (Pen pen = new Pen(Color.Lime, 2f))
-            {
-                g.DrawLine(pen, sP1, sP2);
-            }
-
-            // [2] ROI1, ROI2 중심점 표시 (빨간색 점)
-            g.FillEllipse(Brushes.Red, sP1.X - 4, sP1.Y - 4, 8, 8);
-            g.FillEllipse(Brushes.Red, sP2.X - 4, sP2.Y - 4, 8, 8);
-
-            // [3] ROI3에서 기준선으로 내려가는 수직선 (하늘색)
-
-            
-
-            // 선택 사항: ROI3의 중심점 표시
-            g.FillEllipse(Brushes.Yellow, sStart.X - 4, sStart.Y - 4, 8, 8);
-
-            float pixelLength = Math.Abs(vEnd.Y - vStart.Y);    // Math.Abs : 절대값 반환
-
-            string distanceText = $"{pixelLength:F2} px"; // 소수점 둘째자리까지 F : Fixed-point(고정 소수점)
             Font font = new Font("Arial", 10, FontStyle.Bold);
-            PointF textPos = new PointF(sEnd.X + 5, (sStart.Y + sEnd.Y) / 2); // 선의 중간 지점 우측
-            if (pixelLength > 370&&pixelLength<390) //정상 제품일 경우
-            {
-                g.DrawString(distanceText, font, Brushes.Lime, textPos);
-                using (Pen pen = new Pen(Color.Lime, 2f))
-                {
-                    g.DrawLine(pen, sStart, sEnd);
-                }
-            }
-            else if(pixelLength > 500)  //뚜껑이 없는 경우
-            {
-                g.DrawString(distanceText, font, Brushes.Red, textPos);
-                using (Pen pen = new Pen(Color.Red, 2f))
-                {
-                    g.DrawLine(pen, sStart, sEnd);
-                }
-            }
-            else    //뚜껑 체결 문제 제품일 경우
-            {
-                g.DrawString(distanceText, font, Brushes.Red, textPos);
-                using (Pen pen = new Pen(Color.Red, 2f))
-                {
-                    g.DrawLine(pen, sStart, sEnd);
-                }
-            }
 
+            // 생성된 모든 라인 세트를 순회하며 그립니다.
+            for (int i = 0; i < _heightLineList.Count; i++)
+            {
+                var lineSet = _heightLineList[i];
+                DiagramEntity roi1 = lineSet[0];
+                DiagramEntity roi2 = lineSet[1];
+                DiagramEntity roi3 = lineSet[2];
 
+                // 1. 가상 좌표 계산
+                PointF vP1 = GetEdgePoint(roi1);
+                PointF vP2 = GetEdgePoint(roi2);
+                PointF vP3 = GetEdgePoint(roi3);
+
+                float targetY;
+                float dx = vP2.X - vP1.X;
+                if (Math.Abs(dx) > 0.0001f)
+                    targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
+                else
+                    targetY = vP1.Y;
+
+                PointF vStart = vP3;
+                PointF vEnd = new PointF(vP3.X, targetY);
+
+                // 2. 화면 좌표 변환
+                PointF sP1 = VirtualToScreen(vP1);
+                PointF sP2 = VirtualToScreen(vP2);
+                PointF sStart = VirtualToScreen(vStart);
+                PointF sEnd = VirtualToScreen(vEnd);
+
+                // 3. 거리 계산
+                float pixelLength = Math.Abs(vEnd.Y - vStart.Y);
+                string distanceText = $"{pixelLength:F2} px";
+                PointF textPos = new PointF(sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
+
+                // 4. [요청 사항] 판정 기준 설정
+                Color resultColor = Color.Red; // 기본은 빨강
+
+                if (_heightLineList.Count == 1)
+                {
+                    // --- 선이 딱 하나일 때 ---
+                    if (pixelLength >= 370 && pixelLength <= 390)
+                        resultColor = Color.Lime; // 초록
+                    else
+                        resultColor = Color.Red;  // 500 이상 포함 그 외 빨강
+                }
+                else
+                {
+                    // --- 선이 두 개 이상일 때 ---
+                    if (i == 0) // 위쪽 선 (첫 번째)
+                    {
+                        if (pixelLength >= 180 && pixelLength <= 185)
+                            resultColor = Color.Lime;
+                        else
+                            resultColor = Color.Red;
+                    }
+                    else if (i == 1) // 아래쪽 선 (두 번째)
+                    {
+                        if (pixelLength >= 300 && pixelLength <= 305)
+                            resultColor = Color.Lime;
+                        else
+                            resultColor = Color.Red;
+                    }
+                }
+
+                // 5. 실제 그리기
+                using (Pen limePen = new Pen(Color.Lime, 2f))
+                    g.DrawLine(limePen, sP1, sP2); // 기준선
+
+                g.FillEllipse(Brushes.Red, sP1.X - 4, sP1.Y - 4, 8, 8);
+                g.FillEllipse(Brushes.Red, sP2.X - 4, sP2.Y - 4, 8, 8);
+                g.FillEllipse(Brushes.Yellow, sStart.X - 4, sStart.Y - 4, 8, 8);
+
+                using (Pen resultPen = new Pen(resultColor, 2f))
+                {
+                    g.DrawLine(resultPen, sStart, sEnd); // 측정선
+                    using (Brush textBrush = new SolidBrush(resultColor))
+                        g.DrawString(distanceText, font, textBrush, textPos); // 거리 텍스트
+                }
+            }
         }
 
         // 중심점 계산 헬퍼 함수
@@ -1361,18 +1352,13 @@ namespace ABCsystem.UIControl
 
         private void OnDrawHeightLineClicked(object sender, EventArgs e)
         {
-            if (_multiSelectedEntities.Count != 3)
+            if (_multiSelectedEntities.Count == 3)
             {
-                MessageBox.Show("ROI 세 개를 선택하세요. (1,2번: 기준선, 3번: 수직선 기준)");
-                return;
+                // 3개를 하나의 배열로 묶어서 리스트에 추가 (누적됨)
+                _heightLineList.Add(_multiSelectedEntities.ToArray());
+                _drawVerticalEnabled = true;
+                Invalidate(); // 화면 갱신
             }
-
-            _lineRoi1 = _multiSelectedEntities[0];
-            _lineRoi2 = _multiSelectedEntities[1];
-            _lineRoi3 = _multiSelectedEntities[2]; // 새 ROI
-            _drawVerticalEnabled = true;
-
-            Invalidate();
         }
 
 
@@ -1409,17 +1395,19 @@ namespace ABCsystem.UIControl
         }
 
         // 선 관련 변수를 초기화하는 헬퍼 메서드
-        private void CheckAndResetLineRois(DiagramEntity target)    //ROI 삭제시, 선 그리기 관련 ROI인지 확인하고 초기화
+        private void CheckAndResetLineRois(DiagramEntity target)
         {
-            // 삭제되는 ROI가 선을 구성하는 ROI 중 하나라면 모든 선 정보 초기화
-            if (target == _lineRoi1 || target == _lineRoi2 || target == _lineRoi3)
+            // 리스트를 뒤에서부터 검사하여 삭제된 ROI가 포함된 라인만 제거
+            for (int i = _heightLineList.Count - 1; i >= 0; i--)
             {
-                _lineRoi1 = null;
-                _lineRoi2 = null;
-                _lineRoi3 = null;
-                _drawVerticalEnabled = false; // 수직선 그리기 비활성화
-                                              // 만약 다른 플래그를 쓰신다면 그것도 여기서 false 처리하세요.
+                if (_heightLineList[i].Contains(target))
+                {
+                    _heightLineList.RemoveAt(i);
+                }
             }
+
+            if (_heightLineList.Count == 0) _drawVerticalEnabled = false;
+            Invalidate();
         }
         public List<string> GetSelectedUids()
         {
