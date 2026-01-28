@@ -312,8 +312,7 @@ namespace ABCsystem.UIControl
                 }
             }
             // 실패 시 기본 ROI 중앙점 반환 (Fallback)
-            float centerX = entity.EntityROI.X + (entity.EntityROI.Width / 2f);
-            return new PointF(centerX, 0);
+            return new PointF(-1, -1); // 유효하지 않은 좌표
         }
 
         public void DrawHeightLine(Graphics g)
@@ -323,7 +322,6 @@ namespace ABCsystem.UIControl
             g.SmoothingMode = SmoothingMode.AntiAlias;
             Font font = new Font("Arial", 10, FontStyle.Bold);
 
-            // 생성된 모든 라인 세트를 순회하며 그립니다.
             for (int i = 0; i < _heightLineList.Count; i++)
             {
                 var lineSet = _heightLineList[i];
@@ -336,15 +334,24 @@ namespace ABCsystem.UIControl
                 PointF vP2 = GetEdgePoint(roi2);
                 PointF vP3 = GetEdgePoint(roi3);
 
-                float targetY;
+                // ❗ 좌표가 유효하지 않으면 그리지 않음
+                bool IsInvalid(PointF p) => p.X <= 0 && p.Y <= 0;
+                if (IsInvalid(vP1) || IsInvalid(vP2) || IsInvalid(vP3))
+                    continue;
+
                 float dx = vP2.X - vP1.X;
-                if (Math.Abs(dx) > 0.0001f)
-                    targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
-                else
-                    targetY = vP1.Y;
+                float targetY = Math.Abs(dx) > 0.0001f
+                    ? vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X)
+                    : vP1.Y;
 
                 PointF vStart = vP3;
                 PointF vEnd = new PointF(vP3.X, targetY);
+
+                float pixelLength = Math.Abs(vEnd.Y - vStart.Y);
+
+                // ❗ 0 또는 비정상 길이면 아예 그리지 않음
+                if (pixelLength <= 0.01f)
+                    continue;
 
                 // 2. 화면 좌표 변환
                 PointF sP1 = VirtualToScreen(vP1);
@@ -352,42 +359,25 @@ namespace ABCsystem.UIControl
                 PointF sStart = VirtualToScreen(vStart);
                 PointF sEnd = VirtualToScreen(vEnd);
 
-                // 3. 거리 계산
-                float pixelLength = Math.Abs(vEnd.Y - vStart.Y);
                 string distanceText = $"{pixelLength:F2} px";
                 PointF textPos = new PointF(sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
 
-                // 4. [요청 사항] 판정 기준 설정
-                Color resultColor = Color.Red; // 기본은 빨강
-
+                // 3. 판정 색상
+                Color resultColor = Color.Red;
                 if (_heightLineList.Count == 1)
                 {
-                    // --- 선이 딱 하나일 때 ---
                     if (pixelLength >= 370 && pixelLength <= 390)
-                        resultColor = Color.Lime; // 초록
-                    else
-                        resultColor = Color.Red;  // 500 이상 포함 그 외 빨강
+                        resultColor = Color.Lime;
                 }
                 else
                 {
-                    // --- 선이 두 개 이상일 때 ---
-                    if (i == 0) // 위쪽 선 (첫 번째)
-                    {
-                        if (pixelLength >= 180 && pixelLength <= 185)
-                            resultColor = Color.Lime;
-                        else
-                            resultColor = Color.Red;
-                    }
-                    else if (i == 1) // 아래쪽 선 (두 번째)
-                    {
-                        if (pixelLength >= 300 && pixelLength <= 305)
-                            resultColor = Color.Lime;
-                        else
-                            resultColor = Color.Red;
-                    }
+                    if (i == 0)
+                        resultColor = (pixelLength >= 180 && pixelLength <= 185) ? Color.Lime : Color.Red;
+                    else if (i == 1)
+                        resultColor = (pixelLength >= 300 && pixelLength <= 305) ? Color.Lime : Color.Red;
                 }
 
-                // 5. 실제 그리기
+                // 4. 실제 그리기
                 using (Pen limePen = new Pen(Color.Lime, 2f))
                     g.DrawLine(limePen, sP1, sP2); // 기준선
 
@@ -399,10 +389,11 @@ namespace ABCsystem.UIControl
                 {
                     g.DrawLine(resultPen, sStart, sEnd); // 측정선
                     using (Brush textBrush = new SolidBrush(resultColor))
-                        g.DrawString(distanceText, font, textBrush, textPos); // 거리 텍스트
+                        g.DrawString(distanceText, font, textBrush, textPos);
                 }
             }
         }
+
 
         // 중심점 계산 헬퍼 함수
         private PointF GetCenter(Rectangle rect)

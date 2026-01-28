@@ -667,7 +667,7 @@ namespace ABCsystem.Core
                 var cameraForm = MainForm.GetDockForm<CameraForm>();
                 cameraForm?.ImageViewer.Invalidate();
             }));
-
+            System.Threading.Thread.Sleep(200);
             return true;
         }
         public void StopCycle()

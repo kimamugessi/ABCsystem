@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using ABCsystem.Algorithm;
 
 namespace ABCsystem.Teach
 {
@@ -25,6 +26,10 @@ namespace ABCsystem.Teach
 
 
         public List<string[]> SavedHeightLineUids { get; set; } = new List<string[]>();
+
+
+        public string LastInspectImagePath { get; set; }   // 마지막 검사 이미지 경로
+        public List<DrawInspectInfo> LastInspectResults { get; set; } // 마지막 검사 결과
 
         public Model()
         {
