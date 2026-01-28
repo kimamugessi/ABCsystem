@@ -1052,12 +1052,12 @@ namespace ABCsystem.UIControl
             {
                 //_rectInfos.Clear(); //song
                 // song : filtered만 "교체"되게 (windowId + inspectType 단위)
-                var groups = filtered.GroupBy(x => new { x.windowId, x.inspectType });
+                var groups = filtered.GroupBy(x => new { x.windowUid, x.inspectType });
 
                 foreach (var g in groups)
                 {
                     _rectInfos.RemoveAll(old =>
-                        old.windowId == g.Key.windowId &&
+                        old.windowUid == g.Key.windowUid &&
                         old.inspectType == g.Key.inspectType);
 
                     _rectInfos.AddRange(g);
@@ -1065,6 +1065,32 @@ namespace ABCsystem.UIControl
             }
 
             Invalidate();   //오버레이 다시 그리기 요청
+        }
+
+        //엣지 삭제 _20260128
+        //Delete
+        public void RemoveResultsByWindowUid(string uid)
+        {
+            if (string.IsNullOrEmpty(uid)) return;
+
+            lock (_lock)
+            {
+                _rectInfos.RemoveAll(x => x.windowUid == uid);
+            }
+            Invalidate();
+        }
+
+        //DeleteList
+        public void RemoveResultsByWindowUids(IEnumerable<string> uids)
+        {
+            if (uids == null) return;
+            var set = new HashSet<string>(uids.Where(x => !string.IsNullOrEmpty(x)));
+
+            lock (_lock)
+            {
+                _rectInfos.RemoveAll(x => set.Contains(x.windowUid));
+            }
+            Invalidate();
         }
 
         public void SetInspResultCount(InspectResultCount inspectResultCount)

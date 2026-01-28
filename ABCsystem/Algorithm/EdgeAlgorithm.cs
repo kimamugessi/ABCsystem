@@ -20,6 +20,7 @@ namespace ABCsystem.Algorithm
         public int EdgeThreshold { get; set; } = 30;
 
         // 라인별로 픽킹된 엣지 수 (라인당 1개씩)
+        [XmlIgnore]
         public int OutEdgeCount { get; private set; } = 0;
 
         // 픽킹된 점들의 bounding box(ROI 전체좌표계 기준). 디버그/참고용.
