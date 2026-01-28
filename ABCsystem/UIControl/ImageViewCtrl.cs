@@ -308,8 +308,7 @@ namespace ABCsystem.UIControl
                 if (edgeAlgo != null && edgeAlgo.IsInspected)
                 {
                     var pt = edgeAlgo.FoundEdgePoint; // EdgeAlgorithm.cs에 추가한 public property
-                    if (pt.X >= 0 && pt.Y >= 0)
-                        return new PointF(pt.X, pt.Y);
+                    if (pt.X >= 0 && pt.Y >= 0) return new PointF(pt.X, pt.Y);
                 }
             }
             // 실패 시 기본 ROI 중앙점 반환 (Fallback)
@@ -1417,7 +1416,46 @@ namespace ABCsystem.UIControl
                    .Select(e => e.LinkedWindow.UID)
                    .ToList();
         }
+        public List<string[]> GetHeightLineUids()
+        {
+            // _heightLineList에 담긴 각 DiagramEntity 배열에서 UID만 뽑아냅니다.
+            return _heightLineList.Select(nodes => new string[] {
+        nodes[0].LinkedWindow.UID,
+        nodes[1].LinkedWindow.UID,
+        nodes[2].LinkedWindow.UID
+    }).ToList();
+        }
+        public void RestoreHeightLinesFromModel(Model model)
+        {
+            // 1. 저장된 데이터가 없으면 리스트를 비우고 종료
+            if (model == null || model.SavedHeightLineUids == null)
+            {
+                _heightLineList.Clear();
+                _drawVerticalEnabled = false;
+                return;
+            }
 
+            _heightLineList.Clear();
+
+            // 2. 저장된 UID 세트를 하나씩 확인
+            foreach (var uids in model.SavedHeightLineUids)
+            {
+                // 현재 ImageViewer가 관리하는 _diagramEntityList에서 같은 UID를 가진 객체를 찾음
+                var ent1 = _diagramEntityList.FirstOrDefault(e => e.LinkedWindow.UID == uids[0]);
+                var ent2 = _diagramEntityList.FirstOrDefault(e => e.LinkedWindow.UID == uids[1]);
+                var baseEnt = _diagramEntityList.FirstOrDefault(e => e.LinkedWindow.UID == uids[2]);
+
+                // 세 개의 ROI가 모두 찾아졌다면 선 리스트에 추가
+                if (ent1 != null && ent2 != null && baseEnt != null)
+                {
+                    _heightLineList.Add(new DiagramEntity[] { ent1, ent2, baseEnt });
+                }
+            }
+
+            // 3. 선이 존재하면 그리기 활성화 및 화면 갱신
+            _drawVerticalEnabled = (_heightLineList.Count > 0);
+            this.Invalidate();
+        }
     }
     #region EventArgs
     public class DiagramEntityEventArgs : EventArgs

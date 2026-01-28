@@ -23,6 +23,9 @@ namespace ABCsystem.Teach
         [XmlElement("InspWindow")]
         public List<InspWindow> InspWindowList { get; set; }
 
+
+        public List<string[]> SavedHeightLineUids { get; set; } = new List<string[]>();
+
         public Model()
         {
             InspWindowList = new List<InspWindow>();
@@ -88,11 +91,24 @@ namespace ABCsystem.Teach
         //모델 저장함수
         public void Save()
         {
-            if (ModelPath == "")
-                return;
+            if (ModelPath == "") return;
 
+            // 1. 현재 열려있는 CameraForm의 ImageViewer를 찾습니다.
+            var cameraForm = MainForm.DockPanelInstance.Contents
+                                     .OfType<CameraForm>()
+                                     .FirstOrDefault();
+
+            if (cameraForm != null)
+            {
+                // 2. [핵심] 화면의 선 정보를 모델의 리스트 변수에 옮겨 담습니다.
+                // 이제 ImageViewCtrl에 메서드를 만들었으므로 에러가 사라집니다.
+                this.SavedHeightLineUids = cameraForm.ImageViewer.GetHeightLineUids();
+            }
+
+            // 3. XML 파일 저장 (SavedHeightLineUids 리스트가 함께 저장됨)
             XmlHelper.SaveXml(ModelPath, this);
 
+            // 4. 기존 ROI 개별 저장 로직
             foreach (var window in InspWindowList)
             {
                 window.SaveInspWindow(this);

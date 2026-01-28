@@ -20,7 +20,7 @@ namespace ABCsystem
     public partial class MainForm : Form
     {
         private static DockPanel _dockPanel;
-
+        public static DockPanel DockPanelInstance => _dockPanel;
         public MainForm()
         {
             InitializeComponent();

@@ -54,49 +54,55 @@ namespace ABCsystem.Inspect
         {
             isDefect = false;
             Model curMode = Global.Inst.InspStage.CurModel;
+            if (curMode == null) return false;
+
             List<InspWindow> inspWindowList = curMode.InspWindowList;
+
+            // 1. 검사 시작 전 모든 윈도우의 이전 결과값을 강제로 초기화
             foreach (var inspWindow in inspWindowList)
             {
                 if (inspWindow == null) continue;
+
+                // 이전 결과 리스트와 알고리즘 내부 좌표(-1, -1) 초기화
+                inspWindow.ResetInspResult();
+
+                // 현재 이미지에 맞춰 데이터 업데이트
                 UpdateInspData(inspWindow);
             }
 
+            // 2. 실제 알고리즘 연산 수행 (이때 새로운 좌표가 계산됨)
             _inspectBoard.InspectWindowList(inspWindowList);
 
             int totalCnt = 0;
             int okCnt = 0;
             int ngCnt = 0;
+
             foreach (var inspWindow in inspWindowList)
             {
-                if (inspWindow == null) continue; //song
-
+                if (inspWindow == null) continue;
                 totalCnt++;
 
                 if (inspWindow.IsDefect())
                 {
-                    if (!isDefect)
-                        isDefect = true;
-
+                    isDefect = true;
                     ngCnt++;
                 }
                 else
                 {
                     okCnt++;
                 }
-
-                //DisplayResult(inspWindow, InspectType.InspNone); //song
             }
-            //song 모든 window의 결과를 한 번에 합쳐서 그리기(기존 ROI 결과 유지)
+
+            // 3. 결과 표시 (이미지 갱신 직후에 그리기)
             DisplayResultAll(inspWindowList, InspectType.InspNone);
 
+            // UI 카운트 갱신
             if (totalCnt > 0)
             {
                 var cameraForm = MainForm.GetDockForm<CameraForm>();
-                if (cameraForm != null)
-                {
-                    cameraForm.SetInspResultCount(totalCnt, okCnt, ngCnt);
-                }
+                cameraForm?.SetInspResultCount(totalCnt, okCnt, ngCnt);
             }
+
             return true;
         }
         public bool TryInspect(InspWindow inspObj, InspectType inspType)

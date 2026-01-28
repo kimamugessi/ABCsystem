@@ -21,6 +21,7 @@ namespace ABCsystem
     //public partial class CameraForm: Form
     public partial class CameraForm : DockContent
     {
+        public ImageViewCtrl ImageViewer => this.imageViewer;
         eImageChannel _currentImageChannel = eImageChannel.Gray;
         public CameraForm()
         {
