@@ -19,21 +19,6 @@ namespace ABCsystem.Algorithm
         // 엣지로 판단할 임계값 (클수록 엣지 덜 검출)
         public int EdgeThreshold { get; set; } = 30;
 
-        // 라인별로 픽킹된 엣지 수 (라인당 1개씩)
-        [XmlIgnore]
-        public int OutEdgeCount { get; private set; } = 0;
-
-        // 픽킹된 점들의 bounding box(ROI 전체좌표계 기준). 디버그/참고용.
-        [XmlIgnore]
-        private Rect _edgeBoundingRect = new Rect(0, 0, 0, 0);
-
-        // 대표점(전체좌표계 기준) / 화면 표시
-        private Point2f _edgePoint = InvalidPoint;
-
-        // 라인별로 찾은 "첫 엣지" 점들 중 일부를 화면에 같이 찍기 위한 리스트(전체좌표)
-        [XmlIgnore]
-        private readonly List<Point2f> _pickedEdgePoints = new List<Point2f>();
-
         // 엣지 윤곽선 시각화용 점 표시 간격 (1: 모든 엣지 점 표시, 5: 5픽셀마다 1점 표시)
         public int DrawStride { get; set; } = 1;
 
@@ -58,6 +43,27 @@ namespace ABCsystem.Algorithm
         // false : 스캔 방향에 따른 extreme(Y) 사용
         public bool UseCenterYOnVertical { get; set; } = true;
 
+        // Align(기준점)용
+        public bool UseAsAlignment { get; set; } = false;   // InspAlignEdge일 때 true
+        public double TeachAnchorX { get; set; } = double.NaN;  // 정상 모델에서 저장할 기준 X. 아직 티칭 전이면 NaN 유지
+
+        // 런타임 결과 (XML 저장 X)
+        // 라인별로 픽킹된 엣지 수 (라인당 1개씩)
+        [XmlIgnore]
+        public int OutEdgeCount { get; private set; } = 0;
+        // 픽킹된 점들의 bounding box(ROI 전체좌표계 기준). 디버그/참고용.
+        [XmlIgnore]
+        private Rect _edgeBoundingRect = new Rect(0, 0, 0, 0);
+        // 대표점(전체좌표계 기준) / 화면 표시
+        private Point2f _edgePoint = InvalidPoint;
+        // 라인별로 찾은 "첫 엣지" 점들 중 일부를 화면에 같이 찍기 위한 리스트(전체좌표)
+        [XmlIgnore]
+        private readonly List<Point2f> _pickedEdgePoints = new List<Point2f>();
+
+        // Align 런타임 결과
+        [XmlIgnore] public bool HasAnchor { get; private set; } = false;
+        [XmlIgnore] public Point2f AnchorPoint { get; private set; }  // 찾은 첫 엣지점
+
         public EdgeAlgorithm()
         {
             InspectType = InspectType.InspEdge;
@@ -73,6 +79,13 @@ namespace ABCsystem.Algorithm
             cloneAlgo.ExtremeTol = this.ExtremeTol;
             cloneAlgo.UseCenterYOnVertical = this.UseCenterYOnVertical;
 
+            // Align 옵션도 복사
+            cloneAlgo.UseAsAlignment = this.UseAsAlignment;
+            cloneAlgo.TeachAnchorX = this.TeachAnchorX;
+
+            // InspectType도 상황에 맞게 복사
+            cloneAlgo.InspectType = this.InspectType;
+
             return cloneAlgo;
         }
 
@@ -84,6 +97,13 @@ namespace ABCsystem.Algorithm
             ScanDir = src.ScanDir;
             ExtremeTol = src.ExtremeTol;
             UseCenterYOnVertical = src.UseCenterYOnVertical;
+
+            // Align 옵션도 복사
+            UseAsAlignment = src.UseAsAlignment;
+            TeachAnchorX = src.TeachAnchorX;
+
+            // InspectType 복사
+            InspectType = src.InspectType;
 
             return true;
         }
@@ -350,6 +370,10 @@ namespace ABCsystem.Algorithm
             OutEdgeCount = 0;
             _pickedEdgePoints.Clear();
 
+            // Align 결과 초기화
+            HasAnchor = false;
+            AnchorPoint = InvalidPoint;
+
             // 원본 취득
             Mat srcImage = Global.Inst.InspStage.GetMat(0, ImageChannel);
             if (srcImage == null || srcImage.Empty())
@@ -383,6 +407,57 @@ namespace ABCsystem.Algorithm
                 Cv2.CvtColor(roiImg, gray, ColorConversionCodes.BGR2GRAY);
             }
 
+            // Align(기준점) 모드 분기
+            if (UseAsAlignment)
+            {
+                // 기준점은 "무조건 좌 -> 우" 스캔 + 첫 엣지
+                var prevDir = ScanDir;
+                ScanDir = ScanDirection.LeftToRight;
+
+                _edgePoint = FindEdgePointByScan(gray, roi, out int pickedCountA, out Rect pickedBoundingA);
+
+                // 원복(혹시라도 다른 로직에서 ScanDir 참조할까봐)
+                ScanDir = prevDir;
+
+                OutEdgeCount = pickedCountA;
+                _edgeBoundingRect = pickedBoundingA;
+
+                if (_edgePoint.X < 0 || _edgePoint.Y < 0)
+                {
+                    // 뚜껑 없음 등: 기준점 실패
+                    HasAnchor = false;
+                    IsDefect = true;
+                    IsInspected = true;
+
+                    ResultString.Add("NG: Align anchor edge not found");
+                    ResultString.Add($"ScanDir(forced): LeftToRight");
+                    ResultString.Add($"EdgeThreshold: {EdgeThreshold}");
+                    ResultString.Add($"PickedEdgeCount: {OutEdgeCount}");
+
+                    return false;
+                }
+
+                // 성공
+                HasAnchor = true;
+                AnchorPoint = _edgePoint;
+
+                IsDefect = false;
+                IsInspected = true;
+
+                ResultString.Add("OK: Align anchor found");
+                ResultString.Add($"ScanDir(forced): LeftToRight");
+                ResultString.Add($"EdgeThreshold: {EdgeThreshold}");
+                ResultString.Add($"PickedEdgeCount: {OutEdgeCount}");
+                ResultString.Add($"AnchorPoint: ({AnchorPoint.X:0.0}, {AnchorPoint.Y:0.0})");
+
+                // 티칭값이 있으면 참고로 출력
+                if (!double.IsNaN(TeachAnchorX))
+                    ResultString.Add($"TeachAnchorX: {TeachAnchorX:0.0}");
+
+                return true;
+            }
+
+            // 기존 Edge 검사 모드
             // 방향 스캔으로 대표점 산출
             _edgePoint = FindEdgePointByScan(gray, roi, out int pickedCount, out Rect pickedBounding);
 
@@ -409,14 +484,26 @@ namespace ABCsystem.Algorithm
             if (_edgePoint.X < 0 || _edgePoint.Y < 0)
                 return resultArea.Count;
 
+            // Align 모드면 표시 타입을 Align으로
+            var drawType = UseAsAlignment ? InspectType.InspAlignEdge : InspectType.InspEdge;
+
             // 샘플 엣지 점들(노란색: DecisionType.Info)
             foreach (var pt in _pickedEdgePoints)
             {
                 resultArea.Add(new DrawInspectInfo(pt, "", InspectType.InspEdge, DecisionType.Info));
             }
 
-            // 대표점(초록색) + 텍스트(EdgeCount) 화면 표시
-            resultArea.Add(new DrawInspectInfo(_edgePoint, $"Edge:{OutEdgeCount}", InspectType.InspEdge, DecisionType.Good));
+            // 대표점 표시
+            if (UseAsAlignment)
+            {
+                // 기준점은 텍스트를 Anchor로 표시(원하면 dx는 InspectBoard에서 계산 후 별도 표시)
+                resultArea.Add(new DrawInspectInfo(_edgePoint, $"Anchor", drawType, DecisionType.Defect));
+            }
+            else
+            {
+                // 대표점(초록색) + 텍스트(EdgeCount) 화면 표시
+                resultArea.Add(new DrawInspectInfo(_edgePoint, $"Edge:{OutEdgeCount}", drawType, DecisionType.Good));
+            }
 
             return resultArea.Count;
         }

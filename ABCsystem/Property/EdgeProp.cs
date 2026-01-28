@@ -1,4 +1,5 @@
 ﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
 using ABCsystem.Teach;
 using System;
 using System.Windows.Forms;
@@ -26,9 +27,27 @@ namespace ABCsystem.Property
             _win = win;
             _algo = algo;
 
-            // 알고리즘 값 -> 콤보 UI 동기화
-            if (_algo != null)
-                cbEdgeType.SelectedItem = ToArrow(_algo.ScanDir);
+            if (_algo == null) return;
+
+            // Body 윈도우면 기본값 Align로
+            bool defaultAlign = (_win != null && _win.InspWindowType == InspWindowType.Body);
+
+            // 이미 Align 모드로 저장돼 있으면 그대로, 아니면 Body면 Align로 맞춤
+            bool isAlign = _algo.UseAsAlignment || _algo.InspectType == InspectType.InspAlignEdge;
+
+            if (!isAlign && defaultAlign)
+            {
+                // 내부 값도 Align로 맞춰두면 UX가 훨씬 자연스러움
+                _algo.UseAsAlignment = true;
+                _algo.InspectType = InspectType.InspAlignEdge;
+                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+
+                cbEdgeType.SelectedItem = "Align";
+                return;
+            }
+
+            // 일반 처리
+            cbEdgeType.SelectedItem = isAlign ? "Align" : ToArrow(_algo.ScanDir);
         }
 
 
@@ -52,6 +71,18 @@ namespace ABCsystem.Property
             string arrow = cbEdgeType.SelectedItem?.ToString();
             if (string.IsNullOrWhiteSpace(arrow)) return;
 
+            // Align 선택 시
+            if (arrow.Equals("Align", StringComparison.OrdinalIgnoreCase))
+            {
+                _algo.UseAsAlignment = true;
+                _algo.InspectType = InspectType.InspAlignEdge;
+                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+                return;
+            }
+
+            // 스캔방향 선택 시
+            _algo.UseAsAlignment = false;
+            _algo.InspectType = InspectType.InspEdge;
             _algo.ScanDir = FromArrow(arrow);
         }
 

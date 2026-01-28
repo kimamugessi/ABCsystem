@@ -15,7 +15,8 @@ namespace ABCsystem.Core
         InspFilter,
         InspAIModule,
         InspCount,
-        InspEdge //song
+        InspEdge, // Edge 찾기
+        InspAlignEdge  // 기준점용 Edge 추가
     }
 
     //#10_INSPWINDOW#4 InspWindow 정의

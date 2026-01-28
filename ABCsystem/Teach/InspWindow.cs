@@ -15,7 +15,7 @@ namespace ABCsystem.Teach
 {
     public class InspWindow
     {
-        public InspWindowType InspWindowType { get; set; } 
+        public InspWindowType InspWindowType { get; set; }
 
         public string Name { get; set; }
         public string UID { get; set; }
@@ -98,7 +98,7 @@ namespace ABCsystem.Teach
 
         public bool PatternLearn()
         {
-            if(IsPatternLearn==true) return true;
+            if (IsPatternLearn == true) return true;
             foreach (var algorithm in AlgorithmList)
             {
                 if (algorithm.InspectType != InspectType.InspMatch)
@@ -140,9 +140,17 @@ namespace ABCsystem.Teach
                 case InspectType.InspMatch:
                     inspAlgo = new MatchAlgorithm();
                     break;
-                //song
+                // Edge
                 case InspectType.InspEdge:
                     inspAlgo = new EdgeAlgorithm();
+                    break;
+                // 기준점 Edge
+                case InspectType.InspAlignEdge:
+                    var edge = new EdgeAlgorithm();
+                    edge.UseAsAlignment = true;
+                    edge.InspectType = InspectType.InspAlignEdge;
+                    edge.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+                    inspAlgo = edge;
                     break;
             }
 

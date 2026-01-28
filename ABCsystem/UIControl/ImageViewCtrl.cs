@@ -147,7 +147,7 @@ namespace ABCsystem.UIControl
                     color = Color.LightBlue;
                     break;
                 case InspWindowType.Body:
-                    color = Color.Yellow;
+                    color = Color.Red;
                     break;
                 case InspWindowType.Sub:
                     color = Color.Orange;
