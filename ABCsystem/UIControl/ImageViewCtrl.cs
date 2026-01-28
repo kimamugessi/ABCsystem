@@ -317,80 +317,98 @@ namespace ABCsystem.UIControl
 
         public void DrawHeightLine(Graphics g)
         {
-            if (!_drawVerticalEnabled || _heightLineList.Count == 0) return;
+            // 1. 기초 검사
+            if (_drawVerticalEnabled == false || _heightLineList.Count == 0) return;
 
-            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             Font font = new Font("Arial", 10, FontStyle.Bold);
+            Font hugeFont = new Font("Arial", 50, FontStyle.Bold);
+
+            // [중요] 시작할 때 무조건 빈값으로 초기화 (잔상 제거)
+            string finalStatus = "";
+            Color statusColor = Color.Red;
 
             for (int i = 0; i < _heightLineList.Count; i++)
             {
                 var lineSet = _heightLineList[i];
-                DiagramEntity roi1 = lineSet[0];
-                DiagramEntity roi2 = lineSet[1];
-                DiagramEntity roi3 = lineSet[2];
+                PointF vP1 = GetEdgePoint(lineSet[0]);
+                PointF vP2 = GetEdgePoint(lineSet[1]);
+                PointF vP3 = GetEdgePoint(lineSet[2]);
 
-                // 1. 가상 좌표 계산
-                PointF vP1 = GetEdgePoint(roi1);
-                PointF vP2 = GetEdgePoint(roi2);
-                PointF vP3 = GetEdgePoint(roi3);
+                // [단계 1] 엣지 갯수 파악
+                int edgeCount = 0;
+                if (vP1.X > 0) edgeCount++;
+                if (vP2.X > 0) edgeCount++;
+                if (vP3.X > 0) edgeCount++;
 
-                // ❗ 좌표가 유효하지 않으면 그리지 않음
-                bool IsInvalid(PointF p) => p.X <= 0 && p.Y <= 0;
-                if (IsInvalid(vP1) || IsInvalid(vP2) || IsInvalid(vP3))
-                    continue;
-
+                // [단계 2] 수치 계산
                 float dx = vP2.X - vP1.X;
-                float targetY = Math.Abs(dx) > 0.0001f
-                    ? vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X)
-                    : vP1.Y;
+                float targetY = vP1.Y;
+                if (Math.Abs(dx) > 0.0001f)
+                {
+                    targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
+                }
+                float pixelLength = Math.Abs(targetY - vP3.Y);
 
-                PointF vStart = vP3;
-                PointF vEnd = new PointF(vP3.X, targetY);
-
-                float pixelLength = Math.Abs(vEnd.Y - vStart.Y);
-
-                // ❗ 0 또는 비정상 길이면 아예 그리지 않음
-                if (pixelLength <= 0.01f)
+                // [단계 3] 0.00px 이거나 엣지가 너무 적으면(0~1개) 묻지도 따지지도 말고 패스
+                // 이 조건이 'NO CAP' 판정보다 위에 있어야 0.00px일 때 글자가 안 뜹니다.
+                if (pixelLength <= 0.01f || edgeCount < 2)
+                {
                     continue;
+                }
 
-                // 2. 화면 좌표 변환
-                PointF sP1 = VirtualToScreen(vP1);
-                PointF sP2 = VirtualToScreen(vP2);
-                PointF sStart = VirtualToScreen(vStart);
-                PointF sEnd = VirtualToScreen(vEnd);
+                // [단계 4] 엣지가 딱 2개일 때만 NO CAP
+                if (edgeCount == 2)
+                {
+                    finalStatus = "NO CAP";
+                    statusColor = Color.Red;
+                    continue;
+                }
 
-                string distanceText = $"{pixelLength:F2} px";
-                PointF textPos = new PointF(sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
-
-                // 3. 판정 색상
-                Color resultColor = Color.Red;
+                // [단계 5] 엣지가 3개일 때 정상 판정
+                bool isOk = false;
                 if (_heightLineList.Count == 1)
                 {
-                    if (pixelLength >= 370 && pixelLength <= 390)
-                        resultColor = Color.Lime;
+                    if (pixelLength >= 370 && pixelLength <= 390) isOk = true;
                 }
                 else
                 {
-                    if (i == 0)
-                        resultColor = (pixelLength >= 180 && pixelLength <= 185) ? Color.Lime : Color.Red;
-                    else if (i == 1)
-                        resultColor = (pixelLength >= 300 && pixelLength <= 305) ? Color.Lime : Color.Red;
+                    if (i == 0 && pixelLength >= 180 && pixelLength <= 185) isOk = true;
+                    else if (i == 1 && pixelLength >= 300 && pixelLength <= 305) isOk = true;
                 }
 
-                // 4. 실제 그리기
-                using (Pen limePen = new Pen(Color.Lime, 2f))
-                    g.DrawLine(limePen, sP1, sP2); // 기준선
-
-                g.FillEllipse(Brushes.Red, sP1.X - 4, sP1.Y - 4, 8, 8);
-                g.FillEllipse(Brushes.Red, sP2.X - 4, sP2.Y - 4, 8, 8);
-                g.FillEllipse(Brushes.Yellow, sStart.X - 4, sStart.Y - 4, 8, 8);
-
-                using (Pen resultPen = new Pen(resultColor, 2f))
+                // 전체 결과 업데이트 (NO CAP이 아닐 때만)
+                if (finalStatus != "NO CAP")
                 {
-                    g.DrawLine(resultPen, sStart, sEnd); // 측정선
-                    using (Brush textBrush = new SolidBrush(resultColor))
-                        g.DrawString(distanceText, font, textBrush, textPos);
+                    if (isOk == false)
+                    {
+                        finalStatus = "NG";
+                        statusColor = Color.Red;
+                    }
+                    else if (finalStatus == "")
+                    {
+                        finalStatus = "OK";
+                        statusColor = Color.Lime;
+                    }
                 }
+
+                // 선 그리기
+                Color lineCol = isOk ? Color.Lime : Color.Red;
+                PointF sStart = VirtualToScreen(vP3);
+                PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));
+
+                using (Pen p = new Pen(lineCol, 2f))
+                {
+                    g.DrawLine(p, sStart, sEnd);
+                    g.DrawString(pixelLength.ToString("F2") + " px", font, new SolidBrush(lineCol), sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
+                }
+            }
+
+            // [최종] 루프를 다 돌았는데 0.00px이거나 엣지가 없으면 finalStatus는 빈값이므로 안 뜸
+            if (finalStatus != "")
+            {
+                g.DrawString(finalStatus, hugeFont, Brushes.Black, 23, 23);
+                g.DrawString(finalStatus, hugeFont, new SolidBrush(statusColor), 20, 20);
             }
         }
 
