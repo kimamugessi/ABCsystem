@@ -322,12 +322,9 @@ namespace ABCsystem.Core
         public void SelectInspWindow(InspWindow inspWindow)
         {
             _selectedInspWindow = inspWindow;
-
-            var propForm = FormManager.GetForm<PropertiesForm>();
-            //song
             Global.Inst.CurTeachWindow = inspWindow;
 
-            var propForm = MainForm.GetDockForm<PropertiesForm>();
+            var propForm = FormManager.GetForm<PropertiesForm>();
             if (propForm != null)
             {
                 if (inspWindow == null)
@@ -560,36 +557,25 @@ namespace ABCsystem.Core
         {
             SLogger.Write($"모델 로딩:{filePath}");
 
-            // 1. 모델 로드
             _model = _model.Load(filePath);
-            if (_model == null) return false;
 
-            // 2. 모델 로드 직후 모든 결과값(좌표) 초기화
-            foreach (var window in _model.InspWindowList)
+            if (_model == null)
             {
-                // 중요: window.ResetInspResult()는 내부 알고리즘의 ResetResult()를 호출하여
-                // 저장되어 있던 엣지 좌표 등을 모두 초기값(-1, -1)으로 바꿉니다.
-                window.ResetInspResult();
+                SLogger.Write($"모델 로딩 실패:{filePath}");
+                return false;
             }
 
-            // 3. ROI 객체 생성
+            string inspImagePath = _model.InspectImagePath;
+            if (File.Exists(inspImagePath))
+            {
+                Global.Inst.InspStage.SetImageBuffer(inspImagePath);
+            }
+
             UpdateDiagramEntity();
 
-            var cameraForm = MainForm.DockPanelInstance.Contents
-                                     .OfType<CameraForm>()
-                                     .FirstOrDefault();
-
-            if (cameraForm != null)
-            {
-                // 4. [핵심] 화면에 그려진 모든 오버레이(선, 점)를 즉시 지움
-                // 빈 리스트를 전달하여 이전 모델의 잔상을 완전히 제거합니다.
-                cameraForm.ImageViewer.AddRect(new List<DrawInspectInfo>());
-
-                // 5. 새 모델의 구조만 다시 그려줌
-                cameraForm.ImageViewer.RestoreHeightLinesFromModel(_model);
-            }
-
             _regKey.SetValue("LastestModelPath", filePath);
+
+
             return true;
         }
 
@@ -647,30 +633,24 @@ namespace ABCsystem.Core
         {
             if (UseCamera)
             {
-                if (!Grab(0)) return false;
+                if (!Grab(0))
+                    return false;
             }
             else
             {
-                // 파일을 불러오는 가상 그랩
-                if (!VirtualGrab()) return false;
+                if (!VirtualGrab())
+                    return false;
             }
 
             ResetDisplay();
 
             bool isDefect;
-            // 1. 실제 알고리즘 검사 수행
             if (!_inspWorker.RunInspect(out isDefect))
                 return false;
 
-            // 2. [추가] 검사 직후 UI를 갱신하여 선 위치를 업데이트함
-            // UI 스레드에서 실행되도록 BeginInvoke를 사용합니다.
-            MainForm.DockPanelInstance.BeginInvoke(new Action(() => {
-                var cameraForm = MainForm.GetDockForm<CameraForm>();
-                cameraForm?.ImageViewer.Invalidate();
-            }));
-           
             return true;
         }
+
         public void StopCycle()
         {
             if (_inspWorker != null)

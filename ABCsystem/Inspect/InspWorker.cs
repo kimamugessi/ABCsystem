@@ -197,7 +197,7 @@ namespace ABCsystem.Inspect
                 }
             }
 
-            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            var cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.AddRect(totalArea);

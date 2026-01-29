@@ -105,8 +105,6 @@ namespace ABCsystem
             SLogger.Write($"CurModel null? {Global.Inst.InspStage.CurModel == null}");
             SLogger.Write($"InspWindowList count: {Global.Inst.InspStage.CurModel?.InspWindowList?.Count}");
         } 
-        }
-
 
         // ModelTreeForm.cs
 
