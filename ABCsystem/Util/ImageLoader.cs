@@ -31,7 +31,7 @@ namespace ABCsystem.Util
         }
         public bool IsLoadedImages()
         {
-            if (_sortedImages is null)
+            if (_sortedImages == null)
                 return false;
 
             if (_sortedImages.Count() <= 0)
@@ -48,7 +48,7 @@ namespace ABCsystem.Util
 
         public string GetImagePath()
         {
-            if (_sortedImages is null)
+            if (_sortedImages == null)
                 return "";
 
             _grabIndex++;

@@ -40,7 +40,7 @@ namespace ABCsystem.Property
 
         public void SetProperty()
         {
-            if (_matchAlgo is null)
+            if (_matchAlgo == null)
                 return;
 
             chkUse.Checked = _matchAlgo.IsUse;
@@ -116,7 +116,7 @@ namespace ABCsystem.Property
 
         private void chkInvertResult_CheckedChanged(object sender, EventArgs e)
         {
-            if (_matchAlgo is null)
+            if (_matchAlgo == null)
                 return;
 
             _matchAlgo.InvertResult = chkInvertResult.Checked;

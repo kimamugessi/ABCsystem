@@ -37,9 +37,11 @@
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(187, 143);
+            this.btnCreate.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnCreate.Location = new System.Drawing.Point(194, 217);
+            this.btnCreate.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(79, 30);
+            this.btnCreate.Size = new System.Drawing.Size(90, 45);
             this.btnCreate.TabIndex = 9;
             this.btnCreate.Text = "만들기";
             this.btnCreate.UseVisualStyleBackColor = true;
@@ -47,47 +49,55 @@
             // 
             // txtModelInfo
             // 
-            this.txtModelInfo.Location = new System.Drawing.Point(77, 33);
+            this.txtModelInfo.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.txtModelInfo.Location = new System.Drawing.Point(12, 81);
+            this.txtModelInfo.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtModelInfo.Name = "txtModelInfo";
-            this.txtModelInfo.Size = new System.Drawing.Size(190, 104);
+            this.txtModelInfo.Size = new System.Drawing.Size(272, 126);
             this.txtModelInfo.TabIndex = 8;
             this.txtModelInfo.Text = "";
             // 
             // txtModelName
             // 
-            this.txtModelName.Location = new System.Drawing.Point(77, 6);
+            this.txtModelName.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.txtModelName.Location = new System.Drawing.Point(67, 14);
+            this.txtModelName.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtModelName.Name = "txtModelName";
-            this.txtModelName.Size = new System.Drawing.Size(190, 21);
+            this.txtModelName.Size = new System.Drawing.Size(217, 26);
             this.txtModelName.TabIndex = 7;
             // 
             // lbModelInfo
             // 
             this.lbModelInfo.AutoSize = true;
-            this.lbModelInfo.Location = new System.Drawing.Point(12, 36);
+            this.lbModelInfo.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbModelInfo.Location = new System.Drawing.Point(14, 58);
             this.lbModelInfo.Name = "lbModelInfo";
-            this.lbModelInfo.Size = new System.Drawing.Size(57, 12);
+            this.lbModelInfo.Size = new System.Drawing.Size(64, 18);
             this.lbModelInfo.TabIndex = 6;
             this.lbModelInfo.Text = "모델 정보";
             // 
             // lbModelName
             // 
             this.lbModelName.AutoSize = true;
-            this.lbModelName.Location = new System.Drawing.Point(12, 9);
+            this.lbModelName.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbModelName.Location = new System.Drawing.Point(14, 17);
             this.lbModelName.Name = "lbModelName";
-            this.lbModelName.Size = new System.Drawing.Size(41, 12);
+            this.lbModelName.Size = new System.Drawing.Size(47, 18);
             this.lbModelName.TabIndex = 5;
             this.lbModelName.Text = "모델명";
             // 
             // NewModel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 179);
+            this.ClientSize = new System.Drawing.Size(297, 269);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.txtModelInfo);
             this.Controls.Add(this.txtModelName);
             this.Controls.Add(this.lbModelInfo);
             this.Controls.Add(this.lbModelName);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "NewModel";
             this.Text = "NewModel";
             this.ResumeLayout(false);

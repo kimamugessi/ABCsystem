@@ -78,5 +78,35 @@ namespace ABCsystem4.Setting
         {
             SaveSetting();
         }
+
+        private void CameraSetting_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbExpUnit_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbExposure_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbCameraType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbCameraType_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbExposure_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

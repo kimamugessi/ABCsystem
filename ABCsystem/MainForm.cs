@@ -20,7 +20,7 @@ namespace ABCsystem
     public partial class MainForm : Form
     {
         private static DockPanel _dockPanel;
-
+        public static DockPanel DockPanelInstance => _dockPanel;
         public MainForm()
         {
             InitializeComponent();
@@ -33,7 +33,7 @@ namespace ABCsystem
             //_dockPanel.Dock = DockStyle.Fill; 상단 코드와 동일
             Controls.Add(_dockPanel);
 
-            _dockPanel.Theme = new VS2015BlueTheme();
+            _dockPanel.Theme = new VS2015DarkTheme();
 
             LoadDockingWindows();
 
@@ -60,6 +60,11 @@ namespace ABCsystem
 
             var modelTreeWindow=new ModelTreeForm();
             modelTreeWindow.Show(resultForm.Pane, DockAlignment.Right, 0.4);
+
+
+            modelTreeWindow.OnRoiSelectedFromTree += (uid) => {
+                cameraForm.SelectRoiByUid(uid);
+            };
 
             var runWindow = new RunForm();
             runWindow.Show(modelTreeWindow.Pane, null);
@@ -112,7 +117,7 @@ namespace ABCsystem
         }
         private string GetMdoelTitle(Model curModel)
         {
-            if (curModel is null)
+            if (curModel == null)
                 return "";
 
             string modelName = curModel.ModelName;

@@ -32,11 +32,12 @@
             // 
             // ImageViewCtrl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ImageViewCtrl";
-            this.Size = new System.Drawing.Size(214, 225);
+            this.Size = new System.Drawing.Size(171, 225);
             this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ImageViewCtrl_MouseDoubleClick);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ImageViewCtrl_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageViewCtrl_MouseMove);

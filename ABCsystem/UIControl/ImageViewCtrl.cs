@@ -111,7 +111,12 @@ namespace ABCsystem.UIControl
         private Rectangle _screenSelectedRect = Rectangle.Empty;
 
         private Size _extSize = new Size(0, 0);
-        
+
+
+        private bool _drawLineEnabled = false; //라인 그리기 활성화 여부(20260125)
+        private List<DiagramEntity[]> _heightLineList = new List<DiagramEntity[]>();
+        private bool _drawVerticalEnabled = false; // 수직선 그리기 활성화 여부
+
         //팝업 메뉴
         private ContextMenuStrip _contextMenu;
 
@@ -127,6 +132,9 @@ namespace ABCsystem.UIControl
             _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
             _contextMenu.Items.Add("Teaching", null, OnTeachingClicked);
             _contextMenu.Items.Add("Unlock", null, OnUnlockClicked);
+            _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
+            _contextMenu.Items.Add("DrawHeightLine", null, OnDrawHeightLineClicked); 
+            
 
             MouseWheel += new MouseEventHandler(ImageViewCCtrl_MouseWheel);
         }
@@ -283,7 +291,160 @@ namespace ABCsystem.UIControl
                     e.Graphics.DrawImage(Canvas, 0, 0); // 캔버스를 UserControl 화면에 표시
                 }
             }
+            DrawHeightLine(e.Graphics); // 새 수직선 (ROI3 기준) 
         }
+
+        private PointF GetEdgePoint(DiagramEntity entity)
+        {
+            // 1. 엔티티에 연결된 InspWindow 확인
+            if (entity?.LinkedWindow != null)
+            {
+                // 2. InspWindow 내의 알고리즘 목록에서 EdgeAlgorithm 추출
+                // (InspWindow 클래스 정의에 따라 AlgorithmList 또는 InspAlgorithmList일 수 있습니다)
+                var edgeAlgo = entity.LinkedWindow.AlgorithmList // <-- 에러 시 변수명 확인 필요
+                    .OfType<EdgeAlgorithm>()
+                    .FirstOrDefault();
+
+                if (edgeAlgo != null && edgeAlgo.IsInspected)
+                {
+                    var pt = edgeAlgo.FoundEdgePoint; // EdgeAlgorithm.cs에 추가한 public property
+                    if (pt.X >= 0 && pt.Y >= 0) return new PointF(pt.X, pt.Y);
+                }
+            }
+            // 실패 시 기본 ROI 중앙점 반환 (Fallback)
+            return new PointF(-1, -1); // 유효하지 않은 좌표
+        }
+
+        public void DrawHeightLine(Graphics g)
+        {
+            // 1. 기초 검사
+            if (_drawVerticalEnabled == false || _heightLineList.Count == 0) return;
+
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            Font font = new Font("Arial", 10, FontStyle.Bold);
+            Font hugeFont = new Font("Arial", 50, FontStyle.Bold);
+
+            // 전체 검사 결과 상태 저장용
+            string finalStatus = "";
+            Color statusColor = Color.Red;
+
+            for (int i = 0; i < _heightLineList.Count; i++)
+            {
+                var lineSet = _heightLineList[i];
+                PointF vP1 = GetEdgePoint(lineSet[0]);
+                PointF vP2 = GetEdgePoint(lineSet[1]);
+                PointF vP3 = GetEdgePoint(lineSet[2]);
+
+                // [수치 계산]
+                float dx = vP2.X - vP1.X;
+                float targetY = vP1.Y;
+
+                if (Math.Abs(dx) > 0.0001f) //분모 0 방지
+                {
+                    targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
+                }
+
+                float pixelLength = Math.Abs(targetY - vP3.Y);
+                if (pixelLength < 300 || pixelLength > 700) //정상 수치가 358px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
+                {
+                    continue;
+                }
+                
+
+                // [단계 1] 판정 로직 적용 (수정된 기준)
+                string currentLineStatus = "NG";
+                Color lineColor = Color.Red;
+
+                if (pixelLength >= 500)
+                {
+                    currentLineStatus = "NO CAP";
+                    lineColor = Color.Red;
+                }
+                else if (pixelLength >= 350 && pixelLength <= 360)
+                {
+                    currentLineStatus = "OK";
+                    lineColor = Color.Lime;
+                }
+                else
+                {
+                    currentLineStatus = "NG";
+                    lineColor = Color.Red;
+                }
+
+                // [단계 2] 전체 결과 업데이트 (우선순위: NO CAP > NG > OK)
+                if (currentLineStatus == "NO CAP")
+                {
+                    finalStatus = "NO CAP";
+                    statusColor = Color.Red;
+                }
+                else if (finalStatus != "NO CAP") // 이미 NO CAP 판정이 났다면 유지
+                {
+                    if (currentLineStatus == "NG")
+                    {
+                        finalStatus = "NG";
+                        statusColor = Color.Red;
+                    }
+                    else if (finalStatus == "") // 아무 판정도 없었을 때만 OK로 초기화
+                    {
+                        finalStatus = "OK";
+                        statusColor = Color.Lime;
+                    }
+                }
+
+                // [단계 3] 화면에 선 및 개별 수치 그리기
+                PointF sP1 = VirtualToScreen(vP1);  //가로선 기준점 1
+                PointF sP2 = VirtualToScreen(vP2);  //가로선 기준점 2
+                PointF sStart = VirtualToScreen(vP3);   //세로선 시작점
+                PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));  //세로선 끝점
+
+                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;
+
+                using (Pen bluePen = new Pen(Color.Blue, 2f))   //가로선 그리기
+                {
+                    g.DrawLine(bluePen, sP1, sP2);
+                }
+
+                using (Pen p = new Pen(drawColor, 2f))  //세로선 그리기
+                {
+                    // 선 그리기
+                    g.DrawLine(p, sStart, sEnd);
+
+                    // 글자 그리기 (메모리 효율을 위해 브러시도 using 사용 권장)
+                    using (SolidBrush textBrush = new SolidBrush(drawColor))
+                    {
+                        g.DrawString($"{pixelLength:F2} px", font, textBrush, sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
+                    }
+                }
+            }
+
+            // [최종] 상단에 전체 판정 글씨 쓰기
+            if (!string.IsNullOrEmpty(finalStatus))
+            {
+                DrawStatusText(g, finalStatus, hugeFont, statusColor, 20, 20);
+            }
+        }
+
+        /// <summary>
+        /// 화면에 판정 텍스트를 그리는 별도 함수 (그림자 효과 포함)
+        /// </summary>
+        private void DrawStatusText(Graphics g, string text, Font font, Color color, float x, float y)
+        {
+            // 그림자 (검은색)
+            g.DrawString(text, font, Brushes.Black, x + 3, y + 3);
+            // 본문 글씨
+            using (SolidBrush brush = new SolidBrush(color))
+            {
+                g.DrawString(text, font, brush, x, y);
+            }
+        }
+
+        // 중심점 계산 헬퍼 함수
+        private PointF GetCenter(Rectangle rect)
+        {
+            return new PointF(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
+        }
+
+
         private void DrawDiagram(Graphics g)
         {
             //#10_INSPWINDOW#18 ROI 그리기
@@ -527,11 +688,11 @@ namespace ABCsystem.UIControl
         {
             _extSize.Width = _extSize.Height = 0;
 
-            if (_selEntity is null)
+            if (_selEntity == null)
                 return;
 
             InspWindow window = _selEntity.LinkedWindow;
-            if (window is null)
+            if (window == null)
                 return;
 
             MatchAlgorithm matchAlgo = (MatchAlgorithm)window.FindInspAlgorithm(InspectType.InspMatch);
@@ -679,7 +840,7 @@ namespace ABCsystem.UIControl
                     {
                         foreach (var entity in _multiSelectedEntities)
                         {
-                            if (entity is null || entity.IsHold)
+                            if (entity == null || entity.IsHold)
                                 continue;
 
                             Rectangle rect = entity.EntityROI;
@@ -1066,6 +1227,9 @@ namespace ABCsystem.UIControl
 
             Invalidate();   //오버레이 다시 그리기 요청
         }
+        public void RemoveResultsByWindowUid(string uid)
+        {
+            if (string.IsNullOrEmpty(uid)) return;
 
         //엣지 삭제 _20260128
         //Delete
@@ -1221,6 +1385,7 @@ namespace ABCsystem.UIControl
         private void OnDeleteClicked(object sender, EventArgs e)
         {
             DeleteSelEntity();
+
         }
 
         private void OnTeachingClicked(object sender, EventArgs e)
@@ -1247,6 +1412,18 @@ namespace ABCsystem.UIControl
             _selEntity.IsHold = false;
         }
 
+        private void OnDrawHeightLineClicked(object sender, EventArgs e)
+        {
+            if (_multiSelectedEntities.Count == 3)
+            {
+                // 3개를 하나의 배열로 묶어서 리스트에 추가 (누적됨)
+                _heightLineList.Add(_multiSelectedEntities.ToArray());
+                _drawVerticalEnabled = true;
+                Invalidate(); // 화면 갱신
+            }
+        }
+
+
         private void DeleteSelEntity()
         {
             List<InspWindow> selected = _multiSelectedEntities
@@ -1256,20 +1433,92 @@ namespace ABCsystem.UIControl
 
             if (selected.Count > 0)
             {
-                DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.DeleteList, selected));
-                return;
-            }
+                // 1. 다중 선택된 항목 중 선 그리기와 관련된 ROI가 있는지 확인하고 초기화
+                foreach (var entity in _multiSelectedEntities)
+                {
+                    CheckAndResetLineRois(entity);
+                }
 
-            if (_selEntity != null)
+                DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.DeleteList, selected));
+            }
+            else if (_selEntity != null)
             {
                 InspWindow linkedWindow = _selEntity.LinkedWindow;
                 if (linkedWindow == null) return;
 
+                // 2. 단일 선택된 항목이 선 그리기와 관련된 ROI인지 확인하고 초기화
+                CheckAndResetLineRois(_selEntity);
+
                 DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.Delete, linkedWindow));
             }
+
+            // 삭제 후 화면 갱신
+            Invalidate();
         }
 
+        // 선 관련 변수를 초기화하는 헬퍼 메서드
+        private void CheckAndResetLineRois(DiagramEntity target)
+        {
+            // 리스트를 뒤에서부터 검사하여 삭제된 ROI가 포함된 라인만 제거
+            for (int i = _heightLineList.Count - 1; i >= 0; i--)
+            {
+                if (_heightLineList[i].Contains(target))
+                {
+                    _heightLineList.RemoveAt(i);
+                }
+            }
 
+            if (_heightLineList.Count == 0) _drawVerticalEnabled = false;
+            Invalidate();
+        }
+        public List<string> GetSelectedUids()
+        {
+            // _multiSelectedEntities에 담긴 모든 엔티티의 UID를 리스트로 추출
+            return _multiSelectedEntities
+                   .Where(e => e.LinkedWindow != null)
+                   .Select(e => e.LinkedWindow.UID)
+                   .ToList();
+        }
+        public List<string[]> GetHeightLineUids()
+        {
+            // _heightLineList에 담긴 각 DiagramEntity 배열에서 UID만 뽑아냅니다.
+            return _heightLineList.Select(nodes => new string[] {
+        nodes[0].LinkedWindow.UID,
+        nodes[1].LinkedWindow.UID,
+        nodes[2].LinkedWindow.UID
+    }).ToList();
+        }
+        public void RestoreHeightLinesFromModel(Model model)
+        {
+            // 1. 저장된 데이터가 없으면 리스트를 비우고 종료
+            if (model == null || model.SavedHeightLineUids == null)
+            {
+                _heightLineList.Clear();
+                _drawVerticalEnabled = false;
+                return;
+            }
+
+            _heightLineList.Clear();
+
+            // 2. 저장된 UID 세트를 하나씩 확인
+            foreach (var uids in model.SavedHeightLineUids)
+            {
+                // 현재 ImageViewer가 관리하는 _diagramEntityList에서 같은 UID를 가진 객체를 찾음
+                var ent1 = _diagramEntityList.FirstOrDefault(e => e.LinkedWindow.UID == uids[0]);
+                var ent2 = _diagramEntityList.FirstOrDefault(e => e.LinkedWindow.UID == uids[1]);
+                var baseEnt = _diagramEntityList.FirstOrDefault(e => e.LinkedWindow.UID == uids[2]);
+
+                // 세 개의 ROI가 모두 찾아졌다면 선 리스트에 추가
+                if (ent1 != null && ent2 != null && baseEnt != null)
+                {
+                    _heightLineList.Add(new DiagramEntity[] { ent1, ent2, baseEnt });
+                }
+            }
+
+            // 3. 선이 존재하면 그리기 활성화 및 화면 갱신
+            _drawVerticalEnabled = (_heightLineList.Count > 0);
+            this.Invalidate();
+        }
     }
     #region EventArgs
     public class DiagramEntityEventArgs : EventArgs

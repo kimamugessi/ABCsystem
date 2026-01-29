@@ -17,6 +17,7 @@ namespace ABCsystem
     {
         //개별 트리 노트에서 팝업 메뉴 보이기를 위한 메뉴
         private ContextMenuStrip _contextMenu;
+        public event Action<string> OnRoiSelectedFromTree;
 
         public ModelTreeForm()
         {
@@ -24,6 +25,14 @@ namespace ABCsystem
 
             //초기 트리 노트의 기본값은 "Root"
             tvModelTree.Nodes.Add("Root");
+
+            tvModelTree.AfterSelect += (s, e) => {
+                if (e.Node != null && e.Node.Parent != null) // 자식 노드(UID)인 경우에만
+                {
+                    // 신호를 밖으로 던집니다.
+                    OnRoiSelectedFromTree?.Invoke(e.Node.Text);
+                }
+            };
 
             // 컨텍스트 메뉴 초기화
             _contextMenu = new ContextMenuStrip();
@@ -84,7 +93,7 @@ namespace ABCsystem
 
             foreach (InspWindow window in model.InspWindowList)
             {
-                if (window is null)
+                if (window == null)
                     continue;
 
                 string uid = window.UID;
@@ -95,5 +104,49 @@ namespace ABCsystem
 
             tvModelTree.ExpandAll();
         }
+
+
+        // ModelTreeForm.cs
+
+        public void SelectNodesByUids(List<string> uids)
+        {
+            if (uids == null) return;
+
+            tvModelTree.BeginUpdate(); // 화면 깜빡임 방지
+
+            // 1. 기존에 강조된 모든 노드 초기화 (색상 초기화)
+            ResetNodeStyles(tvModelTree.Nodes);
+
+            // 2. 전달받은 UID 리스트에 해당하는 노드들 강조
+            foreach (string uid in uids)
+            {
+                foreach (TreeNode root in tvModelTree.Nodes)
+                {
+                    foreach (TreeNode child in root.Nodes)
+                    {
+                        if (child.Text == uid)
+                        {
+                            child.BackColor = Color.DodgerBlue; // 강조 색상
+                            child.ForeColor = Color.White;
+                            child.EnsureVisible();
+                        }
+                    }
+                }
+            }
+
+            tvModelTree.EndUpdate();
+        }
+
+        // 노드 스타일 초기화 함수
+        private void ResetNodeStyles(TreeNodeCollection nodes)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                node.BackColor = Color.Empty;
+                node.ForeColor = Color.Empty;
+                if (node.Nodes.Count > 0) ResetNodeStyles(node.Nodes);
+            }
+        }
+
     }
 }

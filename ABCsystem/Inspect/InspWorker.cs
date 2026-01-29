@@ -44,11 +44,13 @@ namespace ABCsystem.Inspect
             while (!token.IsCancellationRequested)
             {
                 Global.Inst.InspStage.OneCycle();
+                Thread.Sleep(200);
             }
 
             IsRunning = false;
 
             SLogger.Write("InspectionLoop End");
+            
         }
         public bool RunInspect(out bool isDefect)
         {
@@ -138,7 +140,7 @@ namespace ABCsystem.Inspect
         //각 알고리즘 타입 별로 검사에 필요한 데이터를 입력하는 함수
         private bool UpdateInspData(InspWindow inspWindow)
         {
-            if (inspWindow is null)
+            if (inspWindow == null)
                 return false;
 
             Rect windowArea = inspWindow.WindowArea;
@@ -208,7 +210,7 @@ namespace ABCsystem.Inspect
         //인자가 None이면 모든 알고리즘의 검사 결과(Rect 영역)를 얻어, cameraForm에 출력한다.
         private bool DisplayResult(InspWindow inspObj, InspectType inspType)
         {
-            if (inspObj is null)
+            if (inspObj == null)
                 return false;
 
             List<DrawInspectInfo> totalArea = new List<DrawInspectInfo>();

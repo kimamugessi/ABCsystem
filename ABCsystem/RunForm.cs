@@ -61,6 +61,5 @@ namespace ABCsystem
                 Global.Inst.InspStage.SetWorkingState(WorkingState.NONE);
             }
         }
-
     }
 }

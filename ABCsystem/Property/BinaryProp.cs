@@ -346,6 +346,20 @@ namespace ABCsystem.Property
             ImageChannelChanged?.Invoke(this, new ImageChannelEventArgs(_blobAlgo.ImageChannel));
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridViewFilter_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void chkRotatedRect_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class ImageChannelEventArgs : EventArgs

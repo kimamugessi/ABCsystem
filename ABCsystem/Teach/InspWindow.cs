@@ -36,7 +36,7 @@ namespace ABCsystem.Teach
 
         public void AddWindowImage(Mat image)
         {
-            if (image is null)
+            if (image == null)
                 return;
 
             _windowImages.Add(image.Clone());
@@ -110,7 +110,7 @@ namespace ABCsystem.Teach
                 for (int i = 0; i < _windowImages.Count; i++)
                 {
                     Mat tempImage = _windowImages[i];
-                    if (tempImage is null)
+                    if (tempImage == null)
                         continue;
 
                     if (tempImage.Type() == MatType.CV_8UC3)
@@ -208,7 +208,7 @@ namespace ABCsystem.Teach
         }
         public virtual bool SaveInspWindow(Model curModel)
         {
-            if (curModel is null)
+            if (curModel == null)
                 return false;
 
             string imgDir = Path.Combine(Path.GetDirectoryName(curModel.ModelPath), "Images");
@@ -220,7 +220,7 @@ namespace ABCsystem.Teach
             for (int i = 0; i < _windowImages.Count; i++)
             {
                 Mat img = _windowImages[i];
-                if (img is null)
+                if (img == null)
                     continue;
 
                 string targetPath = Path.Combine(imgDir, $"{UID}_{i}.png");
@@ -232,14 +232,14 @@ namespace ABCsystem.Teach
 
         public virtual bool LoadInspWindow(Model curModel)
         {
-            if (curModel is null)
+            if (curModel == null)
                 return false;
 
             string imgDir = Path.Combine(Path.GetDirectoryName(curModel.ModelPath), "Images");
 
             foreach (InspAlgorithm algo in AlgorithmList)
             {
-                if (algo is null)
+                if (algo == null)
                     continue;
 
                 if (algo.InspectType == InspectType.InspMatch)

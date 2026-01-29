@@ -32,9 +32,11 @@
             // 
             // StatisticForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(640, 450);
+            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "StatisticForm";
             this.Text = "StatisticForm";
             this.ResumeLayout(false);

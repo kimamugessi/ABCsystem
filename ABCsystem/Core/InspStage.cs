@@ -167,43 +167,41 @@ namespace ABCsystem.Core
         {
             SLogger.Write($"Load Image : {filePath}");
 
-            Mat matImage = Cv2.ImRead(filePath);
-
-            int pixelBpp = 8;
-            int imageWidth;
-            int imageHeight;
-            int imageStride;
-
-            if (matImage.Type() == MatType.CV_8UC3)
-                pixelBpp = 24;
-
-            imageWidth = (matImage.Width + 3) / 4 * 4;
-            imageHeight = matImage.Height;
-
-            // 4바이트 정렬된 새로운 Mat 생성
-            Mat alignedMat = new Mat();
-            Cv2.CopyMakeBorder(matImage, alignedMat, 0, 0, 0, imageWidth - matImage.Width, BorderTypes.Constant, Scalar.Black);
-
-            imageStride = imageWidth * matImage.ElemSize();
-
-            if (_imageSpace != null)
+            // 1. using을 사용하여 matImage가 끝나면 자동으로 메모리 해제되도록 함
+            using (Mat matImage = Cv2.ImRead(filePath))
             {
-                if (_imageSpace.ImageSize.Width != imageWidth || _imageSpace.ImageSize.Height != imageHeight)
+                if (matImage.Empty()) return; // 이미지 로드 실패 예외 처리
+
+                int pixelBpp = (matImage.Type() == MatType.CV_8UC3) ? 24 : 8;
+                int imageWidth = (matImage.Width + 3) / 4 * 4;
+                int imageHeight = matImage.Height;
+
+                // 2. alignedMat도 using으로 감싸서 메모리 누수 방지
+                using (Mat alignedMat = new Mat())
                 {
-                    _imageSpace.SetImageInfo(pixelBpp, imageWidth, imageHeight, imageStride);
-                    SetBuffer(_imageSpace.BufferCount);
-                }
-            }
+                    Cv2.CopyMakeBorder(matImage, alignedMat, 0, 0, 0, imageWidth - matImage.Width, BorderTypes.Constant, Scalar.Black);
 
-            int bufferIndex = 0;
+                    int imageStride = imageWidth * matImage.ElemSize();
 
-            // Mat의 데이터를 byte 배열로 복사
-            int bufSize = (int)(alignedMat.Total() * alignedMat.ElemSize());
-            Marshal.Copy(alignedMat.Data, ImageSpace.GetInspectionBuffer(bufferIndex), 0, bufSize);
+                    if (_imageSpace != null)
+                    {
+                        if (_imageSpace.ImageSize.Width != imageWidth || _imageSpace.ImageSize.Height != imageHeight)
+                        {
+                            _imageSpace.SetImageInfo(pixelBpp, imageWidth, imageHeight, imageStride);
+                            SetBuffer(_imageSpace.BufferCount);
+                        }
+                    }
 
-            _imageSpace.Split(bufferIndex);
+                    int bufferIndex = 0;
+                    int bufSize = (int)(alignedMat.Total() * alignedMat.ElemSize());
 
-            DisplayGrabImage(bufferIndex);
+                    // 데이터 복사
+                    Marshal.Copy(alignedMat.Data, ImageSpace.GetInspectionBuffer(bufferIndex), 0, bufSize);
+
+                    _imageSpace.Split(bufferIndex);
+                    DisplayGrabImage(bufferIndex);
+                } // 여기서 alignedMat 메모리 해제
+            } // 여기서 matImage 메모리 해제
         }
 
         public void CheckImageBuffer()
@@ -331,7 +329,7 @@ namespace ABCsystem.Core
             var propForm = MainForm.GetDockForm<PropertiesForm>();
             if (propForm != null)
             {
-                if (inspWindow is null)
+                if (inspWindow == null)
                 {
                     propForm.ResetProperty();
                     return;
@@ -346,7 +344,7 @@ namespace ABCsystem.Core
         public void AddInspWindow(InspWindowType windowType, Rect rect)
         {
             InspWindow inspWindow = _model.AddInspWindow(windowType);
-            if (inspWindow is null)
+            if (inspWindow == null)
                 return;
 
             inspWindow.WindowArea = rect;
@@ -366,7 +364,7 @@ namespace ABCsystem.Core
         public bool AddInspWindow(InspWindow sourceWindow, OpenCvSharp.Point offset)
         {
             InspWindow cloneWindow = sourceWindow.Clone(offset);
-            if (cloneWindow is null)
+            if (cloneWindow == null)
                 return false;
 
             if (!_model.AddInspWindow(cloneWindow))
@@ -511,7 +509,7 @@ namespace ABCsystem.Core
             if (imageChannel != eImageChannel.None)
                 SelImageChannel = imageChannel;
 
-            if (Global.Inst.InspStage.ImageSpace is null)
+            if (Global.Inst.InspStage.ImageSpace == null)
                 return null;
 
             return Global.Inst.InspStage.ImageSpace.GetBitmap(SelBufferIndex, SelImageChannel);
@@ -560,26 +558,37 @@ namespace ABCsystem.Core
         public bool LoadModel(string filePath)
         {
             SLogger.Write($"모델 로딩:{filePath}");
-                
+
+            // 1. 모델 로드
             _model = _model.Load(filePath);
+            if (_model == null) return false;
 
-            if (_model == null)
+            // 2. 모델 로드 직후 모든 결과값(좌표) 초기화
+            foreach (var window in _model.InspWindowList)
             {
-                SLogger.Write($"모델 로딩 실패:{filePath}");
-                return false;
+                // 중요: window.ResetInspResult()는 내부 알고리즘의 ResetResult()를 호출하여
+                // 저장되어 있던 엣지 좌표 등을 모두 초기값(-1, -1)으로 바꿉니다.
+                window.ResetInspResult();
             }
 
-            string inspImagePath = _model.InspectImagePath;
-            if (File.Exists(inspImagePath))
-            {
-                Global.Inst.InspStage.SetImageBuffer(inspImagePath);
-            }
-
+            // 3. ROI 객체 생성
             UpdateDiagramEntity();
 
+            var cameraForm = MainForm.DockPanelInstance.Contents
+                                     .OfType<CameraForm>()
+                                     .FirstOrDefault();
+
+            if (cameraForm != null)
+            {
+                // 4. [핵심] 화면에 그려진 모든 오버레이(선, 점)를 즉시 지움
+                // 빈 리스트를 전달하여 이전 모델의 잔상을 완전히 제거합니다.
+                cameraForm.ImageViewer.AddRect(new List<DrawInspectInfo>());
+
+                // 5. 새 모델의 구조만 다시 그려줌
+                cameraForm.ImageViewer.RestoreHeightLinesFromModel(_model);
+            }
+
             _regKey.SetValue("LastestModelPath", filePath);
-
-
             return true;
         }
 
@@ -637,21 +646,28 @@ namespace ABCsystem.Core
         {
             if (UseCamera)
             {
-                if (!Grab(0))
-                    return false;
+                if (!Grab(0)) return false;
             }
             else
             {
-                if (!VirtualGrab())
-                    return false;
+                // 파일을 불러오는 가상 그랩
+                if (!VirtualGrab()) return false;
             }
 
             ResetDisplay();
 
             bool isDefect;
+            // 1. 실제 알고리즘 검사 수행
             if (!_inspWorker.RunInspect(out isDefect))
                 return false;
 
+            // 2. [추가] 검사 직후 UI를 갱신하여 선 위치를 업데이트함
+            // UI 스레드에서 실행되도록 BeginInvoke를 사용합니다.
+            MainForm.DockPanelInstance.BeginInvoke(new Action(() => {
+                var cameraForm = MainForm.GetDockForm<CameraForm>();
+                cameraForm?.ImageViewer.Invalidate();
+            }));
+           
             return true;
         }
         public void StopCycle()
@@ -667,7 +683,7 @@ namespace ABCsystem.Core
 
         public bool VirtualGrab()
         {
-            if (_imageLoader is null)
+            if (_imageLoader == null)
                 return false;
 
             string imagePath = _imageLoader.GetNextImagePath();

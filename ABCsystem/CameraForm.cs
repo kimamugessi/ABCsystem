@@ -21,6 +21,7 @@ namespace ABCsystem
     //public partial class CameraForm: Form
     public partial class CameraForm : DockContent
     {
+        public ImageViewCtrl ImageViewer => this.imageViewer;
         eImageChannel _currentImageChannel = eImageChannel.Gray;
         public CameraForm()
         {
@@ -31,6 +32,7 @@ namespace ABCsystem
             imageViewer.DiagramEntityEvent += ImageViewer_DiagramEntityEvent;
 
             mainViewToolbar.ButtonChanged += Toolbar_ButtonChanged;
+
         }
 
         private void ImageViewer_DiagramEntityEvent(object sender, DiagramEntityEventArgs e)
@@ -39,8 +41,31 @@ namespace ABCsystem
             switch (e.ActionType)
             {
                 case EntityActionType.Select:
-                    Global.Inst.InspStage.SelectInspWindow(e.InspWindow);
-                    imageViewer.Focus();
+                    // 1. 선택된 UID 리스트 가져오기
+                    var selectedUids = imageViewer.GetSelectedUids();
+
+                    // 2. 트리 폼 강조 표시 (기존 코드)
+                    var modelTreeForm = MainForm.GetDockForm<ModelTreeForm>();
+                    modelTreeForm?.SelectNodesByUids(selectedUids);
+
+                    // ★ 3. [보완] 속성창(PropertiesForm) 데이터 즉시 갱신 ★
+                    if (selectedUids.Count > 0)
+                    {
+                        string firstUid = selectedUids[0];
+                        var model = Global.Inst.InspStage.CurModel;
+                        var selectedWin = model.InspWindowList.FirstOrDefault(w => w.UID == firstUid);
+
+                        if (selectedWin != null)
+                        {
+                            var propForm = MainForm.GetDockForm<PropertiesForm>();
+                            if (propForm != null)
+                            {
+                                // PropertiesForm에 이미 구현되어 있는 ShowProperty를 호출하면
+                                // 내부적으로 UpdateProperty가 실행되어 EdgeProp의 타겟 알고리즘이 바뀝니다.
+                                propForm.ShowProperty(selectedWin);
+                            }
+                        }
+                    }
                     break;
                 case EntityActionType.Inspect:
                     UpdateDiagramEntity();
@@ -246,6 +271,31 @@ namespace ABCsystem
 
             this.FormClosed -= CameraForm_FormClosed;
         }
+    public void SelectRoiByUid(string uid)
+{
+    // 1. 모델에서 데이터 찾기
+    var model = Global.Inst.InspStage.CurModel;
+    if (model == null) return;
 
+    var window = model.InspWindowList.FirstOrDefault(w => w.UID == uid);
+
+    if (window != null)
+    {
+        // 2. 중요: UI 스레드에서 실행되도록 보장 (반응이 없는 경우 대비)
+        if (this.InvokeRequired)
+        {
+            this.Invoke(new MethodInvoker(() => SelectRoiByUid(uid)));
+            return;
+        }
+
+        // 3. ImageViewCtrl의 선택 로직 호출
+        // 이 메서드가 내부적으로 _multiSelectedEntities에 추가하고 Invalidate()를 호출합니다.
+        imageViewer.SelectDiagramEntity(window);
+
+        // 4. 추가 확인: 강제로 포커스를 주고 다시 그리기를 한 번 더 호출
+        imageViewer.Focus();
+        imageViewer.Invalidate(); 
+    }
+}
     }
 }

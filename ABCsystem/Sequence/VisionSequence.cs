@@ -151,7 +151,7 @@ namespace ABCsystem.Sequence
         }
         private bool SendMessage(MmiMessageInfo message)
         {
-            if (_communicator is null)
+            if (_communicator == null)
                 return false;
 
             _message.Time = string.Format($"{DateTime.Now:HH:mm:ss:fff}");

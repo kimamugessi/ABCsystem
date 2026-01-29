@@ -136,7 +136,7 @@ namespace ABCsystem
 
         public void AddModelResult(Model curModel)
         {
-            if (curModel is null)
+            if (curModel == null)
                 return;
 
             _treeListView.SetObjects(curModel.InspWindowList);
@@ -149,7 +149,7 @@ namespace ABCsystem
 
         public void AddWindowResult(InspWindow inspWindow)
         {
-            if (inspWindow is null)
+            if (inspWindow == null)
                 return;
 
             _treeListView.SetObjects(new List<InspWindow> { inspWindow });
@@ -165,7 +165,7 @@ namespace ABCsystem
         //실제 검사가 되었을때, 검사 결과를 추가하는 함수
         public void AddInspResult(InspResult inspResult)
         {
-            if (inspResult is null)
+            if (inspResult == null)
                 return;
 
             // 현재 트리에 있는 객체 리스트 가져오기
@@ -206,7 +206,7 @@ namespace ABCsystem
 
         private void ShowDedtail(InspResult result)
         {
-            if (result is null)
+            if (result == null)
                 return;
 
             _txtDetails.Text = result.ResultInfos.ToString();

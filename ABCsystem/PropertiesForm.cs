@@ -179,7 +179,7 @@ namespace ABCsystem
                     else if (uc is MatchInspProp matchProp)
                     {
                         MatchAlgorithm matchAlgo = (MatchAlgorithm)window.FindInspAlgorithm(InspectType.InspMatch);
-                        if (matchAlgo is null)
+                        if (matchAlgo == null)
                             continue;
 
                         window.PatternLearn();
@@ -215,6 +215,19 @@ namespace ABCsystem
         private void ImageChannelChanged(object sender, ImageChannelEventArgs e)
         {
             Global.Inst.InspStage.SetPreviewImage(e.Channel);
+        }
+        public EdgeProp EdgePropControl
+        {
+            get
+            {
+                // 탭 컨트롤에서 EdgeProp 타입을 찾아 반환합니다.
+                foreach (TabPage page in tabPropControl.TabPages)
+                {
+                    if (page.Controls.Count > 0 && page.Controls[0] is EdgeProp ctrl)
+                        return ctrl;
+                }
+                return null;
+            }
         }
     }
 }
