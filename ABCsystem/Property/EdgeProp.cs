@@ -27,29 +27,50 @@ namespace ABCsystem.Property
             _win = win;
             _algo = algo;
 
-            if (_algo == null) return;
+            cbEdgeType.SelectedIndexChanged -= cbEdgeType_SelectedIndexChanged;
+            cbEdgeType.Items.Clear();
 
-            // Body 윈도우면 기본값 Align로
-            bool defaultAlign = (_win != null && _win.InspWindowType == InspWindowType.Body);
-
-            // 이미 Align 모드로 저장돼 있으면 그대로, 아니면 Body면 Align로 맞춤
-            bool isAlign = _algo.UseAsAlignment || _algo.InspectType == InspectType.InspAlignEdge;
-
-            if (!isAlign && defaultAlign)
+            if (_win == null || _algo == null)
             {
-                // 내부 값도 Align로 맞춰두면 UX가 훨씬 자연스러움
-                _algo.UseAsAlignment = true;
-                _algo.InspectType = InspectType.InspAlignEdge;
-                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
-
-                cbEdgeType.SelectedItem = "Align";
+                cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
                 return;
             }
 
-            // 일반 처리
-            cbEdgeType.SelectedItem = isAlign ? "Align" : ToArrow(_algo.ScanDir);
-        }
+            // Body: Align만
+            if (_win.InspWindowType == InspWindowType.Body)
+            {
+                cbEdgeType.Items.Add("Align");
 
+                // Align은 무조건 → 강제 + UseAsAlignment 강제
+                _algo.UseAsAlignment = true;
+                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+
+                cbEdgeType.SelectedItem = "Align";
+            }
+
+            // Base: 화살표만
+            else if (_win.InspWindowType == InspWindowType.Base)
+            {
+                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+
+                // Base는 Align 금지
+                _algo.UseAsAlignment = false;
+
+                // 현재 ScanDir에 맞춰 UI 선택
+                var arrow = ToArrow(_algo.ScanDir);
+                cbEdgeType.SelectedItem = arrow;
+                if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedItem = "→";
+            }
+            // 기타 윈도우
+            else
+            {
+                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+                cbEdgeType.SelectedItem = "→";
+                _algo.UseAsAlignment = false;
+            }
+
+            cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+        }
 
         private void btnEdge_Click(object sender, EventArgs e)
         {
@@ -66,24 +87,33 @@ namespace ABCsystem.Property
 
         private void ApplyComboToAlgorithm()
         {
-            if (_algo == null) return;
+            if (_algo == null || _win == null) return;
 
-            string arrow = cbEdgeType.SelectedItem?.ToString();
-            if (string.IsNullOrWhiteSpace(arrow)) return;
-
-            // Align 선택 시
-            if (arrow.Equals("Align", StringComparison.OrdinalIgnoreCase))
+            // Body는 항상 Align 고정
+            if (_win.InspWindowType == InspWindowType.Body)
             {
                 _algo.UseAsAlignment = true;
-                _algo.InspectType = InspectType.InspAlignEdge;
                 _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
                 return;
             }
 
-            // 스캔방향 선택 시
+            // Base는 항상 화살표 고정
+            if (_win.InspWindowType == InspWindowType.Base)
+            {
+                _algo.UseAsAlignment = false;
+
+                string arrow = cbEdgeType.SelectedItem?.ToString();
+                if (string.IsNullOrWhiteSpace(arrow)) return;
+
+                _algo.ScanDir = FromArrow(arrow);
+                return;
+            }
+
+            // 기타는 기본 화살표 처리
             _algo.UseAsAlignment = false;
-            _algo.InspectType = InspectType.InspEdge;
-            _algo.ScanDir = FromArrow(arrow);
+            string sel = cbEdgeType.SelectedItem?.ToString();
+            if (string.IsNullOrWhiteSpace(sel)) return;
+            _algo.ScanDir = FromArrow(sel);
         }
 
         private static EdgeAlgorithm.ScanDirection FromArrow(string arrow)

@@ -115,9 +115,30 @@ namespace ABCsystem
                 return;
             }
 
-            var runType = edgeAlgo.UseAsAlignment ? InspectType.InspAlignEdge : InspectType.InspEdge;
+            InspectType runType;
+            if (win.InspWindowType == InspWindowType.Body)
+            {
+                // Body는 무조건 Align
+                edgeAlgo.UseAsAlignment = true;
+                edgeAlgo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+                runType = InspectType.InspAlignEdge;
+            }
+            else if (win.InspWindowType == InspWindowType.Base)
+            {
+                // Base는 무조건 Edge(화살표)
+                edgeAlgo.UseAsAlignment = false;
+                runType = InspectType.InspEdge;
+            }
+            else
+            {
+                // 기타는 기존 로직 유지(원하면 Base처럼 강제해도 됨)
+                runType = edgeAlgo.UseAsAlignment ? InspectType.InspAlignEdge : InspectType.InspEdge;
+            }
 
-            SLogger.Write($"[EDGE_BTN] Clicked. win={win.UID} type={runType} useAlign={edgeAlgo.UseAsAlignment} thr={edgeAlgo.EdgeThreshold} scanDir={edgeAlgo.ScanDir}");
+            if (edgeAlgo.EdgeThreshold <= 0)
+                edgeAlgo.EdgeThreshold = 30;
+
+            SLogger.Write($"[EDGE_BTN] Clicked. win={win.UID} wType={win.InspWindowType} type={runType} useAlign={edgeAlgo.UseAsAlignment} thr={edgeAlgo.EdgeThreshold} scanDir={edgeAlgo.ScanDir}");
 
             Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
             Global.Inst.InspStage.RedrawMainView();
