@@ -580,7 +580,7 @@ namespace ABCsystem.UIControl
             {
                 float fontSize = 20.0f;
                 Color stateColor = Color.FromArgb(255, 128, 0);
-                PointF textPos = new PointF(10, 10);
+                PointF textPos = new PointF(20,Height-40);
                 DrawText(g, WorkingState, textPos, fontSize, stateColor);
             }
 
