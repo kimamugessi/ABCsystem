@@ -66,5 +66,14 @@ namespace ABCsystem
         {
             this.Close();
         }
+
+        //#15_INSP_WORKER#3 Cycle 모드 설정
+        private void chkCycleMode_CheckedChanged(object sender, EventArgs e)
+        {
+            // 현재 체크 상태 확인
+            bool isChecked = chkCycleMode.Checked;
+            SettingXml.Inst.CycleMode = chkCycleMode.Checked;
+
+        }
     }
 }

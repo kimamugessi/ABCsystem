@@ -40,6 +40,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
+            this.chkCycleMode = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnGrab
@@ -147,18 +148,30 @@
             // btnClose
             // 
             this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
-            this.btnClose.Location = new System.Drawing.Point(648, 12);
+            this.btnClose.Location = new System.Drawing.Point(792, 12);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(40, 40);
             this.btnClose.TabIndex = 4;
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // chkCycleMode
+            // 
+            this.chkCycleMode.AutoSize = true;
+            this.chkCycleMode.Location = new System.Drawing.Point(564, 42);
+            this.chkCycleMode.Name = "chkCycleMode";
+            this.chkCycleMode.Size = new System.Drawing.Size(131, 22);
+            this.chkCycleMode.TabIndex = 5;
+            this.chkCycleMode.Text = "Cycle Mode";
+            this.chkCycleMode.UseVisualStyleBackColor = true;
+            this.chkCycleMode.CheckedChanged += new System.EventHandler(this.chkCycleMode_CheckedChanged);
+            // 
             // RunForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(700, 100);
+            this.ClientSize = new System.Drawing.Size(844, 100);
+            this.Controls.Add(this.chkCycleMode);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -192,5 +205,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.CheckBox chkCycleMode;
     }
 }

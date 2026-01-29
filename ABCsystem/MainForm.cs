@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -208,10 +209,19 @@ namespace ABCsystem
                 openFileDialog.Title = "모델 파일 선택";
                 openFileDialog.Filter = "Model Files|*.xml;";
                 openFileDialog.Multiselect = false;
-                openFileDialog.InitialDirectory = SettingXml.Inst.ModelDir;
+                openFileDialog.RestoreDirectory = true;
+
+                string modelDir = SettingXml.Inst.ModelDir;
+
+                if (string.IsNullOrEmpty(modelDir) || !Directory.Exists(modelDir))
+                    modelDir = Application.StartupPath;
+
+                openFileDialog.InitialDirectory = modelDir;
+
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filePath = openFileDialog.FileName;
+
                     if (Global.Inst.InspStage.LoadModel(filePath))
                     {
                         Model curModel = Global.Inst.InspStage.CurModel;
@@ -261,13 +271,28 @@ namespace ABCsystem
                 openFileDialog.Title = "이미지 파일 선택";
                 openFileDialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.gif";
                 openFileDialog.Multiselect = false;
+                openFileDialog.RestoreDirectory = true;
+
+                // 초기 이미지 경로 결정
+                string imageDir = SettingXml.Inst.ImageDir;
+
+                if (string.IsNullOrEmpty(imageDir) || !Directory.Exists(imageDir))
+                    imageDir = Application.StartupPath;
+
+                openFileDialog.InitialDirectory = imageDir;
+
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filePath = openFileDialog.FileName;
 
                     Global.Inst.InspStage.SetImageBuffer(filePath);
                     Global.Inst.InspStage.CurModel.InspectImagePath = filePath;
-                    _cameraForm?.UpdateDisplay();
+
+                    // 마지막 이미지 폴더 저장
+                    SettingXml.Inst.ImageDir = Path.GetDirectoryName(filePath);
+                    SettingXml.Save();
+
+                    cameraForm.UpdateDisplay();
                 }
             }
             hideSubMenu();
@@ -384,14 +409,16 @@ namespace ABCsystem
 
         private void btnLog_Click(object sender, EventArgs e)
         {
-            if (_logForm != null && !_logForm.IsDisposed)
+            // 무조건 단일 인스턴스
+            _logForm = FormManager.GetForm<LogForm>();
+
+            if (_logForm.Visible)
             {
                 _logForm.BringToFront();
                 _logForm.Activate();
                 return;
             }
 
-            _logForm = new LogForm();
             _logForm.Show(this);
 
             _logConstraint = new WindowConstraintBehavior(_logForm, GetPanelBoundsScreen);
@@ -409,8 +436,9 @@ namespace ABCsystem
 
             _logForm.Bounds = new Rectangle(x, y, w, h);
 
-            _logForm.FormClosed += (s, ev) => { _logConstraint = null; _logForm = null; };
-            ShowLogForm();
+            _logForm.FormClosed -= LogForm_FormClosed;
+            _logForm.FormClosed += LogForm_FormClosed;
+
             hideSubMenu();
         }
         // LogForm 시작할 때 띄워질 수 있도록 코드

@@ -52,10 +52,10 @@
             this.picABC = new System.Windows.Forms.PictureBox();
             this.panelOperation = new System.Windows.Forms.Panel();
             this.panelChildForm = new System.Windows.Forms.Panel();
-            this.panelChlid = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.picChlid = new System.Windows.Forms.PictureBox();
             this.nightCtlChlid = new ReaLTaiizor.Controls.NightControlBox();
+            this.panelChlid = new System.Windows.Forms.Panel();
+            this.picChlid = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelSideMenu.SuspendLayout();
             this.panelViewSubmenu.SuspendLayout();
             this.panelTeachSubmenu.SuspendLayout();
@@ -416,38 +416,6 @@
             this.panelChildForm.Size = new System.Drawing.Size(700, 500);
             this.panelChildForm.TabIndex = 2;
             // 
-            // panelChlid
-            // 
-            this.panelChlid.Controls.Add(this.label1);
-            this.panelChlid.Controls.Add(this.picChlid);
-            this.panelChlid.Controls.Add(this.nightCtlChlid);
-            this.panelChlid.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelChlid.Location = new System.Drawing.Point(0, 0);
-            this.panelChlid.Name = "panelChlid";
-            this.panelChlid.Size = new System.Drawing.Size(700, 35);
-            this.panelChlid.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(43, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 28);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "ABCsystem";
-            // 
-            // picChlid
-            // 
-            this.picChlid.Image = ((System.Drawing.Image)(resources.GetObject("picChlid.Image")));
-            this.picChlid.Location = new System.Drawing.Point(6, 3);
-            this.picChlid.Name = "picChlid";
-            this.picChlid.Size = new System.Drawing.Size(31, 32);
-            this.picChlid.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picChlid.TabIndex = 2;
-            this.picChlid.TabStop = false;
-            // 
             // nightCtlChlid
             // 
             this.nightCtlChlid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -471,6 +439,38 @@
             this.nightCtlChlid.Name = "nightCtlChlid";
             this.nightCtlChlid.Size = new System.Drawing.Size(139, 31);
             this.nightCtlChlid.TabIndex = 1;
+            // 
+            // panelChlid
+            // 
+            this.panelChlid.Controls.Add(this.label1);
+            this.panelChlid.Controls.Add(this.picChlid);
+            this.panelChlid.Controls.Add(this.nightCtlChlid);
+            this.panelChlid.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelChlid.Location = new System.Drawing.Point(0, 0);
+            this.panelChlid.Name = "panelChlid";
+            this.panelChlid.Size = new System.Drawing.Size(700, 35);
+            this.panelChlid.TabIndex = 0;
+            // 
+            // picChlid
+            // 
+            this.picChlid.Image = ((System.Drawing.Image)(resources.GetObject("picChlid.Image")));
+            this.picChlid.Location = new System.Drawing.Point(6, 3);
+            this.picChlid.Name = "picChlid";
+            this.picChlid.Size = new System.Drawing.Size(31, 32);
+            this.picChlid.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picChlid.TabIndex = 2;
+            this.picChlid.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(43, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(108, 28);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "ABCsystem";
             // 
             // MainForm
             // 
@@ -523,11 +523,11 @@
         private System.Windows.Forms.Panel panelOperation;
         private System.Windows.Forms.Panel panelChildForm;
         private System.Windows.Forms.Button btnImageSave;
-        private System.Windows.Forms.Panel panelChlid;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox picChlid;
-        private ReaLTaiizor.Controls.NightControlBox nightCtlChlid;
         private System.Windows.Forms.Panel panelLogo;
         private System.Windows.Forms.PictureBox picABC;
+        private System.Windows.Forms.Panel panelChlid;
+        private ReaLTaiizor.Controls.NightControlBox nightCtlChlid;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox picChlid;
     }
 }
