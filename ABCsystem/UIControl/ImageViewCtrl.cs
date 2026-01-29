@@ -1188,12 +1188,12 @@ namespace ABCsystem.UIControl
             {
                 //_rectInfos.Clear(); //song
                 // song : filtered만 "교체"되게 (windowId + inspectType 단위)
-                var groups = filtered.GroupBy(x => new { x.windowId, x.inspectType });
+                var groups = filtered.GroupBy(x => new { x.windowUid, x.inspectType });
 
                 foreach (var g in groups)
                 {
                     _rectInfos.RemoveAll(old =>
-                        old.windowId == g.Key.windowId &&
+                        old.windowUid == g.Key.windowUid &&
                         old.inspectType == g.Key.inspectType);
 
                     _rectInfos.AddRange(g);

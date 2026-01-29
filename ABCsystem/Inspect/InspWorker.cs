@@ -186,7 +186,8 @@ namespace ABCsystem.Inspect
                         // 각 결과에 windowId 주입 (ROI 식별)
                         foreach (var di in resultArea)
                         {
-                            di.windowId = winIndex;   // 또는 win.Id 같은 게 있으면 그걸로
+                            if (string.IsNullOrEmpty(di.windowUid))
+                            di.windowUid = win.UID;   // 또는 win.Id 같은 게 있으면 그걸로
                         }
 
                         totalArea.AddRange(resultArea);
