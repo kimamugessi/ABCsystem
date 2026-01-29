@@ -1,5 +1,6 @@
 ﻿using ABCsystem.Core;
 using ABCsystem.Teach;
+using ABCsystem.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,11 +10,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace ABCsystem
 {
-    public partial class ModelTreeForm: DockContent
+    public partial class ModelTreeForm: Form
     {
         //개별 트리 노트에서 팝업 메뉴 보이기를 위한 메뉴
         private ContextMenuStrip _contextMenu;
@@ -73,7 +73,7 @@ namespace ABCsystem
         //imageViewer에 ROI 추가 기능 실행
         private void AddNewROI(InspWindowType inspWindowType)
         {
-            CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.AddRoi(inspWindowType);
@@ -101,8 +101,10 @@ namespace ABCsystem
                 TreeNode node = new TreeNode(uid);
                 rootNode.Nodes.Add(node);
             }
-
             tvModelTree.ExpandAll();
+            SLogger.Write($"CurModel null? {Global.Inst.InspStage.CurModel == null}");
+            SLogger.Write($"InspWindowList count: {Global.Inst.InspStage.CurModel?.InspWindowList?.Count}");
+        } 
         }
 
 

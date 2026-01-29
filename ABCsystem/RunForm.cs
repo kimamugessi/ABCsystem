@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+
 
 namespace ABCsystem
 {
-    public partial class RunForm: DockContent
+    public partial class RunForm: Form
     {
         public RunForm()
         {
@@ -60,6 +60,20 @@ namespace ABCsystem
             {
                 Global.Inst.InspStage.SetWorkingState(WorkingState.NONE);
             }
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        //#15_INSP_WORKER#3 Cycle 모드 설정
+        private void chkCycleMode_CheckedChanged(object sender, EventArgs e)
+        {
+            // 현재 체크 상태 확인
+            bool isChecked = chkCycleMode.Checked;
+            SettingXml.Inst.CycleMode = chkCycleMode.Checked;
+
         }
     }
 }

@@ -227,7 +227,7 @@ namespace ABCsystem.Core
         private void UpdateProperty(InspWindow inspWindow)
         {
             if(inspWindow == null) return;
-            PropertiesForm propertiesForm = MainForm.GetDockForm<PropertiesForm>();
+            PropertiesForm propertiesForm = FormManager.GetForm<PropertiesForm>();
             if (propertiesForm == null) return;
             propertiesForm.UpdateProperty(inspWindow);
         }
@@ -259,7 +259,7 @@ namespace ABCsystem.Core
             if (inspWindow == null)
                 return;
 
-            CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm == null)
                 return;
 
@@ -323,6 +323,7 @@ namespace ABCsystem.Core
         {
             _selectedInspWindow = inspWindow;
 
+            var propForm = FormManager.GetForm<PropertiesForm>();
             //song
             Global.Inst.CurTeachWindow = inspWindow;
 
@@ -353,7 +354,7 @@ namespace ABCsystem.Core
             UpdateProperty(inspWindow);
             UpdateDiagramEntity();
 
-            CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.SelectDiagramEntity(inspWindow);
@@ -373,7 +374,7 @@ namespace ABCsystem.Core
             UpdateProperty(cloneWindow);
             UpdateDiagramEntity();
 
-            CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.SelectDiagramEntity(cloneWindow);
@@ -464,7 +465,7 @@ namespace ABCsystem.Core
 
         private void DisplayGrabImage(int bufferIndex)
         {
-            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            var cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.UpdateDisplay();
@@ -473,7 +474,7 @@ namespace ABCsystem.Core
 
         public void UpdateDisplay(Bitmap bitmap)
         {
-            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            var cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.UpdateDisplay(bitmap);
@@ -493,7 +494,7 @@ namespace ABCsystem.Core
 
         public void SetImageChannel(eImageChannel channel)
         {
-            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            var cameraForm = FormManager.GetForm    <CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.SetImageChannel(channel);
@@ -525,13 +526,13 @@ namespace ABCsystem.Core
 
         public void UpdateDiagramEntity()
         {
-            CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.UpdateDiagramEntity();
             }
 
-            ModelTreeForm modelTreeForm = MainForm.GetDockForm<ModelTreeForm>();
+            ModelTreeForm modelTreeForm = FormManager.GetForm<ModelTreeForm>();
             if (modelTreeForm != null)
             {
                 modelTreeForm.UpdateDiagramEntity();
@@ -539,7 +540,7 @@ namespace ABCsystem.Core
         }
         public void RedrawMainView()
         {
-            CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.UpdateImageViewer();
@@ -548,7 +549,7 @@ namespace ABCsystem.Core
 
         public void ResetDisplay()
         {
-            CameraForm cameraForm = MainForm.GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.ResetDisplay();
@@ -823,7 +824,7 @@ namespace ABCsystem.Core
 
         public void SetWorkingState(WorkingState workingState)
         {
-            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            var cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm != null)
             {
                 cameraForm.SetWorkingState(workingState);

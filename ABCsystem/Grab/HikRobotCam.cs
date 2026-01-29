@@ -10,7 +10,7 @@ using System.Windows.Forms.PropertyGridInternal;
 using ABCsystem.Util;
 using MvCameraControl;
 using OpenCvSharp.Flann;
-using WeifenLuo.WinFormsUI.Docking;
+
 
 namespace ABCsystem.Grab
 {
