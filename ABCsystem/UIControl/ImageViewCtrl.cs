@@ -1202,7 +1202,29 @@ namespace ABCsystem.UIControl
 
             Invalidate();   //오버레이 다시 그리기 요청
         }
+        public void RemoveResultsByWindowUid(string uid)
+        {
+            if (string.IsNullOrEmpty(uid)) return;
 
+            lock (_lock)
+            {
+                _rectInfos.RemoveAll(x => x.windowUid == uid);
+            }
+            Invalidate();
+        }
+
+        //DeleteList
+        public void RemoveResultsByWindowUids(IEnumerable<string> uids)
+        {
+            if (uids == null) return;
+            var set = new HashSet<string>(uids.Where(x => !string.IsNullOrEmpty(x)));
+
+            lock (_lock)
+            {
+                _rectInfos.RemoveAll(x => set.Contains(x.windowUid));
+            }
+            Invalidate();
+        }
         public void SetInspResultCount(InspectResultCount inspectResultCount)
         {
             _inspectResultCount = inspectResultCount;

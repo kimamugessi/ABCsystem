@@ -84,9 +84,13 @@ namespace ABCsystem
                     Global.Inst.InspStage.ModifyInspWindow(e.InspWindow, e.Rect);
                     break;
                 case EntityActionType.Delete:
+                    if (e.InspWindow != null)
+                        imageViewer.RemoveResultsByWindowUid(e.InspWindow.UID); //검사 결과도 같이 삭제
                     Global.Inst.InspStage.DelInspWindow(e.InspWindow);
                     break;
                 case EntityActionType.DeleteList:
+                    if (e.InspWindowList != null)
+                        imageViewer.RemoveResultsByWindowUids(e.InspWindowList.Select(w => w.UID).ToList()); //검사 결과도 같이 삭제
                     Global.Inst.InspStage.DelInspWindow(e.InspWindowList);
                     break;
             }
