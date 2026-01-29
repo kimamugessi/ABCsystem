@@ -324,7 +324,7 @@ namespace ABCsystem.UIControl
             Font font = new Font("Arial", 10, FontStyle.Bold);
             Font hugeFont = new Font("Arial", 50, FontStyle.Bold);
 
-            // [중요] 시작할 때 무조건 빈값으로 초기화 (잔상 제거)
+            // 전체 검사 결과 상태 저장용
             string finalStatus = "";
             Color statusColor = Color.Red;
 
@@ -335,13 +335,7 @@ namespace ABCsystem.UIControl
                 PointF vP2 = GetEdgePoint(lineSet[1]);
                 PointF vP3 = GetEdgePoint(lineSet[2]);
 
-                // [단계 1] 엣지 갯수 파악
-                int edgeCount = 0;
-                if (vP1.X > 0) edgeCount++;
-                if (vP2.X > 0) edgeCount++;
-                if (vP3.X > 0) edgeCount++;
-
-                // [단계 2] 수치 계산
+                // [수치 계산]
                 float dx = vP2.X - vP1.X;
                 float targetY = vP1.Y;
                 if (Math.Abs(dx) > 0.0001f)
@@ -350,68 +344,83 @@ namespace ABCsystem.UIControl
                 }
                 float pixelLength = Math.Abs(targetY - vP3.Y);
 
-                // [단계 3] 0.00px 이거나 엣지가 너무 적으면(0~1개) 묻지도 따지지도 말고 패스
-                // 이 조건이 'NO CAP' 판정보다 위에 있어야 0.00px일 때 글자가 안 뜹니다.
-                if (pixelLength <= 0.01f || edgeCount < 2)
+                // --- 추가된 부분: 0.00px (거의 0인 경우) 무시 ---
+                if (pixelLength < 0.01f)
                 {
-                    continue;
+                    continue; // 아래 판정 및 그리기 로직을 타지 않고 다음 i로 넘어감
                 }
 
-                // [단계 4] 엣지가 딱 2개일 때만 NO CAP
-                if (edgeCount == 2)
-                {
-                    finalStatus = "NO CAP";
-                    statusColor = Color.Red;
-                    continue;
-                }
+                // [단계 1] 판정 로직 적용 (수정된 기준)
+                string currentLineStatus = "NG";
+                Color lineColor = Color.Red;
 
-                // [단계 5] 엣지가 3개일 때 정상 판정
-                bool isOk = false;
-                if (_heightLineList.Count == 1)
+                if (pixelLength >= 500)
                 {
-                    if (pixelLength >= 370 && pixelLength <= 390) isOk = true;
+                    currentLineStatus = "NO CAP";
+                    lineColor = Color.Red;
+                }
+                else if (pixelLength >= 370 && pixelLength <= 390)
+                {
+                    currentLineStatus = "OK";
+                    lineColor = Color.Lime;
                 }
                 else
                 {
-                    if (i == 0 && pixelLength >= 180 && pixelLength <= 185) isOk = true;
-                    else if (i == 1 && pixelLength >= 300 && pixelLength <= 305) isOk = true;
+                    currentLineStatus = "NG";
+                    lineColor = Color.Red;
                 }
 
-                // 전체 결과 업데이트 (NO CAP이 아닐 때만)
-                if (finalStatus != "NO CAP")
+                // [단계 2] 전체 결과 업데이트 (우선순위: NO CAP > NG > OK)
+                if (currentLineStatus == "NO CAP")
                 {
-                    if (isOk == false)
+                    finalStatus = "NO CAP";
+                    statusColor = Color.Red;
+                }
+                else if (finalStatus != "NO CAP") // 이미 NO CAP 판정이 났다면 유지
+                {
+                    if (currentLineStatus == "NG")
                     {
                         finalStatus = "NG";
                         statusColor = Color.Red;
                     }
-                    else if (finalStatus == "")
+                    else if (finalStatus == "") // 아무 판정도 없었을 때만 OK로 초기화
                     {
                         finalStatus = "OK";
                         statusColor = Color.Lime;
                     }
                 }
 
-                // 선 그리기
-                Color lineCol = isOk ? Color.Lime : Color.Red;
+                // [단계 3] 화면에 선 및 개별 수치 그리기
                 PointF sStart = VirtualToScreen(vP3);
                 PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));
 
-                using (Pen p = new Pen(lineCol, 2f))
+                using (Pen p = new Pen(lineColor, 2f))
                 {
                     g.DrawLine(p, sStart, sEnd);
-                    g.DrawString(pixelLength.ToString("F2") + " px", font, new SolidBrush(lineCol), sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
+                    g.DrawString($"{pixelLength:F2} px", font, new SolidBrush(lineColor), sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
                 }
             }
 
-            // [최종] 루프를 다 돌았는데 0.00px이거나 엣지가 없으면 finalStatus는 빈값이므로 안 뜸
-            if (finalStatus != "")
+            // [최종] 상단에 전체 판정 글씨 쓰기
+            if (!string.IsNullOrEmpty(finalStatus))
             {
-                g.DrawString(finalStatus, hugeFont, Brushes.Black, 23, 23);
-                g.DrawString(finalStatus, hugeFont, new SolidBrush(statusColor), 20, 20);
+                DrawStatusText(g, finalStatus, hugeFont, statusColor, 20, 20);
             }
         }
 
+        /// <summary>
+        /// 화면에 판정 텍스트를 그리는 별도 함수 (그림자 효과 포함)
+        /// </summary>
+        private void DrawStatusText(Graphics g, string text, Font font, Color color, float x, float y)
+        {
+            // 그림자 (검은색)
+            g.DrawString(text, font, Brushes.Black, x + 3, y + 3);
+            // 본문 글씨
+            using (SolidBrush brush = new SolidBrush(color))
+            {
+                g.DrawString(text, font, brush, x, y);
+            }
+        }
 
         // 중심점 계산 헬퍼 함수
         private PointF GetCenter(Rectangle rect)

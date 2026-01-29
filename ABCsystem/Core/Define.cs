@@ -15,6 +15,7 @@ namespace ABCsystem.Core
         InspFilter,
         InspAIModule,
         InspCount,
+        InspAlignEdge,
         InspEdge //song
     }
 
