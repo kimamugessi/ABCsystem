@@ -1,27 +1,92 @@
-﻿using System;
+﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
+using ABCsystem.Teach;
+using ABCsystem.UIControl;
+using ABCsystem.Util;
+using OpenCvSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using System.IO;
-using ABCsystem.Core;
-using OpenCvSharp;
-using ABCsystem.Algorithm;
-using ABCsystem.Teach;
-using ABCsystem.UIControl;
-using ABCsystem.Util;
 
 namespace ABCsystem
 {
     //public partial class CameraForm: Form
     public partial class CameraForm : Form
     {
+        // MainForm에서 "panel의 화면좌표 bounds"를 제공해줄 함수
+        public Func<Rectangle> GetConstraintBoundsScreen { get; set; }
+
+        private const int WM_MOVING = 0x0216;
+        private const int WM_SIZING = 0x0214;
+
         eImageChannel _currentImageChannel = eImageChannel.Gray;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT
+        {
+            public int Left, Top, Right, Bottom;
+
+            public Rectangle ToRectangle()
+            {
+                return Rectangle.FromLTRB(Left, Top, Right, Bottom);
+            }
+
+            public static RECT FromRectangle(Rectangle r)
+            {
+                return new RECT { Left = r.Left, Top = r.Top, Right = r.Right, Bottom = r.Bottom };
+            }
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if ((m.Msg == WM_MOVING || m.Msg == WM_SIZING) && GetConstraintBoundsScreen != null)
+            {
+                // 현재 움직이려는(혹은 리사이즈하려는) 사각형
+                RECT movingRect = (RECT)Marshal.PtrToStructure(m.LParam, typeof(RECT));
+                Rectangle r = movingRect.ToRectangle();
+
+                // 제한 영역(panelChildForm)의 화면좌표 사각형
+                Rectangle bounds = GetConstraintBoundsScreen();
+
+                // 창이 panel 영역 밖으로 못 나가도록 클램프
+                Rectangle clamped = ClampToBounds(r, bounds);
+
+                // 다시 RECT로 써넣기
+                RECT outRect = RECT.FromRectangle(clamped);
+                Marshal.StructureToPtr(outRect, m.LParam, true);
+            }
+
+            base.WndProc(ref m);
+        }
+
+        private static Rectangle ClampToBounds(Rectangle window, Rectangle bounds)
+        {
+            int w = window.Width;
+            int h = window.Height;
+
+            // 최소한 창 크기가 bounds보다 크면, 좌상단에 붙이기 (어쩔 수 없음)
+            if (w > bounds.Width) w = bounds.Width;
+            if (h > bounds.Height) h = bounds.Height;
+
+            int x = window.X;
+            int y = window.Y;
+
+            if (x < bounds.Left) x = bounds.Left;
+            if (y < bounds.Top) y = bounds.Top;
+            if (x + w > bounds.Right) x = bounds.Right - w;
+            if (y + h > bounds.Bottom) y = bounds.Bottom - h;
+
+            return new Rectangle(x, y, w, h);
+        }
+
         public CameraForm()
         {
             InitializeComponent();

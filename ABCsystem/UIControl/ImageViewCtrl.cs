@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
+using ABCsystem.Teach;
+using ABCsystem.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,9 +14,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABCsystem.Algorithm;
-using ABCsystem.Core;
-using ABCsystem.Teach;
 
 namespace ABCsystem.UIControl
 {
@@ -309,7 +310,7 @@ namespace ABCsystem.UIControl
                         }
                     }
 
-                    g.DrawRectangle(pen, screenRect);
+                    g.DrawRectangle(pen, screenRect);                    
                 }
 
                 //선택된 ROI가 있다면, 리사이즈 핸들 그리기
@@ -400,12 +401,14 @@ namespace ABCsystem.UIControl
         }
         private void DrawRectInfo(Graphics g)
         {
+            
             if (_rectInfos == null || _rectInfos.Count <= 0)
                 return;
 
             // 이미지 좌표 → 화면 좌표 변환 후 사각형 그리기
             foreach (DrawInspectInfo rectInfo in _rectInfos)
             {
+                
                 Color lineColor = Color.LightCoral;
                 if (rectInfo.decision == DecisionType.Defect)
                     lineColor = Color.Red;

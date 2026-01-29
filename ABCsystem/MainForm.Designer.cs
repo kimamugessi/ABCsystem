@@ -28,588 +28,506 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.nightControlBox1 = new ReaLTaiizor.Controls.NightControlBox();
+            this.panelSideMenu = new System.Windows.Forms.Panel();
+            this.btnHelp = new System.Windows.Forms.Button();
+            this.btnSetting = new System.Windows.Forms.Button();
+            this.panelViewSubmenu = new System.Windows.Forms.Panel();
+            this.btnLog = new System.Windows.Forms.Button();
+            this.btnCamera = new System.Windows.Forms.Button();
+            this.btnView = new System.Windows.Forms.Button();
+            this.panelTeachSubmenu = new System.Windows.Forms.Panel();
+            this.btnROI = new System.Windows.Forms.Button();
+            this.btnTeach = new System.Windows.Forms.Button();
+            this.btnOperation = new System.Windows.Forms.Button();
+            this.panelFileSubmenu = new System.Windows.Forms.Panel();
+            this.btnImageSave = new System.Windows.Forms.Button();
+            this.btnImageOpen = new System.Windows.Forms.Button();
+            this.btnModelSaveAs = new System.Windows.Forms.Button();
+            this.btnModelSave = new System.Windows.Forms.Button();
+            this.btnModelOpen = new System.Windows.Forms.Button();
+            this.btnModelNew = new System.Windows.Forms.Button();
+            this.btnFile = new System.Windows.Forms.Button();
+            this.panelLogo = new System.Windows.Forms.Panel();
+            this.picABC = new System.Windows.Forms.PictureBox();
+            this.panelOperation = new System.Windows.Forms.Panel();
+            this.panelChildForm = new System.Windows.Forms.Panel();
+            this.panelChlid = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.menuContainer = new System.Windows.Forms.FlowLayoutPanel();
-            this.menuTransition = new System.Windows.Forms.Timer(this.components);
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.panel12 = new System.Windows.Forms.Panel();
-            this.panel13 = new System.Windows.Forms.Panel();
-            this.button10 = new System.Windows.Forms.Button();
-            this.Inspection = new System.Windows.Forms.Button();
-            this.button12 = new System.Windows.Forms.Button();
-            this.panel14 = new System.Windows.Forms.Panel();
-            this.panel15 = new System.Windows.Forms.Panel();
-            this.panel16 = new System.Windows.Forms.Panel();
-            this.button13 = new System.Windows.Forms.Button();
-            this.button14 = new System.Windows.Forms.Button();
-            this.button15 = new System.Windows.Forms.Button();
-            this.panel17 = new System.Windows.Forms.Panel();
-            this.panel18 = new System.Windows.Forms.Panel();
-            this.panel19 = new System.Windows.Forms.Panel();
-            this.button16 = new System.Windows.Forms.Button();
-            this.button17 = new System.Windows.Forms.Button();
-            this.button18 = new System.Windows.Forms.Button();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panel2.SuspendLayout();
-            this.panel5.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.panel8.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel10.SuspendLayout();
-            this.panel11.SuspendLayout();
-            this.panel12.SuspendLayout();
-            this.panel13.SuspendLayout();
-            this.panel14.SuspendLayout();
-            this.panel15.SuspendLayout();
-            this.panel16.SuspendLayout();
-            this.panel17.SuspendLayout();
-            this.panel18.SuspendLayout();
-            this.panel19.SuspendLayout();
+            this.picChlid = new System.Windows.Forms.PictureBox();
+            this.nightCtlChlid = new ReaLTaiizor.Controls.NightControlBox();
+            this.panelSideMenu.SuspendLayout();
+            this.panelViewSubmenu.SuspendLayout();
+            this.panelTeachSubmenu.SuspendLayout();
+            this.panelFileSubmenu.SuspendLayout();
+            this.panelLogo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picABC)).BeginInit();
+            this.panelChildForm.SuspendLayout();
+            this.panelChlid.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picChlid)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel1
+            // panelSideMenu
             // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.nightControlBox1);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(989, 46);
-            this.panel1.TabIndex = 0;
+            this.panelSideMenu.AutoScroll = true;
+            this.panelSideMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(11)))), ((int)(((byte)(7)))), ((int)(((byte)(17)))));
+            this.panelSideMenu.Controls.Add(this.btnHelp);
+            this.panelSideMenu.Controls.Add(this.btnSetting);
+            this.panelSideMenu.Controls.Add(this.panelViewSubmenu);
+            this.panelSideMenu.Controls.Add(this.btnView);
+            this.panelSideMenu.Controls.Add(this.panelTeachSubmenu);
+            this.panelSideMenu.Controls.Add(this.btnTeach);
+            this.panelSideMenu.Controls.Add(this.btnOperation);
+            this.panelSideMenu.Controls.Add(this.panelFileSubmenu);
+            this.panelSideMenu.Controls.Add(this.btnFile);
+            this.panelSideMenu.Controls.Add(this.panelLogo);
+            this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
+            this.panelSideMenu.Name = "panelSideMenu";
+            this.panelSideMenu.Size = new System.Drawing.Size(250, 600);
+            this.panelSideMenu.TabIndex = 0;
             // 
-            // nightControlBox1
+            // btnHelp
             // 
-            this.nightControlBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.nightControlBox1.BackColor = System.Drawing.Color.Transparent;
-            this.nightControlBox1.CloseHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(199)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
-            this.nightControlBox1.CloseHoverForeColor = System.Drawing.Color.White;
-            this.nightControlBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.nightControlBox1.DefaultLocation = true;
-            this.nightControlBox1.DisableMaximizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(105)))), ((int)(((byte)(105)))));
-            this.nightControlBox1.DisableMinimizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(105)))), ((int)(((byte)(105)))));
-            this.nightControlBox1.EnableCloseColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.nightControlBox1.EnableMaximizeButton = true;
-            this.nightControlBox1.EnableMaximizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.nightControlBox1.EnableMinimizeButton = true;
-            this.nightControlBox1.EnableMinimizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
-            this.nightControlBox1.Location = new System.Drawing.Point(850, 0);
-            this.nightControlBox1.MaximizeHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.nightControlBox1.MaximizeHoverForeColor = System.Drawing.Color.White;
-            this.nightControlBox1.MinimizeHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.nightControlBox1.MinimizeHoverForeColor = System.Drawing.Color.White;
-            this.nightControlBox1.Name = "nightControlBox1";
-            this.nightControlBox1.Size = new System.Drawing.Size(139, 31);
-            this.nightControlBox1.TabIndex = 1;
+            this.btnHelp.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnHelp.FlatAppearance.BorderSize = 0;
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnHelp.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnHelp.Location = new System.Drawing.Point(0, 800);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnHelp.Size = new System.Drawing.Size(224, 50);
+            this.btnHelp.TabIndex = 9;
+            this.btnHelp.Text = "Help";
+            this.btnHelp.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnHelp.UseVisualStyleBackColor = true;
+            // 
+            // btnSetting
+            // 
+            this.btnSetting.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnSetting.FlatAppearance.BorderSize = 0;
+            this.btnSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSetting.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSetting.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnSetting.Location = new System.Drawing.Point(0, 750);
+            this.btnSetting.Name = "btnSetting";
+            this.btnSetting.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnSetting.Size = new System.Drawing.Size(224, 50);
+            this.btnSetting.TabIndex = 8;
+            this.btnSetting.Text = "Setting";
+            this.btnSetting.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSetting.UseVisualStyleBackColor = true;
+            this.btnSetting.Click += new System.EventHandler(this.btnSetting_Click);
+            // 
+            // panelViewSubmenu
+            // 
+            this.panelViewSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(32)))), ((int)(((byte)(39)))));
+            this.panelViewSubmenu.Controls.Add(this.btnLog);
+            this.panelViewSubmenu.Controls.Add(this.btnCamera);
+            this.panelViewSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelViewSubmenu.Location = new System.Drawing.Point(0, 650);
+            this.panelViewSubmenu.Name = "panelViewSubmenu";
+            this.panelViewSubmenu.Size = new System.Drawing.Size(224, 100);
+            this.panelViewSubmenu.TabIndex = 7;
+            // 
+            // btnLog
+            // 
+            this.btnLog.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnLog.FlatAppearance.BorderSize = 0;
+            this.btnLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLog.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLog.ForeColor = System.Drawing.Color.LightGray;
+            this.btnLog.Location = new System.Drawing.Point(0, 50);
+            this.btnLog.Name = "btnLog";
+            this.btnLog.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnLog.Size = new System.Drawing.Size(224, 50);
+            this.btnLog.TabIndex = 1;
+            this.btnLog.Text = "Log";
+            this.btnLog.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnLog.UseVisualStyleBackColor = true;
+            this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
+            // 
+            // btnCamera
+            // 
+            this.btnCamera.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnCamera.FlatAppearance.BorderSize = 0;
+            this.btnCamera.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCamera.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCamera.ForeColor = System.Drawing.Color.LightGray;
+            this.btnCamera.Location = new System.Drawing.Point(0, 0);
+            this.btnCamera.Name = "btnCamera";
+            this.btnCamera.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnCamera.Size = new System.Drawing.Size(224, 50);
+            this.btnCamera.TabIndex = 0;
+            this.btnCamera.Text = "Camera Viewer";
+            this.btnCamera.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCamera.UseVisualStyleBackColor = true;
+            this.btnCamera.Click += new System.EventHandler(this.btnCamera_Click);
+            // 
+            // btnView
+            // 
+            this.btnView.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnView.FlatAppearance.BorderSize = 0;
+            this.btnView.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnView.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnView.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnView.Location = new System.Drawing.Point(0, 600);
+            this.btnView.Name = "btnView";
+            this.btnView.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnView.Size = new System.Drawing.Size(224, 50);
+            this.btnView.TabIndex = 6;
+            this.btnView.Text = "View";
+            this.btnView.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnView.UseVisualStyleBackColor = true;
+            this.btnView.Click += new System.EventHandler(this.btnView_Click);
+            // 
+            // panelTeachSubmenu
+            // 
+            this.panelTeachSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(32)))), ((int)(((byte)(39)))));
+            this.panelTeachSubmenu.Controls.Add(this.btnROI);
+            this.panelTeachSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTeachSubmenu.Location = new System.Drawing.Point(0, 550);
+            this.panelTeachSubmenu.Name = "panelTeachSubmenu";
+            this.panelTeachSubmenu.Size = new System.Drawing.Size(224, 50);
+            this.panelTeachSubmenu.TabIndex = 5;
+            // 
+            // btnROI
+            // 
+            this.btnROI.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnROI.FlatAppearance.BorderSize = 0;
+            this.btnROI.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnROI.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnROI.ForeColor = System.Drawing.Color.LightGray;
+            this.btnROI.Location = new System.Drawing.Point(0, 0);
+            this.btnROI.Name = "btnROI";
+            this.btnROI.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnROI.Size = new System.Drawing.Size(224, 50);
+            this.btnROI.TabIndex = 0;
+            this.btnROI.Text = "ROI";
+            this.btnROI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnROI.UseVisualStyleBackColor = true;
+            this.btnROI.Click += new System.EventHandler(this.btnROI_Click);
+            // 
+            // btnTeach
+            // 
+            this.btnTeach.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnTeach.FlatAppearance.BorderSize = 0;
+            this.btnTeach.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTeach.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTeach.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnTeach.Location = new System.Drawing.Point(0, 500);
+            this.btnTeach.Name = "btnTeach";
+            this.btnTeach.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnTeach.Size = new System.Drawing.Size(224, 50);
+            this.btnTeach.TabIndex = 4;
+            this.btnTeach.Text = "Teach";
+            this.btnTeach.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnTeach.UseVisualStyleBackColor = true;
+            this.btnTeach.Click += new System.EventHandler(this.btnTeach_Click);
+            // 
+            // btnOperation
+            // 
+            this.btnOperation.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnOperation.FlatAppearance.BorderSize = 0;
+            this.btnOperation.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOperation.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOperation.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnOperation.Location = new System.Drawing.Point(0, 450);
+            this.btnOperation.Name = "btnOperation";
+            this.btnOperation.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnOperation.Size = new System.Drawing.Size(224, 50);
+            this.btnOperation.TabIndex = 3;
+            this.btnOperation.Text = "Operation";
+            this.btnOperation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnOperation.UseVisualStyleBackColor = true;
+            this.btnOperation.Click += new System.EventHandler(this.btnOperation_Click);
+            // 
+            // panelFileSubmenu
+            // 
+            this.panelFileSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(32)))), ((int)(((byte)(39)))));
+            this.panelFileSubmenu.Controls.Add(this.btnImageSave);
+            this.panelFileSubmenu.Controls.Add(this.btnImageOpen);
+            this.panelFileSubmenu.Controls.Add(this.btnModelSaveAs);
+            this.panelFileSubmenu.Controls.Add(this.btnModelSave);
+            this.panelFileSubmenu.Controls.Add(this.btnModelOpen);
+            this.panelFileSubmenu.Controls.Add(this.btnModelNew);
+            this.panelFileSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelFileSubmenu.Location = new System.Drawing.Point(0, 150);
+            this.panelFileSubmenu.Name = "panelFileSubmenu";
+            this.panelFileSubmenu.Size = new System.Drawing.Size(224, 300);
+            this.panelFileSubmenu.TabIndex = 2;
+            // 
+            // btnImageSave
+            // 
+            this.btnImageSave.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnImageSave.FlatAppearance.BorderSize = 0;
+            this.btnImageSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImageSave.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImageSave.ForeColor = System.Drawing.Color.LightGray;
+            this.btnImageSave.Location = new System.Drawing.Point(0, 250);
+            this.btnImageSave.Name = "btnImageSave";
+            this.btnImageSave.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnImageSave.Size = new System.Drawing.Size(224, 50);
+            this.btnImageSave.TabIndex = 5;
+            this.btnImageSave.Text = "Image Save";
+            this.btnImageSave.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImageSave.UseVisualStyleBackColor = true;
+            this.btnImageSave.Click += new System.EventHandler(this.btnImageSave_Click);
+            // 
+            // btnImageOpen
+            // 
+            this.btnImageOpen.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnImageOpen.FlatAppearance.BorderSize = 0;
+            this.btnImageOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnImageOpen.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnImageOpen.ForeColor = System.Drawing.Color.LightGray;
+            this.btnImageOpen.Location = new System.Drawing.Point(0, 200);
+            this.btnImageOpen.Name = "btnImageOpen";
+            this.btnImageOpen.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnImageOpen.Size = new System.Drawing.Size(224, 50);
+            this.btnImageOpen.TabIndex = 4;
+            this.btnImageOpen.Text = "Image Open";
+            this.btnImageOpen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnImageOpen.UseVisualStyleBackColor = true;
+            this.btnImageOpen.Click += new System.EventHandler(this.btnImageOpen_Click);
+            // 
+            // btnModelSaveAs
+            // 
+            this.btnModelSaveAs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnModelSaveAs.FlatAppearance.BorderSize = 0;
+            this.btnModelSaveAs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnModelSaveAs.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnModelSaveAs.ForeColor = System.Drawing.Color.LightGray;
+            this.btnModelSaveAs.Location = new System.Drawing.Point(0, 150);
+            this.btnModelSaveAs.Name = "btnModelSaveAs";
+            this.btnModelSaveAs.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnModelSaveAs.Size = new System.Drawing.Size(224, 50);
+            this.btnModelSaveAs.TabIndex = 3;
+            this.btnModelSaveAs.Text = "Model Save As";
+            this.btnModelSaveAs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnModelSaveAs.UseVisualStyleBackColor = true;
+            this.btnModelSaveAs.Click += new System.EventHandler(this.btnModelSaveAs_Click);
+            // 
+            // btnModelSave
+            // 
+            this.btnModelSave.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnModelSave.FlatAppearance.BorderSize = 0;
+            this.btnModelSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnModelSave.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnModelSave.ForeColor = System.Drawing.Color.LightGray;
+            this.btnModelSave.Location = new System.Drawing.Point(0, 100);
+            this.btnModelSave.Name = "btnModelSave";
+            this.btnModelSave.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnModelSave.Size = new System.Drawing.Size(224, 50);
+            this.btnModelSave.TabIndex = 2;
+            this.btnModelSave.Text = "Model Save";
+            this.btnModelSave.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnModelSave.UseVisualStyleBackColor = true;
+            this.btnModelSave.Click += new System.EventHandler(this.btnModelSave_Click);
+            // 
+            // btnModelOpen
+            // 
+            this.btnModelOpen.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnModelOpen.FlatAppearance.BorderSize = 0;
+            this.btnModelOpen.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnModelOpen.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnModelOpen.ForeColor = System.Drawing.Color.LightGray;
+            this.btnModelOpen.Location = new System.Drawing.Point(0, 50);
+            this.btnModelOpen.Name = "btnModelOpen";
+            this.btnModelOpen.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnModelOpen.Size = new System.Drawing.Size(224, 50);
+            this.btnModelOpen.TabIndex = 1;
+            this.btnModelOpen.Text = "Model Open";
+            this.btnModelOpen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnModelOpen.UseVisualStyleBackColor = true;
+            this.btnModelOpen.Click += new System.EventHandler(this.btnModelOpen_Click);
+            // 
+            // btnModelNew
+            // 
+            this.btnModelNew.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnModelNew.FlatAppearance.BorderSize = 0;
+            this.btnModelNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnModelNew.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnModelNew.ForeColor = System.Drawing.Color.LightGray;
+            this.btnModelNew.Location = new System.Drawing.Point(0, 0);
+            this.btnModelNew.Name = "btnModelNew";
+            this.btnModelNew.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnModelNew.Size = new System.Drawing.Size(224, 50);
+            this.btnModelNew.TabIndex = 0;
+            this.btnModelNew.Text = "Model New";
+            this.btnModelNew.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnModelNew.UseVisualStyleBackColor = true;
+            this.btnModelNew.Click += new System.EventHandler(this.btnModelNew_Click);
+            // 
+            // btnFile
+            // 
+            this.btnFile.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnFile.FlatAppearance.BorderSize = 0;
+            this.btnFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFile.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFile.ForeColor = System.Drawing.Color.Gainsboro;
+            this.btnFile.Location = new System.Drawing.Point(0, 100);
+            this.btnFile.Name = "btnFile";
+            this.btnFile.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            this.btnFile.Size = new System.Drawing.Size(224, 50);
+            this.btnFile.TabIndex = 1;
+            this.btnFile.Text = "File";
+            this.btnFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnFile.UseVisualStyleBackColor = true;
+            this.btnFile.Click += new System.EventHandler(this.btnFile_Click);
+            // 
+            // panelLogo
+            // 
+            this.panelLogo.Controls.Add(this.picABC);
+            this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelLogo.Location = new System.Drawing.Point(0, 0);
+            this.panelLogo.Name = "panelLogo";
+            this.panelLogo.Size = new System.Drawing.Size(224, 100);
+            this.panelLogo.TabIndex = 0;
+            // 
+            // picABC
+            // 
+            this.picABC.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picABC.Image = ((System.Drawing.Image)(resources.GetObject("picABC.Image")));
+            this.picABC.Location = new System.Drawing.Point(0, 0);
+            this.picABC.Name = "picABC";
+            this.picABC.Size = new System.Drawing.Size(224, 100);
+            this.picABC.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picABC.TabIndex = 0;
+            this.picABC.TabStop = false;
+            // 
+            // panelOperation
+            // 
+            this.panelOperation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(21)))), ((int)(((byte)(32)))));
+            this.panelOperation.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelOperation.Location = new System.Drawing.Point(250, 500);
+            this.panelOperation.Name = "panelOperation";
+            this.panelOperation.Size = new System.Drawing.Size(700, 100);
+            this.panelOperation.TabIndex = 1;
+            // 
+            // panelChildForm
+            // 
+            this.panelChildForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(30)))), ((int)(((byte)(45)))));
+            this.panelChildForm.Controls.Add(this.panelChlid);
+            this.panelChildForm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelChildForm.Location = new System.Drawing.Point(250, 0);
+            this.panelChildForm.Name = "panelChildForm";
+            this.panelChildForm.Size = new System.Drawing.Size(700, 500);
+            this.panelChildForm.TabIndex = 2;
+            // 
+            // panelChlid
+            // 
+            this.panelChlid.Controls.Add(this.label1);
+            this.panelChlid.Controls.Add(this.picChlid);
+            this.panelChlid.Controls.Add(this.nightCtlChlid);
+            this.panelChlid.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelChlid.Location = new System.Drawing.Point(0, 0);
+            this.panelChlid.Name = "panelChlid";
+            this.panelChlid.Size = new System.Drawing.Size(700, 35);
+            this.panelChlid.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(62, 9);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(43, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(108, 28);
             this.label1.TabIndex = 1;
             this.label1.Text = "ABCsystem";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(56, 43);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 46);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(304, 602);
-            this.flowLayoutPanel1.TabIndex = 1;
-            // 
-            // menuContainer
-            // 
-            this.menuContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.menuContainer.Location = new System.Drawing.Point(333, 231);
-            this.menuContainer.Name = "menuContainer";
-            this.menuContainer.Size = new System.Drawing.Size(301, 301);
-            this.menuContainer.TabIndex = 6;
-            // 
-            // menuTransition
-            // 
-            this.menuTransition.Tick += new System.EventHandler(this.menuTransition_Tick);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.panel5);
-            this.panel2.Controls.Add(this.button5);
-            this.panel2.Location = new System.Drawing.Point(668, 295);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(301, 85);
-            this.panel2.TabIndex = 10;
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.panel6);
-            this.panel5.Controls.Add(this.button4);
-            this.panel5.Location = new System.Drawing.Point(0, 3);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(301, 85);
-            this.panel5.TabIndex = 9;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.button1);
-            this.panel6.Location = new System.Drawing.Point(3, 88);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(301, 85);
-            this.panel6.TabIndex = 10;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(-7, -12);
-            this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button1.Size = new System.Drawing.Size(325, 110);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "        Inspection";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.UseVisualStyleBackColor = false;
-            // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.White;
-            this.button4.Image = ((System.Drawing.Image)(resources.GetObject("button4.Image")));
-            this.button4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.Location = new System.Drawing.Point(-7, -20);
-            this.button4.Name = "button4";
-            this.button4.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button4.Size = new System.Drawing.Size(325, 115);
-            this.button4.TabIndex = 3;
-            this.button4.Text = "        Inspection";
-            this.button4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button4.UseVisualStyleBackColor = false;
-            // 
-            // button5
-            // 
-            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.ForeColor = System.Drawing.Color.White;
-            this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
-            this.button5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button5.Location = new System.Drawing.Point(-7, -12);
-            this.button5.Name = "button5";
-            this.button5.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button5.Size = new System.Drawing.Size(325, 110);
-            this.button5.TabIndex = 3;
-            this.button5.Text = "        Inspection";
-            this.button5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button5.UseVisualStyleBackColor = false;
-            // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.panel9);
-            this.panel8.Controls.Add(this.button9);
-            this.panel8.Location = new System.Drawing.Point(333, 424);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(301, 85);
-            this.panel8.TabIndex = 10;
-            // 
-            // panel9
-            // 
-            this.panel9.Controls.Add(this.panel10);
-            this.panel9.Controls.Add(this.button8);
-            this.panel9.Location = new System.Drawing.Point(0, 3);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(301, 85);
-            this.panel9.TabIndex = 9;
-            // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.button7);
-            this.panel10.Location = new System.Drawing.Point(3, 88);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(301, 85);
-            this.panel10.TabIndex = 10;
-            // 
-            // button7
-            // 
-            this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button7.ForeColor = System.Drawing.Color.White;
-            this.button7.Image = ((System.Drawing.Image)(resources.GetObject("button7.Image")));
-            this.button7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button7.Location = new System.Drawing.Point(-7, -12);
-            this.button7.Name = "button7";
-            this.button7.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button7.Size = new System.Drawing.Size(325, 110);
-            this.button7.TabIndex = 3;
-            this.button7.Text = "        Inspection";
-            this.button7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button7.UseVisualStyleBackColor = false;
-            // 
-            // button8
-            // 
-            this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button8.ForeColor = System.Drawing.Color.White;
-            this.button8.Image = ((System.Drawing.Image)(resources.GetObject("button8.Image")));
-            this.button8.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button8.Location = new System.Drawing.Point(-7, -20);
-            this.button8.Name = "button8";
-            this.button8.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button8.Size = new System.Drawing.Size(325, 115);
-            this.button8.TabIndex = 3;
-            this.button8.Text = "        Inspection";
-            this.button8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button8.UseVisualStyleBackColor = false;
-            // 
-            // button9
-            // 
-            this.button9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button9.ForeColor = System.Drawing.Color.White;
-            this.button9.Image = ((System.Drawing.Image)(resources.GetObject("button9.Image")));
-            this.button9.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button9.Location = new System.Drawing.Point(-7, -12);
-            this.button9.Name = "button9";
-            this.button9.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button9.Size = new System.Drawing.Size(325, 110);
-            this.button9.TabIndex = 3;
-            this.button9.Text = "        Inspection";
-            this.button9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button9.UseVisualStyleBackColor = false;
-            // 
-            // panel11
-            // 
-            this.panel11.Controls.Add(this.panel12);
-            this.panel11.Controls.Add(this.button12);
-            this.panel11.Location = new System.Drawing.Point(333, 245);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(301, 85);
-            this.panel11.TabIndex = 10;
-            // 
-            // panel12
-            // 
-            this.panel12.Controls.Add(this.panel13);
-            this.panel12.Controls.Add(this.Inspection);
-            this.panel12.Location = new System.Drawing.Point(0, 3);
-            this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(301, 85);
-            this.panel12.TabIndex = 9;
-            // 
-            // panel13
-            // 
-            this.panel13.Controls.Add(this.button10);
-            this.panel13.Location = new System.Drawing.Point(3, 88);
-            this.panel13.Name = "panel13";
-            this.panel13.Size = new System.Drawing.Size(301, 85);
-            this.panel13.TabIndex = 10;
-            // 
-            // button10
-            // 
-            this.button10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button10.ForeColor = System.Drawing.Color.White;
-            this.button10.Image = ((System.Drawing.Image)(resources.GetObject("button10.Image")));
-            this.button10.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button10.Location = new System.Drawing.Point(-7, -12);
-            this.button10.Name = "button10";
-            this.button10.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button10.Size = new System.Drawing.Size(325, 110);
-            this.button10.TabIndex = 3;
-            this.button10.Text = "        Inspection";
-            this.button10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button10.UseVisualStyleBackColor = false;
-            // 
-            // Inspection
-            // 
-            this.Inspection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.Inspection.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Inspection.ForeColor = System.Drawing.Color.White;
-            this.Inspection.Image = ((System.Drawing.Image)(resources.GetObject("Inspection.Image")));
-            this.Inspection.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Inspection.Location = new System.Drawing.Point(-7, -20);
-            this.Inspection.Name = "Inspection";
-            this.Inspection.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.Inspection.Size = new System.Drawing.Size(325, 115);
-            this.Inspection.TabIndex = 3;
-            this.Inspection.Text = "        Inspection";
-            this.Inspection.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Inspection.UseVisualStyleBackColor = false;
-            this.Inspection.Click += new System.EventHandler(this.Inspection_Click);
-            // 
-            // button12
-            // 
-            this.button12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button12.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button12.ForeColor = System.Drawing.Color.White;
-            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button12.Location = new System.Drawing.Point(-7, -12);
-            this.button12.Name = "button12";
-            this.button12.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button12.Size = new System.Drawing.Size(325, 110);
-            this.button12.TabIndex = 3;
-            this.button12.Text = "        Inspection";
-            this.button12.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button12.UseVisualStyleBackColor = false;
-            // 
-            // panel14
-            // 
-            this.panel14.Controls.Add(this.panel15);
-            this.panel14.Controls.Add(this.button15);
-            this.panel14.Location = new System.Drawing.Point(333, 336);
-            this.panel14.Name = "panel14";
-            this.panel14.Size = new System.Drawing.Size(301, 85);
-            this.panel14.TabIndex = 11;
-            // 
-            // panel15
-            // 
-            this.panel15.Controls.Add(this.panel16);
-            this.panel15.Controls.Add(this.button14);
-            this.panel15.Location = new System.Drawing.Point(0, 3);
-            this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(301, 85);
-            this.panel15.TabIndex = 9;
-            // 
-            // panel16
-            // 
-            this.panel16.Controls.Add(this.button13);
-            this.panel16.Location = new System.Drawing.Point(3, 88);
-            this.panel16.Name = "panel16";
-            this.panel16.Size = new System.Drawing.Size(301, 85);
-            this.panel16.TabIndex = 10;
-            // 
-            // button13
-            // 
-            this.button13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button13.ForeColor = System.Drawing.Color.White;
-            this.button13.Image = ((System.Drawing.Image)(resources.GetObject("button13.Image")));
-            this.button13.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button13.Location = new System.Drawing.Point(-7, -12);
-            this.button13.Name = "button13";
-            this.button13.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button13.Size = new System.Drawing.Size(325, 110);
-            this.button13.TabIndex = 3;
-            this.button13.Text = "        Inspection";
-            this.button13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button13.UseVisualStyleBackColor = false;
-            // 
-            // button14
-            // 
-            this.button14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button14.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button14.ForeColor = System.Drawing.Color.White;
-            this.button14.Image = ((System.Drawing.Image)(resources.GetObject("button14.Image")));
-            this.button14.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button14.Location = new System.Drawing.Point(-7, -20);
-            this.button14.Name = "button14";
-            this.button14.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button14.Size = new System.Drawing.Size(325, 115);
-            this.button14.TabIndex = 3;
-            this.button14.Text = "        Inspection";
-            this.button14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button14.UseVisualStyleBackColor = false;
-            // 
-            // button15
-            // 
-            this.button15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button15.ForeColor = System.Drawing.Color.White;
-            this.button15.Image = ((System.Drawing.Image)(resources.GetObject("button15.Image")));
-            this.button15.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button15.Location = new System.Drawing.Point(-7, -12);
-            this.button15.Name = "button15";
-            this.button15.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button15.Size = new System.Drawing.Size(325, 110);
-            this.button15.TabIndex = 3;
-            this.button15.Text = "        Inspection";
-            this.button15.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button15.UseVisualStyleBackColor = false;
-            // 
-            // panel17
-            // 
-            this.panel17.Controls.Add(this.panel18);
-            this.panel17.Controls.Add(this.button18);
-            this.panel17.Location = new System.Drawing.Point(646, 137);
-            this.panel17.Name = "panel17";
-            this.panel17.Size = new System.Drawing.Size(301, 85);
-            this.panel17.TabIndex = 12;
-            // 
-            // panel18
-            // 
-            this.panel18.Controls.Add(this.panel19);
-            this.panel18.Controls.Add(this.button17);
-            this.panel18.Location = new System.Drawing.Point(0, 3);
-            this.panel18.Name = "panel18";
-            this.panel18.Size = new System.Drawing.Size(301, 85);
-            this.panel18.TabIndex = 9;
-            // 
-            // panel19
-            // 
-            this.panel19.Controls.Add(this.button16);
-            this.panel19.Location = new System.Drawing.Point(3, 88);
-            this.panel19.Name = "panel19";
-            this.panel19.Size = new System.Drawing.Size(301, 85);
-            this.panel19.TabIndex = 10;
-            // 
-            // button16
-            // 
-            this.button16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button16.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button16.ForeColor = System.Drawing.Color.White;
-            this.button16.Image = ((System.Drawing.Image)(resources.GetObject("button16.Image")));
-            this.button16.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button16.Location = new System.Drawing.Point(-7, -12);
-            this.button16.Name = "button16";
-            this.button16.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button16.Size = new System.Drawing.Size(325, 110);
-            this.button16.TabIndex = 3;
-            this.button16.Text = "        Inspection";
-            this.button16.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button16.UseVisualStyleBackColor = false;
-            // 
-            // button17
-            // 
-            this.button17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button17.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button17.ForeColor = System.Drawing.Color.White;
-            this.button17.Image = ((System.Drawing.Image)(resources.GetObject("button17.Image")));
-            this.button17.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button17.Location = new System.Drawing.Point(-7, -20);
-            this.button17.Name = "button17";
-            this.button17.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button17.Size = new System.Drawing.Size(325, 115);
-            this.button17.TabIndex = 3;
-            this.button17.Text = "        Inspection";
-            this.button17.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button17.UseVisualStyleBackColor = false;
-            // 
-            // button18
-            // 
-            this.button18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(24)))), ((int)(((byte)(29)))));
-            this.button18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button18.ForeColor = System.Drawing.Color.White;
-            this.button18.Image = ((System.Drawing.Image)(resources.GetObject("button18.Image")));
-            this.button18.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button18.Location = new System.Drawing.Point(-7, -12);
-            this.button18.Name = "button18";
-            this.button18.Padding = new System.Windows.Forms.Padding(25, 0, 0, 0);
-            this.button18.Size = new System.Drawing.Size(325, 110);
-            this.button18.TabIndex = 3;
-            this.button18.Text = "        Inspection";
-            this.button18.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button18.UseVisualStyleBackColor = false;
+            // picChlid
+            // 
+            this.picChlid.Image = ((System.Drawing.Image)(resources.GetObject("picChlid.Image")));
+            this.picChlid.Location = new System.Drawing.Point(6, 3);
+            this.picChlid.Name = "picChlid";
+            this.picChlid.Size = new System.Drawing.Size(31, 32);
+            this.picChlid.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picChlid.TabIndex = 2;
+            this.picChlid.TabStop = false;
+            // 
+            // nightCtlChlid
+            // 
+            this.nightCtlChlid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.nightCtlChlid.BackColor = System.Drawing.Color.Transparent;
+            this.nightCtlChlid.CloseHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(199)))), ((int)(((byte)(80)))), ((int)(((byte)(80)))));
+            this.nightCtlChlid.CloseHoverForeColor = System.Drawing.Color.White;
+            this.nightCtlChlid.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.nightCtlChlid.DefaultLocation = true;
+            this.nightCtlChlid.DisableMaximizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(105)))), ((int)(((byte)(105)))));
+            this.nightCtlChlid.DisableMinimizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(105)))), ((int)(((byte)(105)))));
+            this.nightCtlChlid.EnableCloseColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.nightCtlChlid.EnableMaximizeButton = true;
+            this.nightCtlChlid.EnableMaximizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.nightCtlChlid.EnableMinimizeButton = true;
+            this.nightCtlChlid.EnableMinimizeColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(160)))), ((int)(((byte)(160)))));
+            this.nightCtlChlid.Location = new System.Drawing.Point(561, 0);
+            this.nightCtlChlid.MaximizeHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.nightCtlChlid.MaximizeHoverForeColor = System.Drawing.Color.White;
+            this.nightCtlChlid.MinimizeHoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.nightCtlChlid.MinimizeHoverForeColor = System.Drawing.Color.White;
+            this.nightCtlChlid.Name = "nightCtlChlid";
+            this.nightCtlChlid.Size = new System.Drawing.Size(139, 31);
+            this.nightCtlChlid.TabIndex = 1;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(989, 648);
-            this.Controls.Add(this.panel17);
-            this.Controls.Add(this.panel14);
-            this.Controls.Add(this.panel11);
-            this.Controls.Add(this.panel8);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.menuContainer);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(950, 600);
+            this.Controls.Add(this.panelChildForm);
+            this.Controls.Add(this.panelOperation);
+            this.Controls.Add(this.panelSideMenu);
+            this.Font = new System.Drawing.Font("굴림", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.MinimumSize = new System.Drawing.Size(950, 600);
             this.Name = "MainForm";
             this.Text = "MainForm";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel5.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
-            this.panel11.ResumeLayout(false);
-            this.panel12.ResumeLayout(false);
-            this.panel13.ResumeLayout(false);
-            this.panel14.ResumeLayout(false);
-            this.panel15.ResumeLayout(false);
-            this.panel16.ResumeLayout(false);
-            this.panel17.ResumeLayout(false);
-            this.panel18.ResumeLayout(false);
-            this.panel19.ResumeLayout(false);
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
+            this.panelSideMenu.ResumeLayout(false);
+            this.panelViewSubmenu.ResumeLayout(false);
+            this.panelTeachSubmenu.ResumeLayout(false);
+            this.panelFileSubmenu.ResumeLayout(false);
+            this.panelLogo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picABC)).EndInit();
+            this.panelChildForm.ResumeLayout(false);
+            this.panelChlid.ResumeLayout(false);
+            this.panelChlid.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picChlid)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelSideMenu;
+        private System.Windows.Forms.Panel panelFileSubmenu;
+        private System.Windows.Forms.Button btnModelSave;
+        private System.Windows.Forms.Button btnModelOpen;
+        private System.Windows.Forms.Button btnModelNew;
+        private System.Windows.Forms.Button btnFile;
+        private System.Windows.Forms.Button btnImageOpen;
+        private System.Windows.Forms.Button btnModelSaveAs;
+        private System.Windows.Forms.Button btnOperation;
+        private System.Windows.Forms.Panel panelTeachSubmenu;
+        private System.Windows.Forms.Button btnTeach;
+        private System.Windows.Forms.Panel panelViewSubmenu;
+        private System.Windows.Forms.Button btnCamera;
+        private System.Windows.Forms.Button btnView;
+        private System.Windows.Forms.Button btnROI;
+        private System.Windows.Forms.Button btnSetting;
+        private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.Button btnLog;
+        private System.Windows.Forms.Panel panelOperation;
+        private System.Windows.Forms.Panel panelChildForm;
+        private System.Windows.Forms.Button btnImageSave;
+        private System.Windows.Forms.Panel panelChlid;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private ReaLTaiizor.Controls.NightControlBox nightControlBox1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel menuContainer;
-        private System.Windows.Forms.Timer menuTransition;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Panel panel8;
-        private System.Windows.Forms.Panel panel9;
-        private System.Windows.Forms.Panel panel10;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Panel panel11;
-        private System.Windows.Forms.Panel panel12;
-        private System.Windows.Forms.Panel panel13;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button Inspection;
-        private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.Panel panel14;
-        private System.Windows.Forms.Panel panel15;
-        private System.Windows.Forms.Panel panel16;
-        private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.Button button14;
-        private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.Panel panel17;
-        private System.Windows.Forms.Panel panel18;
-        private System.Windows.Forms.Panel panel19;
-        private System.Windows.Forms.Button button16;
-        private System.Windows.Forms.Button button17;
-        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.PictureBox picChlid;
+        private ReaLTaiizor.Controls.NightControlBox nightCtlChlid;
+        private System.Windows.Forms.Panel panelLogo;
+        private System.Windows.Forms.PictureBox picABC;
     }
 }

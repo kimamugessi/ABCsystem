@@ -28,18 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewModel));
             this.btnCreate = new System.Windows.Forms.Button();
             this.txtModelInfo = new System.Windows.Forms.RichTextBox();
             this.txtModelName = new System.Windows.Forms.TextBox();
             this.lbModelInfo = new System.Windows.Forms.Label();
             this.lbModelName = new System.Windows.Forms.Label();
+            this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(187, 143);
+            this.btnCreate.Location = new System.Drawing.Point(263, 234);
+            this.btnCreate.Margin = new System.Windows.Forms.Padding(4);
             this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(79, 30);
+            this.btnCreate.Size = new System.Drawing.Size(113, 45);
             this.btnCreate.TabIndex = 9;
             this.btnCreate.Text = "만들기";
             this.btnCreate.UseVisualStyleBackColor = true;
@@ -47,47 +50,64 @@
             // 
             // txtModelInfo
             // 
-            this.txtModelInfo.Location = new System.Drawing.Point(77, 33);
+            this.txtModelInfo.Location = new System.Drawing.Point(106, 70);
+            this.txtModelInfo.Margin = new System.Windows.Forms.Padding(4);
             this.txtModelInfo.Name = "txtModelInfo";
-            this.txtModelInfo.Size = new System.Drawing.Size(190, 104);
+            this.txtModelInfo.Size = new System.Drawing.Size(270, 154);
             this.txtModelInfo.TabIndex = 8;
             this.txtModelInfo.Text = "";
             // 
             // txtModelName
             // 
-            this.txtModelName.Location = new System.Drawing.Point(77, 6);
+            this.txtModelName.Location = new System.Drawing.Point(106, 29);
+            this.txtModelName.Margin = new System.Windows.Forms.Padding(4);
             this.txtModelName.Name = "txtModelName";
-            this.txtModelName.Size = new System.Drawing.Size(190, 21);
+            this.txtModelName.Size = new System.Drawing.Size(270, 28);
             this.txtModelName.TabIndex = 7;
             // 
             // lbModelInfo
             // 
             this.lbModelInfo.AutoSize = true;
-            this.lbModelInfo.Location = new System.Drawing.Point(12, 36);
+            this.lbModelInfo.Location = new System.Drawing.Point(13, 74);
+            this.lbModelInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbModelInfo.Name = "lbModelInfo";
-            this.lbModelInfo.Size = new System.Drawing.Size(57, 12);
+            this.lbModelInfo.Size = new System.Drawing.Size(86, 18);
             this.lbModelInfo.TabIndex = 6;
             this.lbModelInfo.Text = "모델 정보";
             // 
             // lbModelName
             // 
             this.lbModelName.AutoSize = true;
-            this.lbModelName.Location = new System.Drawing.Point(12, 9);
+            this.lbModelName.Location = new System.Drawing.Point(13, 34);
+            this.lbModelName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbModelName.Name = "lbModelName";
-            this.lbModelName.Size = new System.Drawing.Size(41, 12);
+            this.lbModelName.Size = new System.Drawing.Size(62, 18);
             this.lbModelName.TabIndex = 5;
             this.lbModelName.Text = "모델명";
             // 
+            // btnClose
+            // 
+            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
+            this.btnClose.Location = new System.Drawing.Point(604, 12);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(40, 40);
+            this.btnClose.TabIndex = 10;
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
             // NewModel
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(273, 179);
+            this.ClientSize = new System.Drawing.Size(656, 388);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.txtModelInfo);
             this.Controls.Add(this.txtModelName);
             this.Controls.Add(this.lbModelInfo);
             this.Controls.Add(this.lbModelName);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "NewModel";
             this.Text = "NewModel";
             this.ResumeLayout(false);
@@ -102,5 +122,6 @@
         private System.Windows.Forms.TextBox txtModelName;
         private System.Windows.Forms.Label lbModelInfo;
         private System.Windows.Forms.Label lbModelName;
+        private System.Windows.Forms.Button btnClose;
     }
 }

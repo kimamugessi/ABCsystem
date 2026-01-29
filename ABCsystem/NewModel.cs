@@ -37,7 +37,7 @@ namespace ABCsystem
             string modelName = txtModelName.Text.Trim();
             if (modelName == "")
             {
-                MessageBox.Show("모덜 이름을 입력하세요.");
+                MessageBox.Show("모델 이름을 입력하세요.");
                 return;
             }
 
@@ -63,6 +63,11 @@ namespace ABCsystem
 
             Global.Inst.InspStage.CurModel.CreateModel(modelPath, modelName, modelInfo);
             Global.Inst.InspStage.CurModel.Save();
+            this.Close();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
             this.Close();
         }
     }

@@ -120,7 +120,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormManager.cs" />
+    <Compile Include="Window\FormManager.cs" />
     <Compile Include="Grab\GrabModel.cs" />
     <Compile Include="Grab\HikRobotCam.cs" />
     <Compile Include="Grab\WebCam.cs" />
@@ -146,6 +146,8 @@
     <Compile Include="ModelTreeForm.Designer.cs">
       <DependentUpon>ModelTreeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Window\WindowClampHelper.cs" />
+    <Compile Include="Window\WindowConstraintBehavior.cs" />
     <Compile Include="NewModel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -262,6 +264,7 @@
     <Compile Include="Util\ImageLoader.cs" />
     <Compile Include="Util\SLogger.cs" />
     <Compile Include="Util\XmlHelper.cs" />
+    <Compile Include="WinApi.cs" />
     <EmbeddedResource Include="CameraForm.resx">
       <DependentUpon>CameraForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -346,6 +349,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

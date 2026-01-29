@@ -56,5 +56,10 @@ namespace ABCsystem4.Setting
             newTab.Controls.Add(control);
             tabSetting.TabPages.Add(newTab);
         }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

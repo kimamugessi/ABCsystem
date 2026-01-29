@@ -1,5 +1,6 @@
 ﻿using ABCsystem.Core;
 using ABCsystem.Teach;
+using ABCsystem.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -91,8 +92,9 @@ namespace ABCsystem
                 TreeNode node = new TreeNode(uid);
                 rootNode.Nodes.Add(node);
             }
-
             tvModelTree.ExpandAll();
-        }
+            SLogger.Write($"CurModel null? {Global.Inst.InspStage.CurModel == null}");
+            SLogger.Write($"InspWindowList count: {Global.Inst.InspStage.CurModel?.InspWindowList?.Count}");
+        } 
     }
 }
