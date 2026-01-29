@@ -343,12 +343,11 @@ namespace ABCsystem.UIControl
                     targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
                 }
                 float pixelLength = Math.Abs(targetY - vP3.Y);
-
-                // --- 추가된 부분: 0.00px (거의 0인 경우) 무시 ---
-                if (pixelLength < 0.01f)
+                if (pixelLength < 300 || pixelLength > 700) //정상 수치가 381px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
                 {
-                    continue; // 아래 판정 및 그리기 로직을 타지 않고 다음 i로 넘어감
+                    continue;
                 }
+                
 
                 // [단계 1] 판정 로직 적용 (수정된 기준)
                 string currentLineStatus = "NG";

@@ -44,11 +44,13 @@ namespace ABCsystem.Inspect
             while (!token.IsCancellationRequested)
             {
                 Global.Inst.InspStage.OneCycle();
+                Thread.Sleep(200);
             }
 
             IsRunning = false;
 
             SLogger.Write("InspectionLoop End");
+            
         }
         public bool RunInspect(out bool isDefect)
         {
