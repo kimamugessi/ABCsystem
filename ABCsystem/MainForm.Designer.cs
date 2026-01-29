@@ -104,10 +104,12 @@
             this.imageSaveToolStripMenuItem.Name = "imageSaveToolStripMenuItem";
             this.imageSaveToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.imageSaveToolStripMenuItem.Text = "Image Save";
+            this.imageSaveToolStripMenuItem.Click += new System.EventHandler(this.imageSaveToolStripMenuItem_Click);
             // 
             // MainMenu
             // 
             this.MainMenu.BackColor = System.Drawing.Color.White;
+            this.MainMenu.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.MainMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,

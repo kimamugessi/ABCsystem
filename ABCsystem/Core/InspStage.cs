@@ -22,6 +22,7 @@ using Microsoft.Win32;
 using System.Diagnostics.Eventing.Reader;
 using ABCsystem.Sequence;
 using System.Data.SqlClient;
+using Point = OpenCvSharp.Point; // 추가: 이 파일에서 Point는 OpenCV용임
 
 namespace ABCsystem.Core
 {
@@ -650,26 +651,31 @@ namespace ABCsystem.Core
             }
             else
             {
-                // 파일을 불러오는 가상 그랩
                 if (!VirtualGrab()) return false;
             }
 
             ResetDisplay();
 
             bool isDefect;
-            // 1. 실제 알고리즘 검사 수행
             if (!_inspWorker.RunInspect(out isDefect))
                 return false;
 
-            // 2. [추가] 검사 직후 UI를 갱신하여 선 위치를 업데이트함
-            // UI 스레드에서 실행되도록 BeginInvoke를 사용합니다.
+            // UI 갱신 부분 수정
             MainForm.DockPanelInstance.BeginInvoke(new Action(() => {
                 var cameraForm = MainForm.GetDockForm<CameraForm>();
-                cameraForm?.ImageViewer.Invalidate();
+                if (cameraForm != null && this.CurModel != null)
+                {
+                    // 1. 현재 모델의 ROI 리스트를 뷰어에 전달 (바구니 채우기)
+                    cameraForm.ImageViewer.SetInspWindowList(this.CurModel.InspWindowList);
+
+                    // 2. 화면을 다시 그리라고 명령
+                    cameraForm.ImageViewer.Invalidate();
+                }
             }));
-           
+
             return true;
         }
+
         public void StopCycle()
         {
             if (_inspWorker != null)
@@ -837,7 +843,35 @@ namespace ABCsystem.Core
                 _grabManager.SetExposureTime(exposureTime);
             }
         }
-
+        public void SaveImageToFile(string filePath)
+        {
+            try
+            {
+                // 1. 현재 화면에 표시되고 있는 카메라 폼을 찾습니다.
+                var cameraForm = MainForm.GetDockForm<CameraForm>();
+                if (cameraForm != null)
+                {
+                    // 2. 카메라 폼으로부터 현재 Mat 이미지를 가져옵니다.
+                    using (OpenCvSharp.Mat curImage = cameraForm.GetDisplayImage())
+                    {
+                        if (curImage != null && !curImage.Empty())
+                        {
+                            // 3. OpenCV의 저장 기능을 사용하여 지정된 경로에 저장합니다.
+                            OpenCvSharp.Cv2.ImWrite(filePath, curImage);
+                        }
+                        else
+                        {
+                            System.Windows.Forms.MessageBox.Show("저장할 이미지 데이터가 없습니다.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 오류 발생 시 로그 기록
+                SLogger.Write($"이미지 저장 실패: {ex.Message}");
+            }
+        }
 
         #region Disposable
 

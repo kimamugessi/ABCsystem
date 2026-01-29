@@ -190,5 +190,21 @@ namespace ABCsystem
             bool isChecked = cycleModeMenuItem.Checked;
             SettingXml.Inst.CycleMode = isChecked;
         }
+
+        private void imageSaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog())
+            {
+                saveFileDialog.Title = "이미지 다른 이름으로 저장";
+                saveFileDialog.Filter = "JPG 파일 (*.jpg)|*.jpg|PNG 파일 (*.png)|*.png|BMP 파일 (*.bmp)|*.bmp";
+                saveFileDialog.DefaultExt = "jpg";
+
+                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    // 위에서 만든 InspStage의 저장 함수를 호출합니다.
+                    Global.Inst.InspStage.SaveImageToFile(saveFileDialog.FileName);
+                }
+            }
+        }
     }
 }

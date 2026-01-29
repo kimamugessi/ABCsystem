@@ -58,7 +58,6 @@
             this.cbCameraType.Name = "cbCameraType";
             this.cbCameraType.Size = new System.Drawing.Size(161, 26);
             this.cbCameraType.TabIndex = 4;
-            this.cbCameraType.SelectedIndexChanged += new System.EventHandler(this.cbCameraType_SelectedIndexChanged);
             // 
             // lbCameraType
             // 
@@ -69,7 +68,6 @@
             this.lbCameraType.Size = new System.Drawing.Size(77, 18);
             this.lbCameraType.TabIndex = 3;
             this.lbCameraType.Text = "카메라 종류";
-            this.lbCameraType.Click += new System.EventHandler(this.lbCameraType_Click);
             // 
             // lbExposure
             // 
@@ -80,7 +78,6 @@
             this.lbExposure.Size = new System.Drawing.Size(60, 18);
             this.lbExposure.TabIndex = 3;
             this.lbExposure.Text = "노출시간";
-            this.lbExposure.Click += new System.EventHandler(this.lbExposure_Click);
             // 
             // tbExposure
             // 
@@ -90,7 +87,6 @@
             this.tbExposure.Name = "tbExposure";
             this.tbExposure.Size = new System.Drawing.Size(122, 26);
             this.tbExposure.TabIndex = 6;
-            this.tbExposure.TextChanged += new System.EventHandler(this.tbExposure_TextChanged);
             // 
             // lbExpUnit
             // 
@@ -101,7 +97,6 @@
             this.lbExpUnit.Size = new System.Drawing.Size(27, 18);
             this.lbExpUnit.TabIndex = 3;
             this.lbExpUnit.Text = "ms";
-            this.lbExpUnit.Click += new System.EventHandler(this.lbExpUnit_Click);
             // 
             // CameraSetting
             // 
@@ -117,7 +112,6 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CameraSetting";
             this.Size = new System.Drawing.Size(283, 164);
-            this.Load += new System.EventHandler(this.CameraSetting_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using Point = System.Drawing.Point; // 추가: Point는 이제 System.Drawing.Point로 인식됨
+using Size = System.Drawing.Size;   // 추가: Size는 이제 System.Drawing.Size로 인식됨
 using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
 using System.Drawing.Text;
@@ -17,7 +19,8 @@ using System.Windows.Forms;
 
 namespace ABCsystem.UIControl
 {
-    public enum EntityActionType
+    //ROI 변경 작업 타입
+    public enum EntityActionType    
     {
         None = 0,
         Select,
@@ -31,8 +34,8 @@ namespace ABCsystem.UIControl
         UpdateImage
     }
 
-    //#13_INSP_RESULT#3 검사 양불판정 갯수를 화면에 표시하기 위한 구조체
-    public struct InspectResultCount
+    //검사 양불판정 갯수를 화면에 표시하기 위한 구조체
+    public struct InspectResultCount    
     {
         public int Total { get; set; }
         public int OK { get; set; }
@@ -46,82 +49,117 @@ namespace ABCsystem.UIControl
         }
     }
 
+    // 이미지 뷰어 컨트롤 클래스
     public partial class ImageViewCtrl: UserControl
     {
         //ROI를 추가,수정,삭제 등으로 변경 시, 이벤트 발생
+        // ROI(관심영역) 추가, 수정, 삭제 등 상태 변화 시 외부로 알리는 이벤트
         public event EventHandler<DiagramEntityEventArgs> DiagramEntityEvent;
 
+        // 컨트롤의 초기화 완료 여부 (중복 초기화 방지 및 렌더링 시점 제어)
         private bool _isInitialized = false;
 
-        // 현재 로드된 이미지
+        // 원본 이미지 객체 (이미지 프로세싱 및 렌더링의 소스)
         private Bitmap _bitmapImage = null;
 
-        // 더블 버퍼링을 위한 캔버스
-        // 더블버퍼링 : 화면 깜빡임을 방지하고 부드러운 펜더링위해 사용
+        // [Double Buffering] 화면 깜빡임 방지를 위한 메모리 내 도화지(Back Buffer)
         private Bitmap Canvas = null;
 
-        // 화면에 표시될 이미지의 크기 및 위치
-        // 부동 소수점(float) 좌표를 사용하는 사각형 구조체
+        // 원본 이미지가 전체 화면(Control) 내에서 그려질 실제 영역과 위치 (Zoom/Pan 반영)
         private RectangleF ImageRect = new RectangleF(0, 0, 0, 0);
 
-        // 현재 줌 배율
+        // 현재 화면 확대/축소 배율 (1.0 = 100%)
         private float _curZoom = 1.0f;
-        // 줌 배율 변경 시, 확대/축소 단위
+        // 마우스 휠 등을 이용한 확대/축소 시 적용되는 가중치 (1.1 = 10%씩 변화)
         private float _zoomFactor = 1.1f;
 
-        // 최소 및 최대 줌 제한 값
+        // 줌 배율의 최소/최대 한계값 설정
         private float MinZoom = 1.0f;
         private const float MaxZoom = 100.0f;
 
+        // 검사 정보(검사 영역 및 결과 등)를 저장하는 리스트
         private List<DrawInspectInfo> _rectInfos = new List<DrawInspectInfo>();
 
+        // 현재 컨트롤의 작업 상태 (예: "Idle", "Drawing", "Editing" 등)
         public string WorkingState { get; set; } = "";
 
-        //#13_INSP_RESULT#4 검사 양불 판정 갯수를 화면에 표시하기 위한 변수
+        // 검사 결과(OK/NG 등)의 통계 수치를 관리하는 객체
         private InspectResultCount _inspectResultCount = new InspectResultCount();
 
-        //#10_INSPWINDOW#15 ROI 편집에 필요한 변수 선언
+        // [ROI 편집] 새로운 ROI를 그릴 때 시작 좌표
         private Point _roiStart = Point.Empty;
+        // [ROI 편집] 현재 그려지거나 선택된 ROI의 사각형 영역
         private Rectangle _roiRect = Rectangle.Empty;
+
+        // [상태 제어] 마우스 드래그를 통한 ROI 생성/크기조절/이동 여부 플래그
         private bool _isSelectingRoi = false;
         private bool _isResizingRoi = false;
         private bool _isMovingRoi = false;
+
+        // [상태 제어] 크기 조절 및 이동 시작 시점의 좌표 저장
         private Point _resizeStart = Point.Empty;
         private Point _moveStart = Point.Empty;
+
+        // [핸들러] 8방향 크기 조절 중 현재 선택된 방향 인덱스
         private int _resizeDirection = -1;
+        // ROI 테두리에 표시될 크기 조절용 핸들(Square)의 크기
         private const int _ResizeHandleSize = 10;
 
-        //새로 추가할 ROI 타입
+        // 생성할 새 ROI의 타입 (Rect, Circle, Line 등)
         private InspWindowType _newRoiType = InspWindowType.None;
 
-        //여러개 ROI를 관리하기 위한 리스트
+        // 화면상의 모든 그래픽 개체(ROI, Line 등)를 관리하는 마스터 리스트
         private List<DiagramEntity> _diagramEntityList = new List<DiagramEntity>();
 
-        //현재 선택된 ROI 리스트
+        // [멀티 선택] 현재 마우스 드래그나 Ctrl+클릭으로 선택된 개체들
         private List<DiagramEntity> _multiSelectedEntities = new List<DiagramEntity>();
+        // [복사/붙여넣기] 클립보드 역할을 하는 엔티티 버퍼
         private List<DiagramEntity> _copyBuffer = new List<DiagramEntity>();
+        // 마우스의 현재 좌표 (실시간 렌더링 및 툴팁 표시용)
         private Point _mousePos;
 
+        // 현재 단일 선택된 엔티티
         private DiagramEntity _selEntity;
+        // 선택된 엔티티를 강조할 색상
         private Color _selColor = Color.White;
 
+        // [드래그 선택] 마우스 드래그로 범위를 지정할 때 그려지는 사각형 영역
         private Rectangle _selectionBox = Rectangle.Empty;
+        // [드래그 선택] 현재 영역 선택 중인지 여부
         private bool _isBoxSelecting = false;
+        // [키 조합] 컨트롤키가 눌려있는지 여부 (다중 선택 로직용)
         private bool _isCtrlPressed = false;
+        // 화면(Screen) 좌표계 기준의 선택 영역
         private Rectangle _screenSelectedRect = Rectangle.Empty;
 
+        // 외부 여백 또는 추가 확장 사이즈 설정
         private Size _extSize = new Size(0, 0);
 
-
-        private bool _drawLineEnabled = false; //라인 그리기 활성화 여부(20260125)
+        // [라인 측정] 일반 라인 그리기 기능 활성화 여부
+        private bool _drawLineEnabled = false;
+        // [라인 측정] 수직 높이 측정을 위한 데이터 세트 리스트 (점들의 집합)
         private List<DiagramEntity[]> _heightLineList = new List<DiagramEntity[]>();
-        private bool _drawVerticalEnabled = false; // 수직선 그리기 활성화 여부
+        // [라인 측정] 수직 높이 측정선 렌더링 활성화 여부
+        private bool _drawVerticalEnabled = false;
 
-        //팝업 메뉴
+        // 우클릭 시 나타날 메뉴 (삭제, 복사, 설정 등)
         private ContextMenuStrip _contextMenu;
 
+        // 멀티스레드 환경에서 데이터(List 등) 접근 시 충돌 방지를 위한 잠금 객체
         private readonly object _lock = new object();
 
+        private List<InspWindow> _inspWindowList = new List<InspWindow>();
+
+        public void SetInspWindowList(List<InspWindow> inspWindowList)
+        {
+            // 외부(InspStage 등)에서 받은 리스트를 컨트롤 내부 변수에 저장
+            this._inspWindowList = inspWindowList;
+
+            // 화면을 다시 그리도록 명령 (OnPaint 호출)
+            this.Invalidate();
+        }
+
+        // 생성자
         public ImageViewCtrl()
         {
             InitializeComponent();
@@ -139,13 +177,16 @@ namespace ABCsystem.UIControl
             MouseWheel += new MouseEventHandler(ImageViewCCtrl_MouseWheel);
         }
 
-        private void initializeCanvas() //캔버스 초기화 및 설정
+
+        //캔버스 초기화 및 설정
+        private void initializeCanvas() 
         {
             ResizeCanvas(); //캔버스 userControl 크기만큼 생성
             DoubleBuffered = true;  //깜빡임 방지 더블 버퍼 설정
         }
 
-        public Color GetWindowColor(InspWindowType inspWindowType)  /*InspWindowType에 따른 색상 반환 함수*/
+        //InspWindowType에 따른 색상 반환 함수
+        public Color GetWindowColor(InspWindowType inspWindowType)
         {
             Color color = Color.LightBlue;
 
@@ -168,6 +209,7 @@ namespace ABCsystem.UIControl
             return color;
         }
 
+        //새로운 ROI 추가 시작 함수
         public void NewRoi(InspWindowType inspWindowType)
         {
             _newRoiType = inspWindowType;
@@ -178,13 +220,10 @@ namespace ABCsystem.UIControl
         //줌에 따른 좌표 계산 기능 수정 
         private void ResizeCanvas()
         {
-            if (Width <= 0 || Height <= 0 || _bitmapImage == null)
-                return;
+            if (Width <= 0 || Height <= 0 || _bitmapImage == null) return;
 
-            // 캔버스를 UserControl 크기만큼 생성
-            Canvas = new Bitmap(Width, Height);
-            if (Canvas == null)
-                return;
+            Canvas = new Bitmap(Width, Height); // 캔버스를 UserControl 크기만큼 생성
+            if (Canvas == null) return;
 
             float virtualWidth = _bitmapImage.Width * _curZoom;
             float virtualHeight = _bitmapImage.Height * _curZoom;
@@ -195,21 +234,16 @@ namespace ABCsystem.UIControl
             ImageRect = new RectangleF(offsetX, offsetY, virtualWidth, virtualHeight);
         }
 
-        //#4_IMAGE_VIEWER#5 이미지 로딩 함수
+        // 이미지 로딩 함수
         public void LoadBitmap(Bitmap bitmap)
         {
-            //#15_INSP_WORKER#9 스레드에서 검사시, 멈추는 현상 방지
-            if (this.InvokeRequired)
+            if (this.InvokeRequired)    //스레드에서 검사시, 멈추는 현상 방지
             {
-                this.BeginInvoke(new Action<Bitmap>(LoadBitmap), bitmap);
-                return;
+                this.BeginInvoke(new Action<Bitmap>(LoadBitmap), bitmap); return;
             }
-
-            // 기존에 로드된 이미지가 있다면 해제 후 초기화, 메모리누수 방지
-            if (_bitmapImage != null)
+            if (_bitmapImage != null)   // 기존에 로드된 이미지가 있다면 해제 후 초기화, 메모리누수 방지
             {
-                //이미지 크기가 같다면, 이미지 변경 후, 화면 갱신
-                if (_bitmapImage.Width == bitmap.Width && _bitmapImage.Height == bitmap.Height)
+                if (_bitmapImage.Width == bitmap.Width && _bitmapImage.Height == bitmap.Height) //이미지 크기가 같다면, 이미지 변경 후, 화면 갱신
                 {
                     _bitmapImage.Dispose();   // 기존 이미지 해제 후 교체
                     _bitmapImage = bitmap;
@@ -228,12 +262,12 @@ namespace ABCsystem.UIControl
             FitImageToScreen();
         }
 
+        // 이미지 화면에 맞게 조정 함수
         private void FitImageToScreen()
         {
-            if (_bitmapImage == null)
-                return;
+            if (_bitmapImage == null) return;
 
-            RecalcZoomRatio();
+            RecalcZoomRatio();  
 
             float NewWidth = _bitmapImage.Width * _curZoom;
             float NewHeight = _bitmapImage.Height * _curZoom;
@@ -247,7 +281,9 @@ namespace ABCsystem.UIControl
 
             Invalidate();   //내부 함수, 화면 갱신 기능
         }
-        private void RecalcZoomRatio()  //줌비율 재계산(모르것음)
+
+        // 줌 비율 재계산 함수
+        private void RecalcZoomRatio()
         {
             if (_bitmapImage == null || Width <= 0 || Height <= 0) return;
 
@@ -288,16 +324,16 @@ namespace ABCsystem.UIControl
                     g.DrawImage(_bitmapImage, ImageRect);
 
                     DrawDiagram(g);
-                    e.Graphics.DrawImage(Canvas, 0, 0); // 캔버스를 UserControl 화면에 표시
+                    e.Graphics.DrawImage(Canvas, 0, 0); //캔버스를 UserControl 화면에 표시
                 }
             }
-            DrawHeightLine(e.Graphics); // 새 수직선 (ROI3 기준) 
+            DrawHeightLine(e.Graphics); //새 수직선 (ROI3 기준) 
         }
 
+        //EdgeAlgorithm에서 검출된 엣지 포인트를 가져오는 함수
         private PointF GetEdgePoint(DiagramEntity entity)
         {
-            // 1. 엔티티에 연결된 InspWindow 확인
-            if (entity?.LinkedWindow != null)
+            if (entity?.LinkedWindow != null)   //1. 엔티티에 연결된 InspWindow 확인
             {
                 // 2. InspWindow 내의 알고리즘 목록에서 EdgeAlgorithm 추출
                 // (InspWindow 클래스 정의에 따라 AlgorithmList 또는 InspAlgorithmList일 수 있습니다)
@@ -311,16 +347,23 @@ namespace ABCsystem.UIControl
                     if (pt.X >= 0 && pt.Y >= 0) return new PointF(pt.X, pt.Y);
                 }
             }
-            // 실패 시 기본 ROI 중앙점 반환 (Fallback)
+            // [Fallback] 검사에 실패했거나 유효한 엣지를 찾지 못한 경우
+            // 호출 측에서 이 값을 체크하여 렌더링 여부를 결정
             return new PointF(-1, -1); // 유효하지 않은 좌표
         }
 
+
+        // 수직 높이 라인 그리기 함수
         public void DrawHeightLine(Graphics g)
         {
-            // 1. 기초 검사
+            SLogger.Write($"[DrawHeightLine] Enabled={_drawVerticalEnabled}, Count={_heightLineList.Count}");
+            // 1. 기초 검사: 그리기 비활성화 상태거나 데이터가 없으면 즉시 종료
             if (_drawVerticalEnabled == false || _heightLineList.Count == 0) return;
 
+            // 선의 품질을 높이기 위한 안티앨리어싱 설정
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            // 폰트 설정 (수치 표시용 및 상단 결과 표시용)
             Font font = new Font("Arial", 10, FontStyle.Bold);
             Font hugeFont = new Font("Arial", 50, FontStyle.Bold);
 
@@ -331,13 +374,14 @@ namespace ABCsystem.UIControl
             for (int i = 0; i < _heightLineList.Count; i++)
             {
                 var lineSet = _heightLineList[i];
-                PointF vP1 = GetEdgePoint(lineSet[0]);
-                PointF vP2 = GetEdgePoint(lineSet[1]);
-                PointF vP3 = GetEdgePoint(lineSet[2]);
+                // [좌표 추출] 알고리즘이 찾은 실제 이미지상의 엣지 포인트(Virtual Coord)
+                PointF vP1 = GetEdgePoint(lineSet[0]);  //가로선 기준점 1
+                PointF vP2 = GetEdgePoint(lineSet[1]);  //가로선 기준점 2
+                PointF vP3 = GetEdgePoint(lineSet[2]);  //세로선 시작점
 
                 // [수치 계산]
-                float dx = vP2.X - vP1.X;
-                float targetY = vP1.Y;
+                float dx = vP2.X - vP1.X;   //가로선의 X축 길이
+                float targetY = vP1.Y;  //세로선이 만나는 Y좌표 초기값
 
                 if (Math.Abs(dx) > 0.0001f) //분모 0 방지
                 {
@@ -355,12 +399,12 @@ namespace ABCsystem.UIControl
                 string currentLineStatus = "NG";
                 Color lineColor = Color.Red;
 
-                if (pixelLength >= 500)
+                if (pixelLength >= 500) //NO CAP 기준
                 {
                     currentLineStatus = "NO CAP";
                     lineColor = Color.Red;
                 }
-                else if (pixelLength >= 350 && pixelLength <= 360)
+                else if (pixelLength >= 350 && pixelLength <= 360)  //OK 기준
                 {
                     currentLineStatus = "OK";
                     lineColor = Color.Lime;
@@ -371,7 +415,7 @@ namespace ABCsystem.UIControl
                     lineColor = Color.Red;
                 }
 
-                // [단계 2] 전체 결과 업데이트 (우선순위: NO CAP > NG > OK)
+                // [단계 2] 전체 결과 업데이트 (우선순위: NO CAP > NG > OK)   
                 if (currentLineStatus == "NO CAP")
                 {
                     finalStatus = "NO CAP";
@@ -397,7 +441,7 @@ namespace ABCsystem.UIControl
                 PointF sStart = VirtualToScreen(vP3);   //세로선 시작점
                 PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));  //세로선 끝점
 
-                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;
+                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;    //500px 초과 시 흰색으로 그리기
 
                 using (Pen bluePen = new Pen(Color.Blue, 2f))   //가로선 그리기
                 {
@@ -424,9 +468,8 @@ namespace ABCsystem.UIControl
             }
         }
 
-        /// <summary>
-        /// 화면에 판정 텍스트를 그리는 별도 함수 (그림자 효과 포함)
-        /// </summary>
+
+        // 화면에 판정 텍스트를 그리는 별도 함수 (그림자 효과 포함)
         private void DrawStatusText(Graphics g, string text, Font font, Color color, float x, float y)
         {
             // 그림자 (검은색)
@@ -438,47 +481,39 @@ namespace ABCsystem.UIControl
             }
         }
 
-        // 중심점 계산 헬퍼 함수
-        private PointF GetCenter(Rectangle rect)
-        {
-            return new PointF(rect.X + rect.Width / 2f, rect.Y + rect.Height / 2f);
-        }
-
-
+        // 다이어그램 그리기 함수
         private void DrawDiagram(Graphics g)
         {
-            //#10_INSPWINDOW#18 ROI 그리기
+            // ROI 그리기
+            // 선택된 모든 ROI들을 포함하는 최소 사각형 영역을 초기화
             _screenSelectedRect = new Rectangle(0, 0, 0, 0);
+            // 1. 관리 리스트에 있는 모든 엔티티(ROI)를 순회하며 그리기
             foreach (DiagramEntity entity in _diagramEntityList)
             {
-                Rectangle screenRect = VirtualToScreen(entity.EntityROI);
+                Rectangle screenRect = VirtualToScreen(entity.EntityROI);   // 원본 이미지 기준의 ROI 좌표를 현재 화면(Zoom/Pan 반영) 좌표로 변환
                 using (Pen pen = new Pen(entity.EntityColor, 2))
                 {
+                    // 2. 다중 선택된 상태인지 확인
                     if (_multiSelectedEntities.Contains(entity))
                     {
-                        pen.DashStyle = DashStyle.Dash;
+                        pen.DashStyle = DashStyle.Dash; // 선택된 개체는 점선으로 표시하여 강조
                         pen.Width = 2;
 
-                        if (_screenSelectedRect.IsEmpty)
+                        if (_screenSelectedRect.IsEmpty)    // 선택된 모든 ROI를 감싸는 전체 영역(Union) 계산
                         {
                             _screenSelectedRect = screenRect;
                         }
                         else
                         {
-                            //선택된 roi가 여러개 일때, 전체 roi 영역 계산
-                            //선택된 roi 영역 합치기
-                            _screenSelectedRect = Rectangle.Union(_screenSelectedRect, screenRect);
+                            _screenSelectedRect = Rectangle.Union(_screenSelectedRect, screenRect); // 기존 선택 영역과 현재 ROI 영역을 합쳐서 확장된 사각형 생성
                         }
                     }
-
-                    g.DrawRectangle(pen, screenRect);
+                    g.DrawRectangle(pen, screenRect);// 실질적인 ROI 사각형 그리기
                 }
-
-                //선택된 ROI가 있다면, 리사이즈 핸들 그리기
-                if (_multiSelectedEntities.Count <= 1 && entity == _selEntity)
+                
+                if (_multiSelectedEntities.Count <= 1 && entity == _selEntity)  //선택된 ROI가 있다면, 리사이즈 핸들 그리기
                 {
-                    // 리사이즈 핸들 그리기 (8개 포인트: 4 모서리 + 4 변 중간)
-                    using (Brush brush = new SolidBrush(Color.LightBlue))
+                    using (Brush brush = new SolidBrush(Color.LightBlue))   // 리사이즈 핸들 그리기 (8개 포인트: 4 모서리 + 4 변 중간)
                     {
                         Point[] resizeHandles = GetResizeHandles(screenRect);
                         foreach (Point handle in resizeHandles)
@@ -560,10 +595,11 @@ namespace ABCsystem.UIControl
                 DrawText(g, resultText, textPos, fontSize, resultColor);
             }
         }
+
+        // 검사 정보(사각형 및 점 등) 그리기 함수
         private void DrawRectInfo(Graphics g)
         {
-            if (_rectInfos == null || _rectInfos.Count <= 0)
-                return;
+            if (_rectInfos == null || _rectInfos.Count <= 0) return;    //검사 정보가 없으면 종료
 
             // 이미지 좌표 → 화면 좌표 변환 후 사각형 그리기
             foreach (DrawInspectInfo rectInfo in _rectInfos)
@@ -576,7 +612,7 @@ namespace ABCsystem.UIControl
                 else if (rectInfo.decision == DecisionType.Info)
                     lineColor = Color.Yellow; // 엣지 윤곽선 추출
 
-                //song : 점 표시
+                //점 표시
                 if (rectInfo.UsePoint)
                 {
                     PointF screenPt = VirtualToScreen(
@@ -1512,6 +1548,8 @@ namespace ABCsystem.UIControl
             _drawVerticalEnabled = (_heightLineList.Count > 0);
             this.Invalidate();
         }
+
+
     }
     #region EventArgs
     public class DiagramEntityEventArgs : EventArgs
