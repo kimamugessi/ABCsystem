@@ -105,9 +105,7 @@ namespace ABCsystem
             var win = Global.Inst.CurTeachWindow;
             if (win == null) return;
 
-            var edgeAlgo =
-                win.FindInspAlgorithm(InspectType.InspAlignEdge) as EdgeAlgorithm
-                ?? win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
+            var edgeAlgo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
 
             if (edgeAlgo == null)
             {
@@ -115,24 +113,18 @@ namespace ABCsystem
                 return;
             }
 
+            // Body/Base 강제 분기
             InspectType runType;
             if (win.InspWindowType == InspWindowType.Body)
             {
-                // Body는 무조건 Align
                 edgeAlgo.UseAsAlignment = true;
                 edgeAlgo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
                 runType = InspectType.InspAlignEdge;
             }
-            else if (win.InspWindowType == InspWindowType.Base)
+            else // Base 포함
             {
-                // Base는 무조건 Edge(화살표)
                 edgeAlgo.UseAsAlignment = false;
                 runType = InspectType.InspEdge;
-            }
-            else
-            {
-                // 기타는 기존 로직 유지(원하면 Base처럼 강제해도 됨)
-                runType = edgeAlgo.UseAsAlignment ? InspectType.InspAlignEdge : InspectType.InspEdge;
             }
 
             if (edgeAlgo.EdgeThreshold <= 0)
@@ -141,6 +133,14 @@ namespace ABCsystem
             SLogger.Write($"[EDGE_BTN] Clicked. win={win.UID} wType={win.InspWindowType} type={runType} useAlign={edgeAlgo.UseAsAlignment} thr={edgeAlgo.EdgeThreshold} scanDir={edgeAlgo.ScanDir}");
 
             Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
+
+            // Align일 때만 Teach 값 저장
+            if (runType == InspectType.InspAlignEdge && edgeAlgo.HasAnchor)
+            {
+                edgeAlgo.TeachAnchorX = edgeAlgo.AnchorPoint.X;
+                SLogger.Write($"[TEACH_SAVE] TeachAnchorX 저장됨 = {edgeAlgo.TeachAnchorX}");
+            }
+
             Global.Inst.InspStage.RedrawMainView();
         }
 
