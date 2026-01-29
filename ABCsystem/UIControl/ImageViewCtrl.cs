@@ -338,12 +338,14 @@ namespace ABCsystem.UIControl
                 // [수치 계산]
                 float dx = vP2.X - vP1.X;
                 float targetY = vP1.Y;
-                if (Math.Abs(dx) > 0.0001f)
+
+                if (Math.Abs(dx) > 0.0001f) //분모 0 방지
                 {
                     targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
                 }
+
                 float pixelLength = Math.Abs(targetY - vP3.Y);
-                if (pixelLength < 300 || pixelLength > 700) //정상 수치가 381px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
+                if (pixelLength < 300 || pixelLength > 700) //정상 수치가 358px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
                 {
                     continue;
                 }
@@ -358,7 +360,7 @@ namespace ABCsystem.UIControl
                     currentLineStatus = "NO CAP";
                     lineColor = Color.Red;
                 }
-                else if (pixelLength >= 370 && pixelLength <= 390)
+                else if (pixelLength >= 350 && pixelLength <= 360)
                 {
                     currentLineStatus = "OK";
                     lineColor = Color.Lime;
@@ -390,13 +392,28 @@ namespace ABCsystem.UIControl
                 }
 
                 // [단계 3] 화면에 선 및 개별 수치 그리기
-                PointF sStart = VirtualToScreen(vP3);
-                PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));
+                PointF sP1 = VirtualToScreen(vP1);  //가로선 기준점 1
+                PointF sP2 = VirtualToScreen(vP2);  //가로선 기준점 2
+                PointF sStart = VirtualToScreen(vP3);   //세로선 시작점
+                PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));  //세로선 끝점
 
-                using (Pen p = new Pen(lineColor, 2f))
+                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;
+
+                using (Pen bluePen = new Pen(Color.Blue, 2f))   //가로선 그리기
                 {
+                    g.DrawLine(bluePen, sP1, sP2);
+                }
+
+                using (Pen p = new Pen(drawColor, 2f))  //세로선 그리기
+                {
+                    // 선 그리기
                     g.DrawLine(p, sStart, sEnd);
-                    g.DrawString($"{pixelLength:F2} px", font, new SolidBrush(lineColor), sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
+
+                    // 글자 그리기 (메모리 효율을 위해 브러시도 using 사용 권장)
+                    using (SolidBrush textBrush = new SolidBrush(drawColor))
+                    {
+                        g.DrawString($"{pixelLength:F2} px", font, textBrush, sEnd.X + 5, (sStart.Y + sEnd.Y) / 2);
+                    }
                 }
             }
 
