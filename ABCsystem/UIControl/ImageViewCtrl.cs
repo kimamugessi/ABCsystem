@@ -356,7 +356,7 @@ namespace ABCsystem.UIControl
         // 수직 높이 라인 그리기 함수
         public void DrawHeightLine(Graphics g)
         {
-            SLogger.Write($"[DrawHeightLine] Enabled={_drawVerticalEnabled}, Count={_heightLineList.Count}");
+            //SLogger.Write($"[DrawHeightLine] Enabled={_drawVerticalEnabled}, Count={_heightLineList.Count}");
             // 1. 기초 검사: 그리기 비활성화 상태거나 데이터가 없으면 즉시 종료
             if (_drawVerticalEnabled == false || _heightLineList.Count == 0) return;
 
@@ -393,7 +393,7 @@ namespace ABCsystem.UIControl
                 {
                     continue;
                 }
-                
+
 
                 // [단계 1] 판정 로직 적용 (수정된 기준)
                 string currentLineStatus = "NG";
