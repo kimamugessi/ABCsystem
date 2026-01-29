@@ -61,6 +61,8 @@ namespace ABCsystem.Core
 
         private bool _isInspectMode = false;
 
+        public event Action<InspWindow> SelectedInspWindowChanged;
+
         public InspStage() { }
         public ImageSpace ImageSpace
         {
@@ -324,21 +326,11 @@ namespace ABCsystem.Core
             _selectedInspWindow = inspWindow;
             Global.Inst.CurTeachWindow = inspWindow;
 
-            var propForm = FormManager.GetForm<PropertiesForm>();
-            if (propForm != null)
-            {
-                if (inspWindow == null)
-                {
-                    propForm.ResetProperty();
-                    return;
-                }
-               propForm.ShowProperty(inspWindow);
-            }
-
-            UpdateProperty(inspWindow);
-
             Global.Inst.InspStage.PreView.SetInspWindow(inspWindow);
+
+            SelectedInspWindowChanged?.Invoke(inspWindow);
         }
+
         public void AddInspWindow(InspWindowType windowType, Rect rect)
         {
             InspWindow inspWindow = _model.AddInspWindow(windowType);

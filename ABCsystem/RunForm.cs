@@ -1,5 +1,7 @@
-﻿using ABCsystem.Core;
+﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
 using ABCsystem.Setting;
+using ABCsystem.Teach;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +17,27 @@ namespace ABCsystem
 {
     public partial class RunForm: Form
     {
+        private InspWindow _win;
+        private EdgeAlgorithm _algo;
+
         public RunForm()
         {
             InitializeComponent();
+
+            btnEdge.Click += btnEdge_Click;
+            cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+
+            // ROI 선택 변경 이벤트 구독
+            Global.Inst.InspStage.SelectedInspWindowChanged += OnSelectedWindowChanged;
+
+            // 폼 닫힐 때 구독 해제(메모리/중복호출 방지)
+            this.FormClosed += (s, e) =>
+            {
+                Global.Inst.InspStage.SelectedInspWindowChanged -= OnSelectedWindowChanged;
+            };
+
+            // RunForm이 이미 떠있을 때 현재 선택 ROI 반영
+            OnSelectedWindowChanged(Global.Inst.CurTeachWindow);
         }
 
         private void btnGrab_Click(object sender, EventArgs e)
@@ -74,6 +94,169 @@ namespace ABCsystem
             bool isChecked = chkCycleMode.Checked;
             SettingXml.Inst.CycleMode = chkCycleMode.Checked;
 
+        }
+
+        public void SetAlgorithm(InspWindow win, EdgeAlgorithm algo)
+        {
+            _win = win;
+            _algo = algo;
+
+            cbEdgeType.SelectedIndexChanged -= cbEdgeType_SelectedIndexChanged;
+            cbEdgeType.Items.Clear();
+
+            if (_win == null || _algo == null)
+            {
+                cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+                return;
+            }
+
+            // Body: Align만
+            if (_win.InspWindowType == InspWindowType.Body)
+            {
+                cbEdgeType.Items.Add("Align");
+
+                // Align은 무조건 → 강제 + UseAsAlignment 강제
+                _algo.UseAsAlignment = true;
+                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+
+                cbEdgeType.SelectedItem = "Align";
+            }
+
+            // Base: 화살표만
+            else if (_win.InspWindowType == InspWindowType.Base)
+            {
+                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+
+                // Base는 Align 금지
+                _algo.UseAsAlignment = false;
+
+                // 현재 ScanDir에 맞춰 UI 선택
+                var arrow = ToArrow(_algo.ScanDir);
+                cbEdgeType.SelectedItem = arrow;
+                if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedItem = "→";
+            }
+            // 기타 윈도우
+            else
+            {
+                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+                cbEdgeType.SelectedItem = "→";
+                _algo.UseAsAlignment = false;
+            }
+
+            cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+        }
+
+        private void btnEdge_Click(object sender, EventArgs e)
+        {
+            var win = _win ?? Global.Inst.CurTeachWindow;
+            if (win == null) return;
+
+            var algo = _algo ?? (win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm);
+            if (algo == null) return;
+
+            _win = win;
+            _algo = algo;
+
+            // 콤보 선택값을 알고리즘에 반영
+            ApplyComboToAlgorithm();
+
+            InspectType runType;
+            if (win.InspWindowType == InspWindowType.Body)
+            {
+                algo.UseAsAlignment = true;
+                algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+                runType = InspectType.InspAlignEdge;
+            }
+            else
+            {
+                algo.UseAsAlignment = false;
+                runType = InspectType.InspEdge;
+            }
+
+            if (algo.EdgeThreshold <= 0)
+                algo.EdgeThreshold = 30;
+
+            Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
+
+            if (runType == InspectType.InspAlignEdge && algo.HasAnchor)
+                algo.TeachAnchorX = algo.AnchorPoint.X;
+
+            Global.Inst.InspStage.RedrawMainView();
+        }
+
+        private void ApplyComboToAlgorithm()
+        {
+            if (_algo == null || _win == null) return;
+
+            if (cbEdgeType.SelectedItem == null && cbEdgeType.Items.Count > 0)
+                cbEdgeType.SelectedIndex = 0;
+
+            // Body는 항상 Align 고정
+            if (_win.InspWindowType == InspWindowType.Body)
+            {
+                _algo.UseAsAlignment = true;
+                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+                return;
+            }
+
+            // Base는 항상 화살표 고정
+            if (_win.InspWindowType == InspWindowType.Base)
+            {
+                _algo.UseAsAlignment = false;
+
+                string arrow = cbEdgeType.SelectedItem?.ToString();
+                if (string.IsNullOrWhiteSpace(arrow)) return;
+
+                _algo.ScanDir = FromArrow(arrow);
+                return;
+            }
+
+            // 기타는 기본 화살표 처리
+            _algo.UseAsAlignment = false;
+            string sel = cbEdgeType.SelectedItem?.ToString();
+            if (string.IsNullOrWhiteSpace(sel)) return;
+            _algo.ScanDir = FromArrow(sel);
+        }
+
+        private void OnSelectedWindowChanged(InspWindow win)
+        {
+            if (win == null)
+            {
+                SetAlgorithm(null, null);   // 콤보 비우기
+                return;
+            }
+
+            var edgeAlgo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
+            SetAlgorithm(win, edgeAlgo);    // 콤보 채우고 방향/Align 세팅
+        }
+
+        private void cbEdgeType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ApplyComboToAlgorithm();
+        }
+
+        private static EdgeAlgorithm.ScanDirection FromArrow(string arrow)
+        {
+            switch (arrow)
+            {
+                case "→": return EdgeAlgorithm.ScanDirection.LeftToRight;
+                case "←": return EdgeAlgorithm.ScanDirection.RightToLeft;
+                case "↑": return EdgeAlgorithm.ScanDirection.BottomToTop;
+                case "↓": return EdgeAlgorithm.ScanDirection.TopToBottom;
+                default: return EdgeAlgorithm.ScanDirection.LeftToRight;
+            }
+        }
+
+        private static string ToArrow(EdgeAlgorithm.ScanDirection dir)
+        {
+            switch (dir)
+            {
+                case EdgeAlgorithm.ScanDirection.LeftToRight: return "→";
+                case EdgeAlgorithm.ScanDirection.RightToLeft: return "←";
+                case EdgeAlgorithm.ScanDirection.BottomToTop: return "↑";
+                case EdgeAlgorithm.ScanDirection.TopToBottom: return "↓";
+                default: return "→";
+            }
         }
     }
 }

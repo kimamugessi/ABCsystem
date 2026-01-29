@@ -105,14 +105,10 @@ namespace ABCsystem
             switch (e.ActionType)
             {
                 case EntityActionType.Select:
-                    // 1. 선택된 UID 리스트 가져오기
                     var selectedUids = imageViewer.GetSelectedUids();
-
-                    // 2. 트리 폼 강조 표시 (기존 코드)
                     var modelTreeForm = FormManager.GetForm<ModelTreeForm>();
                     modelTreeForm?.SelectNodesByUids(selectedUids);
 
-                    // ★ 3. [보완] 속성창(PropertiesForm) 데이터 즉시 갱신 ★
                     if (selectedUids.Count > 0)
                     {
                         string firstUid = selectedUids[0];
@@ -121,14 +117,12 @@ namespace ABCsystem
 
                         if (selectedWin != null)
                         {
-                            var propForm = FormManager.GetForm<PropertiesForm>();
-                            if (propForm != null)
-                            {
-                                // PropertiesForm에 이미 구현되어 있는 ShowProperty를 호출하면
-                                // 내부적으로 UpdateProperty가 실행되어 EdgeProp의 타겟 알고리즘이 바뀝니다.
-                                propForm.ShowProperty(selectedWin);
-                            }
+                            Global.Inst.InspStage.SelectInspWindow(selectedWin);
                         }
+                    }
+                    else
+                    {
+                        Global.Inst.InspStage.SelectInspWindow(null);
                     }
                     break;
                 case EntityActionType.Inspect:
@@ -148,15 +142,27 @@ namespace ABCsystem
                     Global.Inst.InspStage.ModifyInspWindow(e.InspWindow, e.Rect);
                     break;
                 case EntityActionType.Delete:
-                    // ROI에 딸린 검사 결과(엣지점/윤곽점/텍스트) 먼저 제거
                     if (e.InspWindow != null)
                         imageViewer.RemoveResultsByWindowUid(e.InspWindow.UID);
+
+                    if (Global.Inst.CurTeachWindow != null && e.InspWindow != null &&
+                        Global.Inst.CurTeachWindow.UID == e.InspWindow.UID)
+                    {
+                        Global.Inst.InspStage.SelectInspWindow(null);
+                    }
+
                     Global.Inst.InspStage.DelInspWindow(e.InspWindow);
                     break;
                 case EntityActionType.DeleteList:
-                    // 여러 ROI의 결과를 한 번에 제거
                     if (e.InspWindowList != null)
                         imageViewer.RemoveResultsByWindowUids(e.InspWindowList.Select(w => w?.UID));
+
+                    if (Global.Inst.CurTeachWindow != null && e.InspWindowList != null &&
+                        e.InspWindowList.Any(w => w != null && w.UID == Global.Inst.CurTeachWindow.UID))
+                    {
+                        Global.Inst.InspStage.SelectInspWindow(null);
+                    }
+
                     Global.Inst.InspStage.DelInspWindow(e.InspWindowList);
                     break;
             }
