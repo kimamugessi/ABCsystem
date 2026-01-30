@@ -138,24 +138,19 @@ namespace ABCsystem
             var win = Global.Inst.CurTeachWindow;
             if (win == null) return;
 
-            var algo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
-            if (algo == null) return;
+            // 1. 기존 알고리즘 제거 (중복 방지)
+            win.AlgorithmList.RemoveAll(a => a.InspectType == InspectType.InspEdge || a.InspectType == InspectType.InspAlignEdge);
 
-            // 1. [강제 주입] 현재 화면에 떠 있는 화살표 방향을 알고리즘에 바로 입력
-            if (cbEdgeType.SelectedItem != null)
-            {
-                algo.ScanDir = FromArrow(cbEdgeType.SelectedItem.ToString());
-            }
+            // 2. 완전히 새로운 알고리즘 객체 생성 및 주입
+            EdgeAlgorithm newAlgo = new EdgeAlgorithm();
+            newAlgo.InspectType = (win.InspWindowType == InspWindowType.Body) ? InspectType.InspAlignEdge : InspectType.InspEdge;
+            newAlgo.ScanDir = FromArrow(cbEdgeType.SelectedItem.ToString());
+            newAlgo.UseAsAlignment = (win.InspWindowType == InspWindowType.Body);
 
-            // 2. 검사 타입 결정
-            InspectType runType = (win.InspWindowType == InspWindowType.Body)
-                                  ? InspectType.InspAlignEdge
-                                  : InspectType.InspEdge;
+            win.AlgorithmList.Add(newAlgo);
 
-            // 3. 검사 실행 (이제 위에서 설정한 방향으로 검사함)
-            Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
-
-            // 4. 화면 갱신
+            // 3. 검사 실행
+            Global.Inst.InspStage.InspWorker.TryInspect(win, newAlgo.InspectType);
             Global.Inst.InspStage.RedrawMainView();
         }
         private void ApplyComboToAlgorithm()
