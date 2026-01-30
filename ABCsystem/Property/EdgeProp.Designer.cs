@@ -34,9 +34,10 @@
             // 
             // btnEdge
             // 
-            this.btnEdge.Location = new System.Drawing.Point(27, 102);
+            this.btnEdge.Location = new System.Drawing.Point(218, 21);
+            this.btnEdge.Margin = new System.Windows.Forms.Padding(2);
             this.btnEdge.Name = "btnEdge";
-            this.btnEdge.Size = new System.Drawing.Size(238, 58);
+            this.btnEdge.Size = new System.Drawing.Size(141, 44);
             this.btnEdge.TabIndex = 0;
             this.btnEdge.Text = "Inspect Edge";
             this.btnEdge.UseVisualStyleBackColor = true;
@@ -47,24 +48,27 @@
             this.cbEdgeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEdgeType.FormattingEnabled = true;
             this.cbEdgeType.Items.AddRange(new object[] {
+            "Align",
             "→",
             "←",
             "↑",
             "↓"});
-            this.cbEdgeType.Location = new System.Drawing.Point(27, 39);
+            this.cbEdgeType.Location = new System.Drawing.Point(21, 29);
+            this.cbEdgeType.Margin = new System.Windows.Forms.Padding(2);
             this.cbEdgeType.Name = "cbEdgeType";
-            this.cbEdgeType.Size = new System.Drawing.Size(238, 32);
+            this.cbEdgeType.Size = new System.Drawing.Size(184, 26);
             this.cbEdgeType.TabIndex = 1;
             this.cbEdgeType.SelectedIndexChanged += new System.EventHandler(this.cbEdgeType_SelectedIndexChanged);
             // 
             // EdgeProp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.cbEdgeType);
             this.Controls.Add(this.btnEdge);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EdgeProp";
-            this.Size = new System.Drawing.Size(509, 468);
+            this.Size = new System.Drawing.Size(392, 351);
             this.ResumeLayout(false);
 
         }

@@ -323,7 +323,6 @@ namespace ABCsystem.Core
         public void SelectInspWindow(InspWindow inspWindow)
         {
             _selectedInspWindow = inspWindow;
-
             Global.Inst.CurTeachWindow = inspWindow;
 
             var propForm = FormManager.GetForm<PropertiesForm>();
@@ -559,36 +558,25 @@ namespace ABCsystem.Core
         {
             SLogger.Write($"모델 로딩:{filePath}");
 
-            // 1. 모델 로드
             _model = _model.Load(filePath);
-            if (_model == null) return false;
 
-            // 2. 모델 로드 직후 모든 결과값(좌표) 초기화
-            foreach (var window in _model.InspWindowList)
+            if (_model == null)
             {
-                // 중요: window.ResetInspResult()는 내부 알고리즘의 ResetResult()를 호출하여
-                // 저장되어 있던 엣지 좌표 등을 모두 초기값(-1, -1)으로 바꿉니다.
-                window.ResetInspResult();
+                SLogger.Write($"모델 로딩 실패:{filePath}");
+                return false;
             }
 
-            // 3. ROI 객체 생성
+            string inspImagePath = _model.InspectImagePath;
+            if (File.Exists(inspImagePath))
+            {
+                Global.Inst.InspStage.SetImageBuffer(inspImagePath);
+            }
+
             UpdateDiagramEntity();
 
-            var cameraForm = MainForm.DockPanelInstance.Contents
-                                     .OfType<CameraForm>()
-                                     .FirstOrDefault();
-
-            if (cameraForm != null)
-            {
-                // 4. [핵심] 화면에 그려진 모든 오버레이(선, 점)를 즉시 지움
-                // 빈 리스트를 전달하여 이전 모델의 잔상을 완전히 제거합니다.
-                cameraForm.ImageViewer.AddRect(new List<DrawInspectInfo>());
-
-                // 5. 새 모델의 구조만 다시 그려줌
-                cameraForm.ImageViewer.RestoreHeightLinesFromModel(_model);
-            }
-
             _regKey.SetValue("LastestModelPath", filePath);
+
+
             return true;
         }
 
@@ -646,7 +634,8 @@ namespace ABCsystem.Core
         {
             if (UseCamera)
             {
-                if (!Grab(0)) return false;
+                if (!Grab(0))
+                    return false;
             }
             else
             {
@@ -658,19 +647,6 @@ namespace ABCsystem.Core
             bool isDefect;
             if (!_inspWorker.RunInspect(out isDefect))
                 return false;
-
-            // UI 갱신 부분 수정
-            MainForm.DockPanelInstance.BeginInvoke(new Action(() => {
-                var cameraForm = FormManager.GetForm<CameraForm>();
-                if (cameraForm != null && this.CurModel != null)
-                {
-                    // 1. 현재 모델의 ROI 리스트를 뷰어에 전달 (바구니 채우기)
-                    cameraForm.ImageViewer.SetInspWindowList(this.CurModel.InspWindowList);
-
-                    // 2. 화면을 다시 그리라고 명령
-                    cameraForm.ImageViewer.Invalidate();
-                }
-            }));
 
             return true;
         }

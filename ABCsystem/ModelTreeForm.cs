@@ -105,5 +105,48 @@ namespace ABCsystem
             SLogger.Write($"CurModel null? {Global.Inst.InspStage.CurModel == null}");
             SLogger.Write($"InspWindowList count: {Global.Inst.InspStage.CurModel?.InspWindowList?.Count}");
         } 
+
+        // ModelTreeForm.cs
+
+        public void SelectNodesByUids(List<string> uids)
+        {
+            if (uids == null) return;
+
+            tvModelTree.BeginUpdate(); // 화면 깜빡임 방지
+
+            // 1. 기존에 강조된 모든 노드 초기화 (색상 초기화)
+            ResetNodeStyles(tvModelTree.Nodes);
+
+            // 2. 전달받은 UID 리스트에 해당하는 노드들 강조
+            foreach (string uid in uids)
+            {
+                foreach (TreeNode root in tvModelTree.Nodes)
+                {
+                    foreach (TreeNode child in root.Nodes)
+                    {
+                        if (child.Text == uid)
+                        {
+                            child.BackColor = Color.DodgerBlue; // 강조 색상
+                            child.ForeColor = Color.White;
+                            child.EnsureVisible();
+                        }
+                    }
+                }
+            }
+
+            tvModelTree.EndUpdate();
+        }
+
+        // 노드 스타일 초기화 함수
+        private void ResetNodeStyles(TreeNodeCollection nodes)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                node.BackColor = Color.Empty;
+                node.ForeColor = Color.Empty;
+                if (node.Nodes.Count > 0) ResetNodeStyles(node.Nodes);
+            }
+        }
+
     }
 }

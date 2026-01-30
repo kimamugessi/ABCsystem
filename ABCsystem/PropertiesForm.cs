@@ -89,14 +89,11 @@ namespace ABCsystem
                     AIModuleProp aiModuleProp = new AIModuleProp();
                     curProp = aiModuleProp;
                     break;
-                //song
+                case InspectType.InspAlignEdge:
                 case InspectType.InspEdge:
                     {
                         EdgeProp edgeProp = new EdgeProp();
-
-                        // 버튼 클릭 이벤트 연결
                         edgeProp.InspectEdgeClicked += InspectEdgeRequested;
-
                         curProp = edgeProp;
                         break;
                     }
@@ -107,42 +104,69 @@ namespace ABCsystem
             return curProp;
         }
 
-        //song : EdgeProp의 InspectEdgeClicked 이벤트가 호출할 함수
+        // EdgeProp의 InspectEdgeClicked 이벤트가 호출할 함수
         private void InspectEdgeRequested()
         {
             var win = Global.Inst.CurTeachWindow;
-            SLogger.Write($"[EDGE_BTN] Clicked. win={(win == null ? "null" : win.UID)}");
-
             if (win == null) return;
 
             var edgeAlgo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
-            if (edgeAlgo != null && edgeAlgo.EdgeThreshold <= 0)
-                edgeAlgo.EdgeThreshold = 30;   // 임시 기본 임계값. ROI 명암에 따라 조정해야함. 지금 흑백에선 30 ㄱㅊ
-            SLogger.Write($"[EDGE_BTN] edgeAlgo={(edgeAlgo == null ? "null" : "ok")} " + $"thr={(edgeAlgo?.EdgeThreshold.ToString() ?? "-")} " + $"scanDir={(edgeAlgo == null ? "-" : edgeAlgo.ScanDir.ToString())}");
 
+            if (edgeAlgo == null)
+            {
+                SLogger.Write("[EDGE_BTN] edgeAlgo=null");
+                return;
+            }
 
+            // Body/Base 강제 분기
+            InspectType runType;
+            if (win.InspWindowType == InspWindowType.Body)
+            {
+                edgeAlgo.UseAsAlignment = true;
+                edgeAlgo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+                runType = InspectType.InspAlignEdge;
+            }
+            else // Base 포함
+            {
+                edgeAlgo.UseAsAlignment = false;
+                runType = InspectType.InspEdge;
+            }
 
-            Global.Inst.InspStage.InspWorker.TryInspect(win, InspectType.InspEdge);
+            if (edgeAlgo.EdgeThreshold <= 0)
+                edgeAlgo.EdgeThreshold = 30;
+
+            SLogger.Write($"[EDGE_BTN] Clicked. win={win.UID} wType={win.InspWindowType} type={runType} useAlign={edgeAlgo.UseAsAlignment} thr={edgeAlgo.EdgeThreshold} scanDir={edgeAlgo.ScanDir}");
+
+            Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
+
+            // Align일 때만 Teach 값 저장
+            if (runType == InspectType.InspAlignEdge && edgeAlgo.HasAnchor)
+            {
+                edgeAlgo.TeachAnchorX = edgeAlgo.AnchorPoint.X;
+                SLogger.Write($"[TEACH_SAVE] TeachAnchorX 저장됨 = {edgeAlgo.TeachAnchorX}");
+            }
+
             Global.Inst.InspStage.RedrawMainView();
         }
 
         public void ShowProperty(InspWindow window)
         {
-            Global.Inst.CurTeachWindow = window; //song
+            Global.Inst.CurTeachWindow = window;
 
             foreach (InspAlgorithm algo in window.AlgorithmList)
             {
-                LoadOptionControl(algo.InspectType);
+                var typeForTab = (algo.InspectType == InspectType.InspAlignEdge) ? InspectType.InspEdge : algo.InspectType;
+
+                LoadOptionControl(typeForTab);
             }
 
-            //song : 탭 만든 뒤 실제 알고리즘 값 연결
             UpdateProperty(window);
         }
 
         public void ResetProperty() {  tabPropControl.TabPages.Clear(); }
         public void UpdateProperty(InspWindow window)
         {
-            Global.Inst.CurTeachWindow = window; //song
+            Global.Inst.CurTeachWindow = window;
 
             if (window == null) return;
             foreach (TabPage tabPage in tabPropControl.TabPages)
@@ -167,10 +191,12 @@ namespace ABCsystem
 
                         matchProp.SetAlgorithm(matchAlgo);
                     }
-                    //song
                     else if (uc is EdgeProp edgeProp)
                     {
-                        EdgeAlgorithm edgeAlgo = (EdgeAlgorithm)window.FindInspAlgorithm(InspectType.InspEdge);
+                        EdgeAlgorithm edgeAlgo =
+                            window.FindInspAlgorithm(InspectType.InspAlignEdge) as EdgeAlgorithm
+                            ?? window.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
+
                         if (edgeAlgo == null) continue;
 
                         edgeProp.SetAlgorithm(window, edgeAlgo);

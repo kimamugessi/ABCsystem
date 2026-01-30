@@ -27,7 +27,6 @@ namespace ABCsystem
         private const int WM_MOVING = 0x0216;
         private const int WM_SIZING = 0x0214;
 
-        public ImageViewCtrl ImageViewer => this.imageViewer;
         eImageChannel _currentImageChannel = eImageChannel.Gray;
 
         [StructLayout(LayoutKind.Sequential)]
@@ -149,13 +148,15 @@ namespace ABCsystem
                     Global.Inst.InspStage.ModifyInspWindow(e.InspWindow, e.Rect);
                     break;
                 case EntityActionType.Delete:
+                    // ROI에 딸린 검사 결과(엣지점/윤곽점/텍스트) 먼저 제거
                     if (e.InspWindow != null)
-                        imageViewer.RemoveResultsByWindowUid(e.InspWindow.UID); //검사 결과도 같이 삭제
+                        imageViewer.RemoveResultsByWindowUid(e.InspWindow.UID);
                     Global.Inst.InspStage.DelInspWindow(e.InspWindow);
                     break;
                 case EntityActionType.DeleteList:
+                    // 여러 ROI의 결과를 한 번에 제거
                     if (e.InspWindowList != null)
-                        imageViewer.RemoveResultsByWindowUids(e.InspWindowList.Select(w => w.UID).ToList()); //검사 결과도 같이 삭제
+                        imageViewer.RemoveResultsByWindowUids(e.InspWindowList.Select(w => w?.UID));
                     Global.Inst.InspStage.DelInspWindow(e.InspWindowList);
                     break;
             }

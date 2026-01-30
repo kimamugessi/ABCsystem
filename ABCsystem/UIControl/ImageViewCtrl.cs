@@ -196,7 +196,7 @@ namespace ABCsystem.UIControl
                     color = Color.LightBlue;
                     break;
                 case InspWindowType.Body:
-                    color = Color.Yellow;
+                    color = Color.Red;
                     break;
                 case InspWindowType.Sub:
                     color = Color.Orange;
@@ -1272,6 +1272,9 @@ namespace ABCsystem.UIControl
 
             Invalidate();   //오버레이 다시 그리기 요청
         }
+
+        //엣지 삭제 _20260128
+        //Delete
         public void RemoveResultsByWindowUid(string uid)
         {
             if (string.IsNullOrEmpty(uid)) return;
@@ -1295,6 +1298,7 @@ namespace ABCsystem.UIControl
             }
             Invalidate();
         }
+
         public void SetInspResultCount(InspectResultCount inspectResultCount)
         {
             _inspectResultCount = inspectResultCount;

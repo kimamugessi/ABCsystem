@@ -17,8 +17,8 @@ namespace ABCsystem.Algorithm
         public DecisionType decision;
         public bool UseRotatedRect=false;
 
-        //song
-        public string  windowUid = "";
+        // 결과가 속한 ROI UID
+        public string windowUid = "";
 
         //song : 점 표시용
         public bool UsePoint = false;
@@ -39,7 +39,7 @@ namespace ABCsystem.Algorithm
             info = _info;
             inspectType = _inspectType;
             decision = _decision;
-            windowUid = _windowUid; //song
+            windowUid = _windowUid;
         }
 
         //song : 점 생성자
@@ -51,7 +51,7 @@ namespace ABCsystem.Algorithm
             decision = _decision;
             UsePoint = true;
             rect = new Rect(0, 0, 0, 0);
-            windowUid = _windowUid; //song
+            windowUid = _windowUid;
         }
 
         public void SetRotatedRectPoints(Point2f[] _rotatedPoints)

@@ -1,4 +1,5 @@
 ﻿using ABCsystem.Algorithm;
+using ABCsystem.Core;
 using ABCsystem.Teach;
 using System;
 using System.Windows.Forms;
@@ -26,11 +27,50 @@ namespace ABCsystem.Property
             _win = win;
             _algo = algo;
 
-            // 알고리즘 값 -> 콤보 UI 동기화
-            if (_algo != null)
-                cbEdgeType.SelectedItem = ToArrow(_algo.ScanDir);
-        }
+            cbEdgeType.SelectedIndexChanged -= cbEdgeType_SelectedIndexChanged;
+            cbEdgeType.Items.Clear();
 
+            if (_win == null || _algo == null)
+            {
+                cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+                return;
+            }
+
+            // Body: Align만
+            if (_win.InspWindowType == InspWindowType.Body)
+            {
+                cbEdgeType.Items.Add("Align");
+
+                // Align은 무조건 → 강제 + UseAsAlignment 강제
+                _algo.UseAsAlignment = true;
+                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+
+                cbEdgeType.SelectedItem = "Align";
+            }
+
+            // Base: 화살표만
+            else if (_win.InspWindowType == InspWindowType.Base)
+            {
+                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+
+                // Base는 Align 금지
+                _algo.UseAsAlignment = false;
+
+                // 현재 ScanDir에 맞춰 UI 선택
+                var arrow = ToArrow(_algo.ScanDir);
+                cbEdgeType.SelectedItem = arrow;
+                if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedItem = "→";
+            }
+            // 기타 윈도우
+            else
+            {
+                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+                cbEdgeType.SelectedItem = "→";
+                _algo.UseAsAlignment = false;
+            }
+
+            cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+        }
 
         private void btnEdge_Click(object sender, EventArgs e)
         {
@@ -47,12 +87,33 @@ namespace ABCsystem.Property
 
         private void ApplyComboToAlgorithm()
         {
-            if (_algo == null) return;
+            if (_algo == null || _win == null) return;
 
-            string arrow = cbEdgeType.SelectedItem?.ToString();
-            if (string.IsNullOrWhiteSpace(arrow)) return;
+            // Body는 항상 Align 고정
+            if (_win.InspWindowType == InspWindowType.Body)
+            {
+                _algo.UseAsAlignment = true;
+                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
+                return;
+            }
 
-            _algo.ScanDir = FromArrow(arrow);
+            // Base는 항상 화살표 고정
+            if (_win.InspWindowType == InspWindowType.Base)
+            {
+                _algo.UseAsAlignment = false;
+
+                string arrow = cbEdgeType.SelectedItem?.ToString();
+                if (string.IsNullOrWhiteSpace(arrow)) return;
+
+                _algo.ScanDir = FromArrow(arrow);
+                return;
+            }
+
+            // 기타는 기본 화살표 처리
+            _algo.UseAsAlignment = false;
+            string sel = cbEdgeType.SelectedItem?.ToString();
+            if (string.IsNullOrWhiteSpace(sel)) return;
+            _algo.ScanDir = FromArrow(sel);
         }
 
         private static EdgeAlgorithm.ScanDirection FromArrow(string arrow)
