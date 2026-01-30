@@ -12,6 +12,10 @@ namespace ABCsystem.Util
         private List<string> _sortedImages;
         private int _grabIndex = -1;
 
+
+        public int Count => (_sortedImages != null) ? _sortedImages.Count : 0;
+        public int CurrentIndex => _grabIndex;
+
         public bool CyclicMode { get; set; } = true;
 
         public ImageLoader() { }

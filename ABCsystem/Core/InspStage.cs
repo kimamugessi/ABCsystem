@@ -645,6 +645,25 @@ namespace ABCsystem.Core
         }
         public bool OneCycle()
         {
+            // --- 추가: 인덱스 초과 방지 로직 ---
+            if (!UseCamera) // 이미지 로드 모드일 때만 체크
+            {
+                int totalCount = GetFileCount();
+                int currentIndex = GetCurrentFileIndex();
+
+                // 마지막 이미지에 도달했는지 확인 (0부터 시작하므로 currentIndex + 1 >= totalCount)
+                if (totalCount > 0 && (currentIndex + 1) >= totalCount)
+                {
+                    SLogger.Write($"마지막 이미지({totalCount})입니다. 검사를 진행하지 않습니다.");
+
+                    // UI를 '중지' 강조 상태(오른쪽 이미지)로 변경
+                    SetWorkingState(WorkingState.NONE);
+                    return false;
+                }
+                SLogger.Write($"Progress: {currentIndex + 2} / {totalCount}");
+            }
+            // --------------------------------
+
             if (UseCamera)
             {
                 if (!Grab(0)) return false;
@@ -660,15 +679,12 @@ namespace ABCsystem.Core
             if (!_inspWorker.RunInspect(out isDefect))
                 return false;
 
-            // UI 갱신 부분 수정
+            // UI 갱신 부분
             MainForm.DockPanelInstance.BeginInvoke(new Action(() => {
                 var cameraForm = MainForm.GetDockForm<CameraForm>();
                 if (cameraForm != null && this.CurModel != null)
                 {
-                    // 1. 현재 모델의 ROI 리스트를 뷰어에 전달 (바구니 채우기)
                     cameraForm.ImageViewer.SetInspWindowList(this.CurModel.InspWindowList);
-
-                    // 2. 화면을 다시 그리라고 명령
                     cameraForm.ImageViewer.Invalidate();
                 }
             }));
@@ -870,6 +886,28 @@ namespace ABCsystem.Core
             {
                 // 오류 발생 시 로그 기록
                 SLogger.Write($"이미지 저장 실패: {ex.Message}");
+            }
+        }
+
+        public int GetFileCount()
+        {
+            return (_imageLoader != null) ? _imageLoader.Count : 0;
+        }
+
+        public int GetCurrentFileIndex()
+        {
+            return (_imageLoader != null) ? _imageLoader.CurrentIndex : 0;
+        }
+
+        public void ResetImageIndex()
+        {
+            if (_imageLoader != null)
+            {
+                _imageLoader.Reset(); // ImageLoader 내부의 _grabIndex를 -1로 만듭니다.
+            }
+            if (_inspWorker != null)
+            {
+                _inspWorker.ResetCounts();
             }
         }
 

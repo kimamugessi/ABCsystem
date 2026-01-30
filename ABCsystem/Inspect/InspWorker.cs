@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ABCsystem.Algorithm;
 using ABCsystem.Core;
 using ABCsystem.Teach;
@@ -36,28 +37,49 @@ namespace ABCsystem.Inspect
 
         private void InspectionLoop(InspWorker inspWorker, CancellationToken token)
         {
+            // 1. 검사 시작 전 인덱스와 카운트를 초기화 (버튼 눌렀을 때 한 번 수행)
+            Global.Inst.InspStage.ResetImageIndex();
+
             Global.Inst.InspStage.SetWorkingState(WorkingState.INSPECT);
+            IsRunning = true;
 
             SLogger.Write("InspectionLoop Start");
 
-            IsRunning = true;
-
             while (!token.IsCancellationRequested)
             {
+                // 2. 검사 수행
                 Global.Inst.InspStage.OneCycle();
+
+                int totalCount = Global.Inst.InspStage.GetFileCount();
+                int currentIndex = Global.Inst.InspStage.GetCurrentFileIndex();
+
+                //SLogger.Write($"Progress: {currentIndex + 1} / {totalCount}");
+
+                // 3. [종료 조건] 마지막 이미지까지 검사를 마쳤다면 루프 탈출
+                if (totalCount > 0 && (currentIndex + 1) >= totalCount)
+                {
+                    SLogger.Write("All images processed. Auto stopping.");
+                    break;
+                }
+
                 Thread.Sleep(200);
             }
 
+            // 4. 최종 종료 처리 (상태를 NONE으로 변경하여 버튼을 다시 누를 수 있게 함)
             IsRunning = false;
-
+            Global.Inst.InspStage.SetWorkingState(WorkingState.NONE);
             SLogger.Write("InspectionLoop End");
-            
         }
 
         private int _totalAccumulatedCount = 0;
         private int _okAccumulatedCount = 0;
         private int _ngAccumulatedCount = 0;
-
+        public void ResetCounts()
+        {
+            _totalAccumulatedCount = 0;
+            _okAccumulatedCount = 0;
+            _ngAccumulatedCount = 0;
+        }
         public bool RunInspect(out bool isDefect)
         {
             isDefect = false;
