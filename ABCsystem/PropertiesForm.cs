@@ -13,12 +13,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABCsystem.Algorithm;
-using ABCsystem.Core;
-using ABCsystem.Property;
-using ABCsystem.Teach;
-using OpenCvSharp;
-
 
 namespace ABCsystem
 {
@@ -89,64 +83,11 @@ namespace ABCsystem
                     AIModuleProp aiModuleProp = new AIModuleProp();
                     curProp = aiModuleProp;
                     break;
-                case InspectType.InspAlignEdge:
-                case InspectType.InspEdge:
-                    {
-                        EdgeProp edgeProp = new EdgeProp();
-                        edgeProp.InspectEdgeClicked += InspectEdgeRequested;
-                        curProp = edgeProp;
-                        break;
-                    }
                 default:
-                    MessageBox.Show("유효하지 않은 옵션입니다.");
+                    //MessageBox.Show("유효하지 않은 옵션입니다.");
                     return null;
             }
             return curProp;
-        }
-
-        // EdgeProp의 InspectEdgeClicked 이벤트가 호출할 함수
-        private void InspectEdgeRequested()
-        {
-            var win = Global.Inst.CurTeachWindow;
-            if (win == null) return;
-
-            var edgeAlgo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
-
-            if (edgeAlgo == null)
-            {
-                SLogger.Write("[EDGE_BTN] edgeAlgo=null");
-                return;
-            }
-
-            // Body/Base 강제 분기
-            InspectType runType;
-            if (win.InspWindowType == InspWindowType.Body)
-            {
-                edgeAlgo.UseAsAlignment = true;
-                edgeAlgo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
-                runType = InspectType.InspAlignEdge;
-            }
-            else // Base 포함
-            {
-                edgeAlgo.UseAsAlignment = false;
-                runType = InspectType.InspEdge;
-            }
-
-            if (edgeAlgo.EdgeThreshold <= 0)
-                edgeAlgo.EdgeThreshold = 30;
-
-            SLogger.Write($"[EDGE_BTN] Clicked. win={win.UID} wType={win.InspWindowType} type={runType} useAlign={edgeAlgo.UseAsAlignment} thr={edgeAlgo.EdgeThreshold} scanDir={edgeAlgo.ScanDir}");
-
-            Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
-
-            // Align일 때만 Teach 값 저장
-            if (runType == InspectType.InspAlignEdge && edgeAlgo.HasAnchor)
-            {
-                edgeAlgo.TeachAnchorX = edgeAlgo.AnchorPoint.X;
-                SLogger.Write($"[TEACH_SAVE] TeachAnchorX 저장됨 = {edgeAlgo.TeachAnchorX}");
-            }
-
-            Global.Inst.InspStage.RedrawMainView();
         }
 
         public void ShowProperty(InspWindow window)
@@ -191,16 +132,6 @@ namespace ABCsystem
 
                         matchProp.SetAlgorithm(matchAlgo);
                     }
-                    else if (uc is EdgeProp edgeProp)
-                    {
-                        EdgeAlgorithm edgeAlgo =
-                            window.FindInspAlgorithm(InspectType.InspAlignEdge) as EdgeAlgorithm
-                            ?? window.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
-
-                        if (edgeAlgo == null) continue;
-
-                        edgeProp.SetAlgorithm(window, edgeAlgo);
-                    }
                 }
             }
         }
@@ -220,19 +151,6 @@ namespace ABCsystem
         private void ImageChannelChanged(object sender, ImageChannelEventArgs e)
         {
             Global.Inst.InspStage.SetPreviewImage(e.Channel);
-        }
-        public EdgeProp EdgePropControl
-        {
-            get
-            {
-                // 탭 컨트롤에서 EdgeProp 타입을 찾아 반환합니다.
-                foreach (TabPage page in tabPropControl.TabPages)
-                {
-                    if (page.Controls.Count > 0 && page.Controls[0] is EdgeProp ctrl)
-                        return ctrl;
-                }
-                return null;
-            }
         }
     }
 }

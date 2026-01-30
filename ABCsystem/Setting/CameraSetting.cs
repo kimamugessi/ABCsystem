@@ -14,7 +14,7 @@ using ABCsystem.Setting;
 
 namespace ABCsystem4.Setting
 {
-    public partial class CameraSetting: UserControl
+    public partial class CameraSetting : UserControl
     {
         public CameraSetting()
         {
@@ -45,68 +45,19 @@ namespace ABCsystem4.Setting
 
             //환경설정에서 현재 카메라 타입 얻기
             cbCameraType.SelectedIndex = (int)SettingXml.Inst.CamType;
-
-            long exposureTime = SettingXml.Inst.ExposureTime;
-
-            long expTime = 10000;
-            if (exposureTime > 1000)
-                expTime = exposureTime / 1000;
-
-            tbExposure.Text = expTime.ToString();
         }
 
         private void SaveSetting()
         {
             //환경설정에 카메라 타입 설정
             SettingXml.Inst.CamType = (CameraType)cbCameraType.SelectedIndex;
-
-            long.TryParse(tbExposure.Text, out long expTime);
-            SettingXml.Inst.ExposureTime = expTime * 1000; //ms → us
             //환경설정 저장
             SettingXml.Save();
-
-            if (SettingXml.Inst.CamType != CameraType.None)
-            {
-                //카메라 재연결
-                Global.Inst.InspStage.SetExposure(SettingXml.Inst.ExposureTime);
-            }
-
-            SLogger.Write($"카메라 설정 저장");
         }
 
         private void btnApply_Click(object sender, EventArgs e)
         {
             SaveSetting();
-        }
-
-        private void CameraSetting_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lbExpUnit_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbExposure_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cbCameraType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lbCameraType_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lbExposure_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
