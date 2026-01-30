@@ -773,6 +773,8 @@ namespace ABCsystem.Core
                 SLogger.Write(errMsg, SLogger.LogType.Error);
             }
 
+            RedrawMainView();
+
             //#WCF_FSM#6 비젼 -> 제어에 검사 완료 및 결과 전송
             VisionSequence.Inst.VisionCommand(Vision2Mmi.InspDone, isDefect);
         }

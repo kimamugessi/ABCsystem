@@ -329,10 +329,12 @@ namespace ABCsystem.UIControl
                     g.DrawImage(_bitmapImage, ImageRect);
 
                     DrawDiagram(g);
+                    DrawHeightLine(g); //새 수직선 (ROI3 기준) 
+
                     e.Graphics.DrawImage(Canvas, 0, 0); //캔버스를 UserControl 화면에 표시
                 }
             }
-            DrawHeightLine(e.Graphics); //새 수직선 (ROI3 기준) 
+            
         }
 
         //EdgeAlgorithm에서 검출된 엣지 포인트를 가져오는 함수
@@ -412,12 +414,12 @@ namespace ABCsystem.UIControl
                 string currentLineStatus = "NG";
                 Color lineColor = Color.Red;
 
-                if (pixelLength >= 500) //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
+                if (pixelLength >= 1000) //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
                 {
                     currentLineStatus = "NO CAP";
                     lineColor = Color.Red;
                 }
-                else if (pixelLength >= 350 && pixelLength <= 360)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
+                else if (pixelLength >= 870 && pixelLength <= 900)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
                 {
                     currentLineStatus = "OK";
                     lineColor = Color.Lime;
@@ -454,7 +456,7 @@ namespace ABCsystem.UIControl
                 PointF sStart = VirtualToScreen(vP3);   //세로선 시작점
                 PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));  //세로선 끝점
 
-                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;    //+기준 길이 조건에 따라 수정(NO CAP 길이): 500px 초과 시 흰색으로 그리기(시각적으로 숨김) 아닐 경우 lineColor에 따름(라임색 or 빨강색)
+                Color drawColor = (pixelLength > 1000) ? Color.White : lineColor;    //+기준 길이 조건에 따라 수정(NO CAP 길이): 500px 초과 시 흰색으로 그리기(시각적으로 숨김) 아닐 경우 lineColor에 따름(라임색 or 빨강색)
 
                 using (Pen bluePen = new Pen(Color.Blue, 2f))   //가로선 그리기
                 {

@@ -126,12 +126,12 @@ namespace ABCsystem.Inspect
                         float pixelLength = Math.Abs(targetY - vP3.Y);
 
                         // --- DrawHeightLine 판정 기준과 100% 동일화 ---
-                        if (pixelLength >= 500)
+                        if (pixelLength >= 1000)
                         {
                             imageStatus = "NO CAP"; // NO CAP은 불량으로 간주
                             break;
                         }
-                        else if (pixelLength >= 350 && pixelLength <= 360)
+                        else if (pixelLength >= 870 && pixelLength <= 900)
                         {
                             // 이 라인은 OK, 다음 라인 계속 체크
                         }
