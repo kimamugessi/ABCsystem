@@ -381,18 +381,31 @@ namespace ABCsystem.UIControl
 
                 // [수치 계산]
                 float dx = vP2.X - vP1.X;   //가로선의 X축 길이
+                float dy = vP2.Y - vP1.Y;
                 float targetY = vP1.Y;  //세로선이 만나는 Y좌표 초기값
 
-                if (Math.Abs(dx) > 0.0001f) //분모 0 방지
+                if (Math.Abs(dx) > 0.0001f)
                 {
-                    targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
+                    float slope = Math.Abs(dy / dx); // 기울기 계산
+                                                     // 기울기가 0.1(약 5.7도)보다 크면 비정상적인 데이터로 간주하고 무시
+                    if (slope > 0.1f)
+                    {
+                        continue;
+                    }
+
+                    targetY = vP1.Y + (dy / dx) * (vP3.X - vP1.X);
+                }
+                else
+                {
+                    // dx가 0에 가깝다는 것은 선이 수직이라는 의미이므로 가로선으로 부적합
+                    continue;
                 }
 
                 float pixelLength = Math.Abs(targetY - vP3.Y);
-                if (pixelLength < 300 || pixelLength > 700) //정상 수치가 358px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
-                {
-                    continue;
-                }
+                //if (pixelLength < 300 || pixelLength > 700) //정상 수치가 358px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
+                //{
+                //    continue;
+                //}
 
 
                 // [단계 1] 판정 로직 적용 (수정된 기준)
