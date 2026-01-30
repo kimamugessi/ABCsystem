@@ -324,11 +324,9 @@ namespace ABCsystem.Core
         {
             _selectedInspWindow = inspWindow;
 
-            var propForm = FormManager.GetForm<PropertiesForm>();
-            //song
             Global.Inst.CurTeachWindow = inspWindow;
 
-            var propForm = MainForm.GetDockForm<PropertiesForm>();
+            var propForm = FormManager.GetForm<PropertiesForm>();
             if (propForm != null)
             {
                 if (inspWindow == null)
@@ -663,7 +661,7 @@ namespace ABCsystem.Core
 
             // UI 갱신 부분 수정
             MainForm.DockPanelInstance.BeginInvoke(new Action(() => {
-                var cameraForm = MainForm.GetDockForm<CameraForm>();
+                var cameraForm = FormManager.GetForm<CameraForm>();
                 if (cameraForm != null && this.CurModel != null)
                 {
                     // 1. 현재 모델의 ROI 리스트를 뷰어에 전달 (바구니 채우기)
@@ -849,7 +847,7 @@ namespace ABCsystem.Core
             try
             {
                 // 1. 현재 화면에 표시되고 있는 카메라 폼을 찾습니다.
-                var cameraForm = MainForm.GetDockForm<CameraForm>();
+                var cameraForm = FormManager.GetForm<CameraForm>();
                 if (cameraForm != null)
                 {
                     // 2. 카메라 폼으로부터 현재 Mat 이미지를 가져옵니다.

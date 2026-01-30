@@ -110,7 +110,7 @@ namespace ABCsystem
                     var selectedUids = imageViewer.GetSelectedUids();
 
                     // 2. 트리 폼 강조 표시 (기존 코드)
-                    var modelTreeForm = MainForm.GetDockForm<ModelTreeForm>();
+                    var modelTreeForm = FormManager.GetForm<ModelTreeForm>();
                     modelTreeForm?.SelectNodesByUids(selectedUids);
 
                     // ★ 3. [보완] 속성창(PropertiesForm) 데이터 즉시 갱신 ★
@@ -122,7 +122,7 @@ namespace ABCsystem
 
                         if (selectedWin != null)
                         {
-                            var propForm = MainForm.GetDockForm<PropertiesForm>();
+                            var propForm = FormManager.GetForm<PropertiesForm>();
                             if (propForm != null)
                             {
                                 // PropertiesForm에 이미 구현되어 있는 ShowProperty를 호출하면
