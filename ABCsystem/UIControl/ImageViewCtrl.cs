@@ -402,27 +402,22 @@ namespace ABCsystem.UIControl
                 }
 
                 float pixelLength = Math.Abs(targetY - vP3.Y);
-                //if (pixelLength < 300 || pixelLength > 700) //정상 수치가 358px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
-                //{
-                //    continue;
-                //}
-
 
                 // [단계 1] 판정 로직 적용 (수정된 기준)
                 string currentLineStatus = "NG";
                 Color lineColor = Color.Red;
 
-                if (pixelLength >= 500) //NO CAP 기준
+                if (pixelLength >= 500) //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
                 {
                     currentLineStatus = "NO CAP";
                     lineColor = Color.Red;
                 }
-                else if (pixelLength >= 350 && pixelLength <= 360)  //OK 기준
+                else if (pixelLength >= 350 && pixelLength <= 360)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
                 {
                     currentLineStatus = "OK";
                     lineColor = Color.Lime;
                 }
-                else
+                else    //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
                 {
                     currentLineStatus = "NG";
                     lineColor = Color.Red;
@@ -454,7 +449,7 @@ namespace ABCsystem.UIControl
                 PointF sStart = VirtualToScreen(vP3);   //세로선 시작점
                 PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));  //세로선 끝점
 
-                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;    //500px 초과 시 흰색으로 그리기
+                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;    //+기준 길이 조건에 따라 수정(NO CAP 길이): 500px 초과 시 흰색으로 그리기(시각적으로 숨김) 아닐 경우 lineColor에 따름(라임색 or 빨강색)
 
                 using (Pen bluePen = new Pen(Color.Blue, 2f))   //가로선 그리기
                 {
