@@ -14,6 +14,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Point = System.Drawing.Point; // 추가: Point는 이제 System.Drawing.Point로 인식됨
+using Size = System.Drawing.Size;   // 추가: Size는 이제 System.Drawing.Size로 인식됨
+
 
 namespace ABCsystem.UIControl
 {
@@ -121,6 +124,22 @@ namespace ABCsystem.UIControl
         private ContextMenuStrip _contextMenu;
 
         private readonly object _lock = new object();
+
+        private List<InspWindow> _inspWindowList = new List<InspWindow>();
+
+        public List<DiagramEntity[]> GetHeightLineList()
+        {
+            return _heightLineList;
+        }
+
+        public void SetInspWindowList(List<InspWindow> inspWindowList)
+        {
+            // 외부(InspStage 등)에서 받은 리스트를 컨트롤 내부 변수에 저장
+            this._inspWindowList = inspWindowList;
+
+            // 화면을 다시 그리도록 명령 (OnPaint 호출)
+            this.Invalidate();
+        }
 
         public ImageViewCtrl()
         {
@@ -288,13 +307,15 @@ namespace ABCsystem.UIControl
                     g.DrawImage(_bitmapImage, ImageRect);
 
                     DrawDiagram(g);
+                    DrawHeightLine(g); //새 수직선 (ROI3 기준) 
+
                     e.Graphics.DrawImage(Canvas, 0, 0); // 캔버스를 UserControl 화면에 표시
                 }
             }
             DrawHeightLine(e.Graphics); // 새 수직선 (ROI3 기준) 
         }
 
-        private PointF GetEdgePoint(DiagramEntity entity)
+        public PointF GetEdgePoint(DiagramEntity entity)
         {
             // 1. 엔티티에 연결된 InspWindow 확인
             if (entity?.LinkedWindow != null)
@@ -317,10 +338,14 @@ namespace ABCsystem.UIControl
 
         public void DrawHeightLine(Graphics g)
         {
-            // 1. 기초 검사
+            //SLogger.Write($"[DrawHeightLine] Enabled={_drawVerticalEnabled}, Count={_heightLineList.Count}");
+            // 1. 기초 검사: 그리기 비활성화 상태거나 데이터가 없으면 즉시 종료
             if (_drawVerticalEnabled == false || _heightLineList.Count == 0) return;
 
+            // 선의 품질을 높이기 위한 안티앨리어싱 설정
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            // 폰트 설정 (수치 표시용 및 상단 결과 표시용)
             Font font = new Font("Arial", 10, FontStyle.Bold);
             Font hugeFont = new Font("Arial", 50, FontStyle.Bold);
 
@@ -331,47 +356,56 @@ namespace ABCsystem.UIControl
             for (int i = 0; i < _heightLineList.Count; i++)
             {
                 var lineSet = _heightLineList[i];
-                PointF vP1 = GetEdgePoint(lineSet[0]);
-                PointF vP2 = GetEdgePoint(lineSet[1]);
-                PointF vP3 = GetEdgePoint(lineSet[2]);
+                // [좌표 추출] 알고리즘이 찾은 실제 이미지상의 엣지 포인트(Virtual Coord)
+                PointF vP1 = GetEdgePoint(lineSet[0]);  //가로선 기준점 1
+                PointF vP2 = GetEdgePoint(lineSet[1]);  //가로선 기준점 2
+                PointF vP3 = GetEdgePoint(lineSet[2]);  //세로선 시작점
 
                 // [수치 계산]
-                float dx = vP2.X - vP1.X;
-                float targetY = vP1.Y;
+                float dx = vP2.X - vP1.X;   //가로선의 X축 길이
+                float dy = vP2.Y - vP1.Y;
+                float targetY = vP1.Y;  //세로선이 만나는 Y좌표 초기값
 
-                if (Math.Abs(dx) > 0.0001f) //분모 0 방지
+                if (Math.Abs(dx) > 0.0001f)
                 {
-                    targetY = vP1.Y + ((vP2.Y - vP1.Y) / dx) * (vP3.X - vP1.X);
+                    float slope = Math.Abs(dy / dx); // 기울기 계산
+                                                     // 기울기가 0.1(약 5.7도)보다 크면 비정상적인 데이터로 간주하고 무시
+                    if (slope > 0.1f)
+                    {
+                        continue;
+                    }
+
+                    targetY = vP1.Y + (dy / dx) * (vP3.X - vP1.X);
+                }
+                else
+                {
+                    // dx가 0에 가깝다는 것은 선이 수직이라는 의미이므로 가로선으로 부적합
+                    continue;
                 }
 
                 float pixelLength = Math.Abs(targetY - vP3.Y);
-                if (pixelLength < 300 || pixelLength > 700) //정상 수치가 358px 정도이므로, 이미지가 넘어갈 때 발생하는 159px 같은 엉뚱한 수치는 화면에 그리지 않도록 차단
-                {
-                    continue;
-                }
-                
 
                 // [단계 1] 판정 로직 적용 (수정된 기준)
                 string currentLineStatus = "NG";
                 Color lineColor = Color.Red;
 
-                if (pixelLength >= 500)
+                if (pixelLength >= 500) //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
                 {
                     currentLineStatus = "NO CAP";
                     lineColor = Color.Red;
                 }
-                else if (pixelLength >= 350 && pixelLength <= 360)
+                else if (pixelLength >= 350 && pixelLength <= 380)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
                 {
                     currentLineStatus = "OK";
                     lineColor = Color.Lime;
                 }
-                else
+                else    //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
                 {
                     currentLineStatus = "NG";
                     lineColor = Color.Red;
                 }
 
-                // [단계 2] 전체 결과 업데이트 (우선순위: NO CAP > NG > OK)
+                // [단계 2] 전체 결과 업데이트 (우선순위: NO CAP > NG > OK)   
                 if (currentLineStatus == "NO CAP")
                 {
                     finalStatus = "NO CAP";
@@ -397,7 +431,7 @@ namespace ABCsystem.UIControl
                 PointF sStart = VirtualToScreen(vP3);   //세로선 시작점
                 PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));  //세로선 끝점
 
-                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;
+                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;    //+기준 길이 조건에 따라 수정(NO CAP 길이): 500px 초과 시 흰색으로 그리기(시각적으로 숨김) 아닐 경우 lineColor에 따름(라임색 or 빨강색)
 
                 using (Pen bluePen = new Pen(Color.Blue, 2f))   //가로선 그리기
                 {
@@ -423,6 +457,7 @@ namespace ABCsystem.UIControl
                 DrawStatusText(g, finalStatus, hugeFont, statusColor, 20, 20);
             }
         }
+
 
         /// <summary>
         /// 화면에 판정 텍스트를 그리는 별도 함수 (그림자 효과 포함)
@@ -545,19 +580,59 @@ namespace ABCsystem.UIControl
             {
                 float fontSize = 20.0f;
                 Color stateColor = Color.FromArgb(255, 128, 0);
-                PointF textPos = new PointF(10, 10);
+                PointF textPos = new PointF(20, Height - 40);
                 DrawText(g, WorkingState, textPos, fontSize, stateColor);
             }
 
             //#13_INSP_RESULT#5 검사 양불판정 갯수 화면에 표시
             if (_inspectResultCount.Total > 0)
             {
-                string resultText = $"Total: {_inspectResultCount.Total}\r\nOK: {_inspectResultCount.OK}\r\nNG: {_inspectResultCount.NG}";
+                double ngRate = ((double)_inspectResultCount.NG / _inspectResultCount.Total) * 100;
+                string resultText = $"TOTAL : {_inspectResultCount.Total}\n" +
+                        $"OK    : {_inspectResultCount.OK}\n" +
+                        $"NG    : {_inspectResultCount.NG}\n" +
+                        $"RATE  : {ngRate:F1}%";
 
                 float fontSize = 12.0f;
-                Color resultColor = Color.FromArgb(255, 255, 255);
-                PointF textPos = new PointF(Width -120, 10);
-                DrawText(g, resultText, textPos, fontSize, resultColor);
+                using (Font font = new Font("Consolas", fontSize, FontStyle.Bold)) // 숫자가 일정한 Consolas 권장
+                {
+                    // 텍스트의 실제 가로/세로 크기 측정
+                    SizeF textSize = g.MeasureString(resultText, font);
+
+                    int padding = 15; // 박스 안쪽 여백
+                    int margin = 80;  // 화면 끝에서 띄울 거리
+
+                    // 3. 배경 박스 좌표 계산 (우측 상단 고정)
+                    // 화면 너비(Width)에서 박스 너비와 마진을 빼서 X좌표 결정
+                    float boxWidth = textSize.Width + (padding * 2);
+                    float boxHeight = textSize.Height + (padding * 2);
+                    float boxX = Width - boxWidth - margin;
+                    float boxY = 20;
+
+                    RectangleF boxRect = new RectangleF(boxX, boxY, boxWidth, boxHeight);
+
+                    // 4. 그리기 작업 (SmoothingMode 설정으로 테두리를 부드럽게)
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                    // 배경 그리기 (반투명 검정: 180 정도가 적당히 비치고 잘 보임)
+                    using (SolidBrush backBrush = new SolidBrush(Color.FromArgb(180, 0, 0, 0)))
+                    {
+                        g.FillRectangle(backBrush, boxRect);
+                    }
+
+                    // 테두리 그리기 (흰색)
+                    using (Pen borderPen = new Pen(Color.White, 2.0f))
+                    {
+                        g.DrawRectangle(borderPen, boxRect.X, boxRect.Y, boxRect.Width, boxRect.Height);
+                    }
+
+                    // 텍스트 그리기 (흰색)
+                    using (SolidBrush textBrush = new SolidBrush(Color.White))
+                    {
+                        // 박스 시작 좌표에 패딩만큼 더해서 텍스트 배치
+                        g.DrawString(resultText, font, textBrush, boxRect.X + padding, boxRect.Y + padding);
+                    }
+                }
             }
         }
         private void DrawRectInfo(Graphics g)

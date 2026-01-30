@@ -22,6 +22,7 @@ using Microsoft.Win32;
 using System.Diagnostics.Eventing.Reader;
 using ABCsystem.Sequence;
 using System.Data.SqlClient;
+using Point = OpenCvSharp.Point; // 추가: 이 파일에서 Point는 OpenCV용임
 
 namespace ABCsystem.Core
 {
@@ -324,7 +325,20 @@ namespace ABCsystem.Core
         public void SelectInspWindow(InspWindow inspWindow)
         {
             _selectedInspWindow = inspWindow;
-            Global.Inst.CurTeachWindow = inspWindow;
+            var propForm = FormManager.GetForm<PropertiesForm>();
+            if (propForm != null)
+            {
+                if (inspWindow == null)
+                {
+                    propForm.ResetProperty();
+                    return;
+                }
+                propForm.ShowProperty(inspWindow);
+            }
+
+            UpdateProperty(inspWindow);
+
+            Global.Inst.InspStage.PreView.SetInspWindow(inspWindow);
 
             Global.Inst.InspStage.PreView.SetInspWindow(inspWindow);
 
@@ -549,25 +563,34 @@ namespace ABCsystem.Core
         {
             SLogger.Write($"모델 로딩:{filePath}");
 
+            // 1. 모델 로드
             _model = _model.Load(filePath);
+            if (_model == null) return false;
 
-            if (_model == null)
+            // 2. 모델 로드 직후 모든 결과값(좌표) 초기화
+            foreach (var window in _model.InspWindowList)
             {
-                SLogger.Write($"모델 로딩 실패:{filePath}");
-                return false;
+                // 중요: window.ResetInspResult()는 내부 알고리즘의 ResetResult()를 호출하여
+                // 저장되어 있던 엣지 좌표 등을 모두 초기값(-1, -1)으로 바꿉니다.
+                window.ResetInspResult();
             }
 
-            string inspImagePath = _model.InspectImagePath;
-            if (File.Exists(inspImagePath))
-            {
-                Global.Inst.InspStage.SetImageBuffer(inspImagePath);
-            }
-
+            // 3. ROI 객체 생성
             UpdateDiagramEntity();
 
+            var cameraForm = FormManager.GetForm<CameraForm>();
+
+            if (cameraForm != null)
+            {
+                // 4. [핵심] 화면에 그려진 모든 오버레이(선, 점)를 즉시 지움
+                // 빈 리스트를 전달하여 이전 모델의 잔상을 완전히 제거합니다.
+                cameraForm.ImageViewer.AddRect(new List<DrawInspectInfo>());
+
+                // 5. 새 모델의 구조만 다시 그려줌
+                cameraForm.ImageViewer.RestoreHeightLinesFromModel(_model);
+            }
+
             _regKey.SetValue("LastestModelPath", filePath);
-
-
             return true;
         }
 
@@ -623,26 +646,55 @@ namespace ABCsystem.Core
         }
         public bool OneCycle()
         {
+            // --- 추가: 인덱스 초과 방지 로직 ---
+            if (!UseCamera) // 이미지 로드 모드일 때만 체크
+            {
+                int totalCount = GetFileCount();
+                int currentIndex = GetCurrentFileIndex();
+
+                // 마지막 이미지에 도달했는지 확인 (0부터 시작하므로 currentIndex + 1 >= totalCount)
+                if (totalCount > 0 && (currentIndex + 1) >= totalCount)
+                {
+                    SLogger.Write($"마지막 이미지({totalCount})입니다. 검사를 진행하지 않습니다.");
+
+                    // UI를 '중지' 강조 상태(오른쪽 이미지)로 변경
+                    SetWorkingState(WorkingState.NONE);
+                    return false;
+                }
+                SLogger.Write($"Progress: {currentIndex + 2} / {totalCount}");
+            }
+            // --------------------------------
+
             if (UseCamera)
             {
-                if (!Grab(0))
-                    return false;
+                if (!Grab(0)) return false;
             }
             else
             {
-                if (!VirtualGrab())
-                    return false;
+                if (!VirtualGrab()) return false;
             }
-
-            ResetDisplay();
 
             bool isDefect;
             if (!_inspWorker.RunInspect(out isDefect))
                 return false;
 
+            // --- UI 갱신 부분 수정 ---
+            // 1. FormManager를 통해 현재 활성화된 CameraForm을 가져옵니다. 
+            var cameraForm = FormManager.GetForm<CameraForm>();
+
+            // 2. 폼이 존재하고, 닫히지 않았으며(IsDisposed), 모델 데이터가 있는지 확인합니다.
+            if (cameraForm != null && !cameraForm.IsDisposed && this.CurModel != null)
+            {
+                // 3. 독패널 인스턴스가 아닌, 대상 폼(cameraForm)의 BeginInvoke를 사용합니다.
+                cameraForm.BeginInvoke(new Action(() => {
+                    // 검사 결과(윈도우 리스트)를 뷰어에 전달하고 화면을 갱신합니다.
+                    cameraForm.ImageViewer.SetInspWindowList(this.CurModel.InspWindowList);
+                    cameraForm.ImageViewer.Invalidate();
+                }));
+            }
+
             return true;
         }
-
         public void StopCycle()
         {
             if (_inspWorker != null)
@@ -723,7 +775,7 @@ namespace ABCsystem.Core
                 string errMsg = string.Format("Failed to inspect");
                 SLogger.Write(errMsg, SLogger.LogType.Error);
             }
-
+            RedrawMainView();
             //#WCF_FSM#6 비젼 -> 제어에 검사 완료 및 결과 전송
             VisionSequence.Inst.VisionCommand(Vision2Mmi.InspDone, isDefect);
         }
@@ -803,11 +855,62 @@ namespace ABCsystem.Core
             }
         }
 
-        public void SetExposure(long exposureTime)
+         public void SetExposure(long exposureTime)
         {
             if (_grabManager != null)
             {
                 _grabManager.SetExposureTime(exposureTime);
+            }
+        }
+        public void SaveImageToFile(string filePath)
+        {
+            try
+            {
+                // 1. 현재 화면에 표시되고 있는 카메라 폼을 찾습니다.
+                var cameraForm = FormManager.GetForm<CameraForm>();
+                if (cameraForm != null)
+                {
+                    // 2. 카메라 폼으로부터 현재 Mat 이미지를 가져옵니다.
+                    using (OpenCvSharp.Mat curImage = cameraForm.GetDisplayImage())
+                    {
+                        if (curImage != null && !curImage.Empty())
+                        {
+                            // 3. OpenCV의 저장 기능을 사용하여 지정된 경로에 저장합니다.
+                            OpenCvSharp.Cv2.ImWrite(filePath, curImage);
+                        }
+                        else
+                        {
+                            System.Windows.Forms.MessageBox.Show("저장할 이미지 데이터가 없습니다.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 오류 발생 시 로그 기록
+                SLogger.Write($"이미지 저장 실패: {ex.Message}");
+            }
+        }
+
+        public int GetFileCount()
+        {
+            return (_imageLoader != null) ? _imageLoader.Count : 0;
+        }
+
+        public int GetCurrentFileIndex()
+        {
+            return (_imageLoader != null) ? _imageLoader.CurrentIndex : 0;
+        }
+
+        public void ResetImageIndex()
+        {
+            if (_imageLoader != null)
+            {
+                _imageLoader.Reset(); // ImageLoader 내부의 _grabIndex를 -1로 만듭니다.
+            }
+            if (_inspWorker != null)
+            {
+                _inspWorker.ResetCounts();
             }
         }
 

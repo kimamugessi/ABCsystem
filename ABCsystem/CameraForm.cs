@@ -21,6 +21,7 @@ namespace ABCsystem
     //public partial class CameraForm: Form
     public partial class CameraForm : Form
     {
+        public ImageViewCtrl ImageViewer => this.imageViewer;
         // MainForm에서 "panel의 화면좌표 bounds"를 제공해줄 함수
         public Func<Rectangle> GetConstraintBoundsScreen { get; set; }
 
@@ -117,7 +118,13 @@ namespace ABCsystem
 
                         if (selectedWin != null)
                         {
-                            Global.Inst.InspStage.SelectInspWindow(selectedWin);
+                            var propForm = FormManager.GetForm<PropertiesForm>();
+                            if (propForm != null)
+                            {
+                                // PropertiesForm에 이미 구현되어 있는 ShowProperty를 호출하면
+                                // 내부적으로 UpdateProperty가 실행되어 EdgeProp의 타겟 알고리즘이 바뀝니다.
+                                propForm.ShowProperty(selectedWin);
+                            }
                         }
                     }
                     else
