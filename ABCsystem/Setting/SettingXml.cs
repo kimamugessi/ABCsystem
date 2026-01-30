@@ -98,5 +98,33 @@ namespace ABCsystem.Setting
 
         public string CommIP { get; set; } = "127.0.0.1";
 
+        // ##1_Setting_##2 “기존에 입력되있는 Setting” 지워버리기(Setting.xml 초기화)
+        public static void ResetToBlank(bool deleteFile = true)
+        {
+            // 메모리 인스턴스 초기화
+            _setting = new SettingXml();
+
+            // “지워진 상태”로 만들기 (원하면 여기 기본값을 네 취향대로 바꿔도 됨)
+            _setting.MachineName = "";
+            _setting.ModelDir = "";
+            _setting.ImageDir = "";
+            _setting.CamType = ABCsystem.Grab.CameraType.None;
+            _setting.ExposureTime = 15000;          // 기본 노출값은 유지(원하면 0도 가능)
+            _setting.CycleMode = false;
+            _setting.CommType = ABCsystem.Sequence.CommunicatorType.None;
+            _setting.CommIP = "127.0.0.1";
+
+            // 파일 자체도 삭제하고 싶으면 삭제
+            if (deleteFile)
+            {
+                string settingFilePath = Path.Combine(Environment.CurrentDirectory, SETTING_FILE_NAME);
+                if (File.Exists(settingFilePath))
+                    File.Delete(settingFilePath);
+            }
+
+            // 다시 저장(= 완전히 초기화된 파일로 재생성)
+            Save();
+        }
     }
+
 }

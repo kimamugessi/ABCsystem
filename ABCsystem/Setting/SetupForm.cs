@@ -19,30 +19,37 @@ namespace ABCsystem4.Setting
 
     public partial class SetupForm: Form
     {
-        public SetupForm()
+        private CameraSetting _cameraSetting;
+        private PathSetting _pathSetting;
+        private CommunicatorSetting _commSetting;
+        public SetupForm(bool resetOnOpen = false)
         {
             InitializeComponent();
 
-            //#SETUP#5 탭 콘트롤 추가, 아래 함수 함께 구현할것
+            if (resetOnOpen)
+            {
+                // 기존 Setting 초기화 (SettingXml에 ResetToBlank 구현되어 있어야 함)
+                SettingXml.ResetToBlank(deleteFile: true);
+            }
+
             InitTabControl();
         }
-
         private void InitTabControl()
         {
+            tabSetting.TabPages.Clear();
             //카메라 설정 페이지 추가
-            CameraSetting cameraSetting = new CameraSetting();
-            AddTabControl(cameraSetting, "Camera");
-
+            _cameraSetting = new CameraSetting();
+            AddTabControl(_cameraSetting, "Camera");
             //경로 설정 페이지 추가
-            PathSetting pathSetting = new PathSetting();
-            AddTabControl(pathSetting, "Path");
+            _pathSetting = new PathSetting();
+            AddTabControl(_pathSetting, "Path");
 
-            CommunicatorSetting commSetting = new CommunicatorSetting();
-            AddTabControl(commSetting, "Communicator");
-
+            _commSetting = new CommunicatorSetting();
+            AddTabControl(_commSetting, "Communicator");
             //기본값으로 카메라 설정 페이지 보이도록 설정
             tabSetting.SelectTab(0);
         }
+        
 
         //탭 추가 함수
         private void AddTabControl(UserControl control, string tabName)

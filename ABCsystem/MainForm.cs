@@ -33,7 +33,7 @@ namespace ABCsystem
         private bool _startupFormsShown = false;
         private Rectangle GetPanelBoundsScreen()
         {
-            return panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle);
+            return panelViewForm.RectangleToScreen(panelViewForm.ClientRectangle);
         }
         public MainForm()
         {
@@ -78,11 +78,12 @@ namespace ABCsystem
                 }
             }
         }
+
+        // ##1_Setting_##1 SetupForm을 PanelViewForm(panelChildForm)에 띄우기
         private void SetupMenuItem_Click(object sender, EventArgs e)
         {
-            SLogger.Write($"환경설정창 열기");
-            SetupForm setupForm = new SetupForm();
-            setupForm.ShowDialog();
+            SLogger.Write("환경설정창(Panel) 열기");
+            openViewForm(new SetupForm(true)); // true = 기존 입력값 초기화(아래 2번에서 구현)
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -497,8 +498,8 @@ namespace ABCsystem
             ViewForm.TopLevel = false;
             ViewForm.FormBorderStyle = FormBorderStyle.None;
             ViewForm.Dock = DockStyle.Fill;
-            panelChildForm.Controls.Add(ViewForm);
-            panelChildForm.Tag =ViewForm;
+            panelViewForm.Controls.Add(ViewForm);
+            panelViewForm.Tag =ViewForm;
             ViewForm.BringToFront();
             ViewForm.Show();
         }
@@ -537,16 +538,16 @@ namespace ABCsystem
             // panel 기준으로 가두기
             _modelTreeConstraint = new WindowConstraintBehavior(
                 _modelTreeForm,
-                () => panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle)
+                () => panelViewForm.RectangleToScreen(panelViewForm.ClientRectangle)
             );
 
             _modelTreeForm.Show(this);
 
             // 초기 크기/위치 (예: panel의 45%)
-            var bounds = panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle);
+            var bounds = panelViewForm.RectangleToScreen(panelViewForm.ClientRectangle);
 
-            int w = (int)(bounds.Width * 0.45);
-            int h = (int)(bounds.Height * 0.6);
+            int w = (int)(bounds.Width * 0.20);
+            int h = (int)(bounds.Height * 0.30);
 
             int x = bounds.Left + 20;   // 왼쪽에 살짝 붙여도 좋고
             int y = bounds.Top + 20;

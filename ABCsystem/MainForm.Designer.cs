@@ -51,18 +51,18 @@
             this.panelLogo = new System.Windows.Forms.Panel();
             this.picABC = new System.Windows.Forms.PictureBox();
             this.panelOperation = new System.Windows.Forms.Panel();
-            this.panelChildForm = new System.Windows.Forms.Panel();
-            this.nightCtlChlid = new ReaLTaiizor.Controls.NightControlBox();
+            this.panelViewForm = new System.Windows.Forms.Panel();
             this.panelChlid = new System.Windows.Forms.Panel();
-            this.picChlid = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.picChlid = new System.Windows.Forms.PictureBox();
+            this.nightCtlChlid = new ReaLTaiizor.Controls.NightControlBox();
             this.panelSideMenu.SuspendLayout();
             this.panelViewSubmenu.SuspendLayout();
             this.panelTeachSubmenu.SuspendLayout();
             this.panelFileSubmenu.SuspendLayout();
             this.panelLogo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picABC)).BeginInit();
-            this.panelChildForm.SuspendLayout();
+            this.panelViewForm.SuspendLayout();
             this.panelChlid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picChlid)).BeginInit();
             this.SuspendLayout();
@@ -406,15 +406,47 @@
             this.panelOperation.Size = new System.Drawing.Size(700, 100);
             this.panelOperation.TabIndex = 1;
             // 
-            // panelChildForm
+            // panelViewForm
             // 
-            this.panelChildForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(30)))), ((int)(((byte)(45)))));
-            this.panelChildForm.Controls.Add(this.panelChlid);
-            this.panelChildForm.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelChildForm.Location = new System.Drawing.Point(250, 0);
-            this.panelChildForm.Name = "panelChildForm";
-            this.panelChildForm.Size = new System.Drawing.Size(700, 500);
-            this.panelChildForm.TabIndex = 2;
+            this.panelViewForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(30)))), ((int)(((byte)(45)))));
+            this.panelViewForm.Controls.Add(this.panelChlid);
+            this.panelViewForm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelViewForm.Location = new System.Drawing.Point(250, 0);
+            this.panelViewForm.Name = "panelViewForm";
+            this.panelViewForm.Size = new System.Drawing.Size(700, 500);
+            this.panelViewForm.TabIndex = 2;
+            // 
+            // panelChlid
+            // 
+            this.panelChlid.Controls.Add(this.label1);
+            this.panelChlid.Controls.Add(this.picChlid);
+            this.panelChlid.Controls.Add(this.nightCtlChlid);
+            this.panelChlid.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelChlid.Location = new System.Drawing.Point(0, 0);
+            this.panelChlid.Name = "panelChlid";
+            this.panelChlid.Size = new System.Drawing.Size(700, 35);
+            this.panelChlid.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(43, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(108, 28);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "ABCsystem";
+            // 
+            // picChlid
+            // 
+            this.picChlid.Image = ((System.Drawing.Image)(resources.GetObject("picChlid.Image")));
+            this.picChlid.Location = new System.Drawing.Point(6, 3);
+            this.picChlid.Name = "picChlid";
+            this.picChlid.Size = new System.Drawing.Size(31, 32);
+            this.picChlid.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picChlid.TabIndex = 2;
+            this.picChlid.TabStop = false;
             // 
             // nightCtlChlid
             // 
@@ -440,44 +472,12 @@
             this.nightCtlChlid.Size = new System.Drawing.Size(139, 31);
             this.nightCtlChlid.TabIndex = 1;
             // 
-            // panelChlid
-            // 
-            this.panelChlid.Controls.Add(this.label1);
-            this.panelChlid.Controls.Add(this.picChlid);
-            this.panelChlid.Controls.Add(this.nightCtlChlid);
-            this.panelChlid.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelChlid.Location = new System.Drawing.Point(0, 0);
-            this.panelChlid.Name = "panelChlid";
-            this.panelChlid.Size = new System.Drawing.Size(700, 35);
-            this.panelChlid.TabIndex = 0;
-            // 
-            // picChlid
-            // 
-            this.picChlid.Image = ((System.Drawing.Image)(resources.GetObject("picChlid.Image")));
-            this.picChlid.Location = new System.Drawing.Point(6, 3);
-            this.picChlid.Name = "picChlid";
-            this.picChlid.Size = new System.Drawing.Size(31, 32);
-            this.picChlid.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picChlid.TabIndex = 2;
-            this.picChlid.TabStop = false;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(43, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 28);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "ABCsystem";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(950, 600);
-            this.Controls.Add(this.panelChildForm);
+            this.Controls.Add(this.panelViewForm);
             this.Controls.Add(this.panelOperation);
             this.Controls.Add(this.panelSideMenu);
             this.Font = new System.Drawing.Font("굴림", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -492,7 +492,7 @@
             this.panelFileSubmenu.ResumeLayout(false);
             this.panelLogo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picABC)).EndInit();
-            this.panelChildForm.ResumeLayout(false);
+            this.panelViewForm.ResumeLayout(false);
             this.panelChlid.ResumeLayout(false);
             this.panelChlid.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picChlid)).EndInit();
@@ -521,7 +521,7 @@
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button btnLog;
         private System.Windows.Forms.Panel panelOperation;
-        private System.Windows.Forms.Panel panelChildForm;
+        private System.Windows.Forms.Panel panelViewForm;
         private System.Windows.Forms.Button btnImageSave;
         private System.Windows.Forms.Panel panelLogo;
         private System.Windows.Forms.PictureBox picABC;
