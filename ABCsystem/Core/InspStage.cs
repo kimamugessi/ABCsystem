@@ -529,18 +529,23 @@ namespace ABCsystem.Core
 
         public void UpdateDiagramEntity()
         {
+            // 1. CameraForm 찾기
             CameraForm cameraForm = FormManager.GetForm<CameraForm>();
-            if (cameraForm != null)
-            {
-                cameraForm.UpdateDiagramEntity();
-            }
+            cameraForm?.UpdateDiagramEntity();
 
+            // 2. ModelTreeForm 찾기
             ModelTreeForm modelTreeForm = FormManager.GetForm<ModelTreeForm>();
             if (modelTreeForm != null)
             {
+                SLogger.Write("Found ModelTreeForm, calling Update...");
                 modelTreeForm.UpdateDiagramEntity();
             }
+            else
+            {
+                SLogger.Write("ModelTreeForm is NULL - Cannot update UI");
+            }
         }
+
         public void RedrawMainView()
         {
             CameraForm cameraForm = FormManager.GetForm<CameraForm>();

@@ -525,14 +525,18 @@ namespace ABCsystem
 
         private void ShowModelTreeForm()
         {
-            if (_modelTreeForm != null && !_modelTreeForm.IsDisposed)
+            // 1. 직접 생성하지 않고 FormManager에서 인스턴스를 가져옵니다.
+            _modelTreeForm = FormManager.GetForm<ModelTreeForm>();
+
+            // 2. 이미 화면에 떠 있다면 앞으로 가져오고 종료
+            if (_modelTreeForm.Visible)
             {
                 _modelTreeForm.BringToFront();
                 _modelTreeForm.Activate();
                 return;
             }
 
-            _modelTreeForm = new ModelTreeForm();
+            // --- 이하 기존 위치/크기 설정 로직 동일 유지 ---
 
             // panel 기준으로 가두기
             _modelTreeConstraint = new WindowConstraintBehavior(
@@ -540,9 +544,10 @@ namespace ABCsystem
                 () => panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle)
             );
 
+            // 폼 띄우기 (Owner 설정)
             _modelTreeForm.Show(this);
 
-            // 초기 크기/위치 (예: panel의 45%)
+            // 초기 크기/위치 (panel의 25%)
             var bounds = panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle);
 
             int w = (int)(bounds.Width * 0.25);
@@ -552,14 +557,14 @@ namespace ABCsystem
             int lift = 54;
             var wa = Screen.FromControl(this).WorkingArea;
 
-            // LogForm 기준으로 배치 (없으면 중앙하단)
+            // LogForm 기준으로 배치
             var logForm = FormManager.GetForm<LogForm>();
 
             int x, y;
 
             if (logForm != null && !logForm.IsDisposed)
             {
-                // 빨간 네모 느낌: LogForm 왼쪽 + 하단 라인 맞추기
+                // LogForm 왼쪽 + 하단 라인 맞추기
                 x = logForm.Left - w - gap;
                 y = wa.Bottom - h - gap - lift;
             }
