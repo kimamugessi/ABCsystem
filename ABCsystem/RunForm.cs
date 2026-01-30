@@ -111,101 +111,63 @@ namespace ABCsystem
                 return;
             }
 
-            // Body: Align만
+            // 모든 타입(Body, Base 등)에서 화살표를 선택할 수 있도록 변경
+            cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+
             if (_win.InspWindowType == InspWindowType.Body)
             {
-                cbEdgeType.Items.Add("Align");
-
-                // Align은 무조건 → 강제 + UseAsAlignment 강제
+                // Body는 Align 용도로 쓰겠다는 체크만 유지하고 방향은 자유롭게
                 _algo.UseAsAlignment = true;
-                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
-
-                cbEdgeType.SelectedItem = "Align";
             }
-
-            // Base: 화살표만
-            else if (_win.InspWindowType == InspWindowType.Base)
-            {
-                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
-
-                // Base는 Align 금지
-                _algo.UseAsAlignment = false;
-
-                // 현재 ScanDir에 맞춰 UI 선택
-                var arrow = ToArrow(_algo.ScanDir);
-                cbEdgeType.SelectedItem = arrow;
-                if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedItem = "→";
-            }
-            // 기타 윈도우
             else
             {
-                cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
-                cbEdgeType.SelectedItem = "→";
                 _algo.UseAsAlignment = false;
             }
+
+            // [핵심] 알고리즘에 이미 저장되어 있는 방향을 UI에 표시
+            cbEdgeType.SelectedItem = ToArrow(_algo.ScanDir);
+
+            // 만약 선택된 게 없다면 기본값 설정
+            if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedItem = "→";
 
             cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
         }
 
         private void btnEdge_Click(object sender, EventArgs e)
         {
-            var win = _win ?? Global.Inst.CurTeachWindow;
+            var win = Global.Inst.CurTeachWindow;
             if (win == null) return;
 
-            var algo = _algo ?? (win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm);
+            var algo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
             if (algo == null) return;
 
-            _win = win;
-            _algo = algo;
+            // 1. [강제 주입] 현재 화면에 떠 있는 화살표 방향을 알고리즘에 바로 입력
+            if (cbEdgeType.SelectedItem != null)
+            {
+                algo.ScanDir = FromArrow(cbEdgeType.SelectedItem.ToString());
+            }
 
-            // 콤보 선택값을 알고리즘에 반영
-            ApplyComboToAlgorithm();
-
-            // 4. 검사 타입 결정 (Body 타입이면 AlignEdge로 실행)
+            // 2. 검사 타입 결정
             InspectType runType = (win.InspWindowType == InspWindowType.Body)
                                   ? InspectType.InspAlignEdge
                                   : InspectType.InspEdge;
 
+            // 3. 검사 실행 (이제 위에서 설정한 방향으로 검사함)
             Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
 
-            if (runType == InspectType.InspAlignEdge && algo.HasAnchor)
-                algo.TeachAnchorX = algo.AnchorPoint.X;
-
+            // 4. 화면 갱신
             Global.Inst.InspStage.RedrawMainView();
         }
-
         private void ApplyComboToAlgorithm()
         {
             if (_algo == null || _win == null) return;
 
-            if (cbEdgeType.SelectedItem == null && cbEdgeType.Items.Count > 0)
-                cbEdgeType.SelectedIndex = 0;
-
-            // Body는 항상 Align 고정
-            if (_win.InspWindowType == InspWindowType.Body)
-            {
-                _algo.UseAsAlignment = true;
-                _algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
-                return;
-            }
-
-            // Base는 항상 화살표 고정
-            if (_win.InspWindowType == InspWindowType.Base)
-            {
-                _algo.UseAsAlignment = false;
-
-                string arrow = cbEdgeType.SelectedItem?.ToString();
-                if (string.IsNullOrWhiteSpace(arrow)) return;
-
-                _algo.ScanDir = FromArrow(arrow);
-                return;
-            }
-
-            // 기타는 기본 화살표 처리
-            _algo.UseAsAlignment = false;
+            // 선택된 텍스트가 "←" 인지 디버깅으로 확인해보세요.
             string sel = cbEdgeType.SelectedItem?.ToString();
-            if (string.IsNullOrWhiteSpace(sel)) return;
+            if (string.IsNullOrEmpty(sel)) return;
+
             _algo.ScanDir = FromArrow(sel);
+            _algo.UseAsAlignment = (_win.InspWindowType == InspWindowType.Body);
         }
 
         private void OnSelectedWindowChanged(InspWindow win)
