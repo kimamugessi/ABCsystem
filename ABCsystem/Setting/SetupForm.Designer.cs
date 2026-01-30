@@ -28,24 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupForm));
             this.tabSetting = new System.Windows.Forms.TabControl();
+            this.btnClose = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // tabSetting
             // 
-            this.tabSetting.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabSetting.Dock = System.Windows.Forms.DockStyle.Left;
             this.tabSetting.Location = new System.Drawing.Point(0, 0);
+            this.tabSetting.Margin = new System.Windows.Forms.Padding(4);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.SelectedIndex = 0;
-            this.tabSetting.Size = new System.Drawing.Size(466, 237);
+            this.tabSetting.Size = new System.Drawing.Size(329, 444);
             this.tabSetting.TabIndex = 1;
+            // 
+            // btnClose
+            // 
+            this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
+            this.btnClose.Location = new System.Drawing.Point(626, 12);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(40, 40);
+            this.btnClose.TabIndex = 2;
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // SetupForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(466, 237);
+            this.ClientSize = new System.Drawing.Size(678, 444);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabSetting);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SetupForm";
             this.Text = "SetupForm";
             this.ResumeLayout(false);
@@ -55,5 +71,6 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabSetting;
+        private System.Windows.Forms.Button btnClose;
     }
 }

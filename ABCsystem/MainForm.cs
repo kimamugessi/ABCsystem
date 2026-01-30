@@ -1,92 +1,66 @@
-﻿using System;
+﻿using ABCsystem.Core;
+using ABCsystem.Setting;
+using ABCsystem.Teach;
+using ABCsystem.Util;
+using ABCsystem.Window;
+using ABCsystem4.Setting;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ABCsystem.Core;
-using ABCsystem.Setting;
-using ABCsystem.Teach;
-using ABCsystem.Util;
-using ABCsystem4.Setting;
-using WeifenLuo.WinFormsUI.Docking;
-//using WeifenLuo.WinFormsUI.ThemeVS2015;
+using static ReaLTaiizor.Util.RoundInt;
 
 namespace ABCsystem
 {
     public partial class MainForm : Form
     {
-        private static DockPanel _dockPanel;
-        public static DockPanel DockPanelInstance => _dockPanel;
+        private CameraForm _cameraForm;
+        private WindowConstraintBehavior _cameraConstraint;
+
+        private LogForm _logForm;
+        private WindowConstraintBehavior _logConstraint;
+
+        private ModelTreeForm _modelTreeForm;
+        private WindowConstraintBehavior _modelTreeConstraint;
+
+        private bool _startupFormsShown = false;
+        private Rectangle GetPanelBoundsScreen()
+        {
+            return panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle);
+        }
         public MainForm()
         {
             InitializeComponent();
-
-            _dockPanel = new DockPanel
-            {
-                Dock = DockStyle.Fill
-            };
-            //_dockPanel = new DockPanel();
-            //_dockPanel.Dock = DockStyle.Fill; 상단 코드와 동일
-            Controls.Add(_dockPanel);
-
-            _dockPanel.Theme = new VS2015DarkTheme();
-
-            LoadDockingWindows();
+            customizeDesing();
 
             Global.Inst.Initialize();
 
             LoadSetting();
+            this.WindowState = FormWindowState.Maximized;
         }
-
-        private void LoadDockingWindows()
+        
+        private void customizeDesing()
         {
-            _dockPanel.AllowEndUserDocking = false;
-            //아래의 각 폼의 부모를 DockContent로 설정
-            var cameraForm = new CameraForm();
-            cameraForm.Show(_dockPanel, DockState.Document); //첫번째 Form은  Document로 기본적으로 설정 해야함
-
-            var resultForm = new ResultForm();
-            resultForm.Show(cameraForm.Pane, DockAlignment.Bottom, 0.3);  // _____.Show(기준, 위치, 크기); 
-
-            //var stat = new StatisticForm();
-            //stat.Show(_dockPanel, DockState.DockRight);
-
-            var propForm = new PropertiesForm();
-            propForm.Show(_dockPanel, DockState.DockRight); //propForm, stat 위치값 동일 -> 겹쳐진 형태
-
-            var modelTreeWindow=new ModelTreeForm();
-            modelTreeWindow.Show(resultForm.Pane, DockAlignment.Right, 0.4);
-
-
-            modelTreeWindow.OnRoiSelectedFromTree += (uid) => {
-                cameraForm.SelectRoiByUid(uid);
-            };
-
-            var runWindow = new RunForm();
-            runWindow.Show(modelTreeWindow.Pane, null);
-
-            var logForm = new LogForm();
-            logForm.Show(propForm.Pane, DockAlignment.Bottom, 0.3);
-
+            panelFileSubmenu.Visible = false;
+            panelTeachSubmenu.Visible = false;
+            panelViewSubmenu.Visible = false;
         }
+
         private void LoadSetting()
         {
-            cycleModeMenuItem.Checked = SettingXml.Inst.CycleMode;
-        }
-        //시범으로 작성
-        public static T GetDockForm<T>() where T : DockContent
-        {
-            var findForm = _dockPanel.Contents.OfType<T>().FirstOrDefault();
-            return findForm;
+            // cycleModeMenuItem.Checked = SettingXml.Inst.CycleMode;
         }
 
         private void imageOpenToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            CameraForm cameraForm = GetDockForm<CameraForm>();
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
             if (cameraForm == null) return;
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -185,26 +159,415 @@ namespace ABCsystem
             }
         }
 
-        private void cycleModeMenuItem_Click(object sender, EventArgs e)
+        private void hideSubMenu()
         {
-            bool isChecked = cycleModeMenuItem.Checked;
-            SettingXml.Inst.CycleMode = isChecked;
+            if (panelFileSubmenu.Visible == true)
+                panelFileSubmenu.Visible = false;
+            if (panelTeachSubmenu.Visible == true)
+                panelTeachSubmenu.Visible = false;
+            if (panelViewSubmenu.Visible == true)
+                panelViewSubmenu.Visible = false;
         }
 
-        private void imageSaveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showSubMenu(Panel subMenu)
         {
-            using (System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog())
+            if (subMenu.Visible == false)
             {
-                saveFileDialog.Title = "이미지 다른 이름으로 저장";
-                saveFileDialog.Filter = "JPG 파일 (*.jpg)|*.jpg|PNG 파일 (*.png)|*.png|BMP 파일 (*.bmp)|*.bmp";
-                saveFileDialog.DefaultExt = "jpg";
+                hideSubMenu();
+                subMenu.Visible = true;
+            }
+            else
+                subMenu.Visible = false;
+        }
+        #region Panel Button
 
-                if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        private void btnFile_Click(object sender, EventArgs e)
+        {
+            showSubMenu(panelFileSubmenu);
+        }
+
+        private void btnModelNew_Click(object sender, EventArgs e)
+        {
+            openViewForm(new NewModel());
+            ////신규 모델 추가를 위한 모델 정보를 받기 위한 창 띄우기
+            //NewModel newModel = new NewModel();
+            //newModel.ShowDialog();
+
+            Model curModel = Global.Inst.InspStage.CurModel;
+            if (curModel != null)
+            {
+                this.Text = GetMdoelTitle(curModel);
+            }
+            hideSubMenu();
+        }
+
+        private void btnModelOpen_Click(object sender, EventArgs e)
+        {
+            //모델 파일 열기
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "모델 파일 선택";
+                openFileDialog.Filter = "Model Files|*.xml;";
+                openFileDialog.Multiselect = false;
+                openFileDialog.RestoreDirectory = true;
+
+                string modelDir = SettingXml.Inst.ModelDir;
+
+                if (string.IsNullOrEmpty(modelDir) || !Directory.Exists(modelDir))
+                    modelDir = Application.StartupPath;
+
+                openFileDialog.InitialDirectory = modelDir;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    // 위에서 만든 InspStage의 저장 함수를 호출합니다.
-                    Global.Inst.InspStage.SaveImageToFile(saveFileDialog.FileName);
+                    string filePath = openFileDialog.FileName;
+
+                    if (Global.Inst.InspStage.LoadModel(filePath))
+                    {
+                        Model curModel = Global.Inst.InspStage.CurModel;
+                        if (curModel != null)
+                        {
+                            this.Text = GetMdoelTitle(curModel);
+                        }
+                    }
                 }
             }
+            hideSubMenu();
         }
+
+        private void btnModelSave_Click(object sender, EventArgs e)
+        {
+            //모델 파일 저장
+            Global.Inst.InspStage.SaveModel("");
+            hideSubMenu();
+        }
+
+        private void btnModelSaveAs_Click(object sender, EventArgs e)
+        {
+            //다른이름으로 모델 파일 저장
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.InitialDirectory = SettingXml.Inst.ModelDir;
+                saveFileDialog.Title = "모델 파일 선택";
+                saveFileDialog.Filter = "Model Files|*.xml;";
+                saveFileDialog.DefaultExt = "xml";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = saveFileDialog.FileName;
+                    Global.Inst.InspStage.SaveModel(filePath);
+                }
+            }
+            hideSubMenu();
+        }
+
+        private void btnImageOpen_Click(object sender, EventArgs e)
+        {
+            CameraForm cameraForm = FormManager.GetForm<CameraForm>();
+            if (cameraForm == null) return;
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "이미지 파일 선택";
+                openFileDialog.Filter = "Image Files|*.bmp;*.jpg;*.jpeg;*.png;*.gif";
+                openFileDialog.Multiselect = false;
+                openFileDialog.RestoreDirectory = true;
+
+                // 초기 이미지 경로 결정
+                string imageDir = SettingXml.Inst.ImageDir;
+
+                if (string.IsNullOrEmpty(imageDir) || !Directory.Exists(imageDir))
+                    imageDir = Application.StartupPath;
+
+                openFileDialog.InitialDirectory = imageDir;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+
+                    Global.Inst.InspStage.SetImageBuffer(filePath);
+                    Global.Inst.InspStage.CurModel.InspectImagePath = filePath;
+
+                    // 마지막 이미지 폴더 저장
+                    SettingXml.Inst.ImageDir = Path.GetDirectoryName(filePath);
+                    SettingXml.Save();
+
+                    cameraForm.UpdateDisplay();
+                }
+            }
+            hideSubMenu();
+        }
+
+        private void btnImageSave_Click(object sender, EventArgs e)
+        {
+            hideSubMenu();
+        }
+
+        private void btnOperation_Click(object sender, EventArgs e)
+        {
+            OpenOperationForm(new RunForm());
+            hideSubMenu();
+        }
+
+        private void btnTeach_Click(object sender, EventArgs e)
+        {
+            showSubMenu(panelTeachSubmenu);
+        }
+
+        private void btnROI_Click(object sender, EventArgs e)
+        {
+            ShowModelTreeForm();
+            hideSubMenu();
+        }
+
+        private void btnView_Click(object sender, EventArgs e)
+        {
+            showSubMenu(panelViewSubmenu);
+        }
+
+        private void btnCamera_Click(object sender, EventArgs e)
+        {
+
+            // 1) FormManager에서 단일 인스턴스 가져오기
+            _cameraForm = FormManager.GetForm<CameraForm>();
+
+            // 2) 이미 떠있으면 앞으로
+            if (_cameraForm.Visible)
+            {
+                _cameraForm.BringToFront();
+                _cameraForm.Activate();
+                hideSubMenu();
+                return;
+            }
+
+            // 3) 아직 안 떠있으면 Show
+            _cameraForm.Show(this);
+
+            // 4) 제약 붙이기 (핸들 생성 후 attach)
+            _cameraConstraint = new WindowConstraintBehavior(_cameraForm, GetPanelBoundsScreen);
+
+            // 5) 초기 크기/위치
+            var bounds = GetPanelBoundsScreen();
+
+            // 좌우 여백
+            int margin = 12;
+
+            // Camera: 좌측 70% 폭, 전체 높이의 60% 정도
+            int w = (int)(bounds.Width * 0.70);
+            int h = (int)(bounds.Height * 0.80);
+
+            int x = bounds.Left + margin;
+            int y = bounds.Top + margin;
+
+            _cameraForm.Bounds = new Rectangle(x, y, w, h);
+
+            // 6) 닫히면 참조 정리 (중복 핸들러 방지 위해 한 번만 걸리는지 주의)
+            _cameraForm.FormClosed -= CameraForm_FormClosed;
+            _cameraForm.FormClosed += CameraForm_FormClosed;
+            ShowCameraForm();
+            hideSubMenu();
+        }
+        // CameraForm 시작할때 띄워질 수 있도록 코드
+        private void ShowCameraForm()
+        {
+            _cameraForm = FormManager.GetForm<CameraForm>();
+
+            if (_cameraForm.Visible)
+            {
+                _cameraForm.BringToFront();
+                _cameraForm.Activate();
+                return;
+            }
+
+            _cameraForm.Show(this);
+
+            _cameraConstraint = new WindowConstraintBehavior(_cameraForm, GetPanelBoundsScreen);
+
+            // 좌우 여백
+            int margin = 12;
+
+            // Camera: 초기 크기/위치 (폭의 70%, 높이의 85%)
+            var bounds = GetPanelBoundsScreen();
+
+            int w = (int)(bounds.Width * 0.70);
+            int h = (int)(bounds.Height * 0.65);
+
+            int x = bounds.Left + margin;
+            int y = bounds.Top + margin;
+
+            _cameraForm.Bounds = new Rectangle(x, y, w, h);
+
+            _cameraForm.FormClosed -= CameraForm_FormClosed;
+            _cameraForm.FormClosed += CameraForm_FormClosed;
+        }
+        // FormClosed 26.01.28
+        private void CameraForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _cameraConstraint = null;
+            _cameraForm = null;
+        }
+
+        private void btnLog_Click(object sender, EventArgs e)
+        {
+            // 무조건 단일 인스턴스
+            _logForm = FormManager.GetForm<LogForm>();
+
+            if (_logForm.Visible)
+            {
+                _logForm.BringToFront();
+                _logForm.Activate();
+                return;
+            }
+
+            _logForm.Show(this);
+
+            _logConstraint = new WindowConstraintBehavior(_logForm, GetPanelBoundsScreen);
+
+            var bounds = GetPanelBoundsScreen();
+            // 초기 크기
+            int margin = 12;
+
+            // Log: 우측 28% 폭, 아래쪽 35% 높이
+            int w = (int)(bounds.Width * 0.30);
+            int h = (int)(bounds.Height * 0.35);
+
+            int x = bounds.Right - w - margin;
+            int y = bounds.Bottom - h - margin;
+
+            _logForm.Bounds = new Rectangle(x, y, w, h);
+
+            _logForm.FormClosed -= LogForm_FormClosed;
+            _logForm.FormClosed += LogForm_FormClosed;
+
+            hideSubMenu();
+        }
+        // LogForm 시작할 때 띄워질 수 있도록 코드
+        private void ShowLogForm()
+        {
+            _logForm = FormManager.GetForm<LogForm>();
+
+            if (_logForm.Visible)
+            {
+                _logForm.BringToFront();
+                _logForm.Activate();
+                return;
+            }
+
+            _logForm.Show(this);
+
+            _logConstraint = new WindowConstraintBehavior(_logForm, GetPanelBoundsScreen);
+
+            // 초기 크기/위치
+            var bounds = GetPanelBoundsScreen();
+
+            int margin = 12;
+
+            // Log: 우측 28% 폭, 아래쪽 35% 높이
+            int w = (int)(bounds.Width * 0.28);
+            int h = (int)(bounds.Height * 0.35);
+
+            int x = bounds.Right - w - margin;
+            int y = bounds.Bottom - h - margin;
+
+            _logForm.Bounds = new Rectangle(x, y, w, h);
+            _logForm.FormClosed -= LogForm_FormClosed;
+            _logForm.FormClosed += LogForm_FormClosed;
+        }
+
+        // FormClosed 구성 26.01.28
+        private void LogForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _logConstraint = null;
+            _logForm = null;
+        }
+        private void btnSetting_Click(object sender, EventArgs e)
+        {
+            SLogger.Write($"환경설정창 열기");
+            openViewForm(new SetupForm());
+            hideSubMenu();
+        }
+        #endregion
+
+        private Form activeForm = null;
+        private void openViewForm(Form ViewForm)
+        {
+            if(activeForm != null)
+                activeForm.Close();
+            activeForm = ViewForm;
+            ViewForm.TopLevel = false;
+            ViewForm.FormBorderStyle = FormBorderStyle.None;
+            ViewForm.Dock = DockStyle.Fill;
+            panelChildForm.Controls.Add(ViewForm);
+            panelChildForm.Tag =ViewForm;
+            ViewForm.BringToFront();
+            ViewForm.Show();
+        }
+
+        private Form activeOperationForm = null;
+        private void OpenOperationForm(Form ViewForm)
+        {
+            if (activeOperationForm != null && !activeOperationForm.IsDisposed)
+                activeOperationForm.Close();
+
+            activeOperationForm = ViewForm;
+
+            ViewForm.TopLevel = false;
+            ViewForm.FormBorderStyle = FormBorderStyle.None;
+            ViewForm.Dock = DockStyle.Fill;
+
+            panelOperation.Controls.Clear();          // ⭐ 기존 화면 제거
+            panelOperation.Controls.Add(ViewForm);
+            panelOperation.Tag = ViewForm;
+
+            ViewForm.BringToFront();
+            ViewForm.Show();
+        }
+
+        private void ShowModelTreeForm()
+        {
+            if (_modelTreeForm != null && !_modelTreeForm.IsDisposed)
+            {
+                _modelTreeForm.BringToFront();
+                _modelTreeForm.Activate();
+                return;
+            }
+
+            _modelTreeForm = new ModelTreeForm();
+
+            // panel 기준으로 가두기
+            _modelTreeConstraint = new WindowConstraintBehavior(
+                _modelTreeForm,
+                () => panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle)
+            );
+
+            _modelTreeForm.Show(this);
+
+            // 초기 크기/위치 (예: panel의 45%)
+            var bounds = panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle);
+
+            int w = (int)(bounds.Width * 0.45);
+            int h = (int)(bounds.Height * 0.6);
+
+            int x = bounds.Left + 20;   // 왼쪽에 살짝 붙여도 좋고
+            int y = bounds.Top + 20;
+
+            _modelTreeForm.Bounds = new Rectangle(x, y, w, h);
+
+            _modelTreeForm.FormClosed += (s, e) =>
+            {
+                _modelTreeConstraint = null;
+                _modelTreeForm = null;
+            };
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            if (_startupFormsShown) return;
+            _startupFormsShown = true;
+
+            ShowCameraForm();
+            ShowLogForm();
+        }
+
     }
 }

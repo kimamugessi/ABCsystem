@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+
 
 namespace ABCsystem
 {
-    public partial class StatisticForm : DockContent
+    public partial class StatisticForm : Form
     {
         public StatisticForm()
         {

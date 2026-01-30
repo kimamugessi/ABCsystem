@@ -117,7 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="MainMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="picABC.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABGdBTUEAALGPC/xhBQAAAKZJREFUaEPt
+        1sENgkAQhWFKsAQ7ogRa8WYPXqiNMjg9Y4xxnMyykzUaF//vuMPb5SUQGAYAAAAAAP6DpFE5i8tlHUxm
+        8cOC0Z6VImn1u5S4XNalIbPas1Js2s9uJE3R3MSOdv3BzOdg7fR69Z2Zh/eyqRamyNM5WAuLvMVs3lpk
+        UyHz2SI1LblC5ieL7ObRqhXZzcveTZGabj6INd/5RQEAAAAAoE9X5NcmN8cF3EQAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="picChlid.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAADpJREFUSEvt
+        0CESAEAIw0D+/+k7h4hiCjKrOxGtkk69I+w2DlPsao5fpthtHKbY1Ry/TLHbOEyxK+18D4OuYF3P4P8A
+        AAAASUVORK5CYII=
+</value>
+  </data>
 </root>

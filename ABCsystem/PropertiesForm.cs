@@ -13,11 +13,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
+using ABCsystem.Algorithm;
+using ABCsystem.Core;
+using ABCsystem.Property;
+using ABCsystem.Teach;
+using OpenCvSharp;
+
 
 namespace ABCsystem
 {
-    public partial class PropertiesForm : DockContent
+    public partial class PropertiesForm : Form
     {
         //song
         private InspWindow _curWindow;
