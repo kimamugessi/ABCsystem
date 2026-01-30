@@ -340,7 +340,11 @@ namespace ABCsystem.UIControl
                 var edgeAlgo = entity.LinkedWindow.AlgorithmList // <-- 에러 시 변수명 확인 필요
                     .OfType<EdgeAlgorithm>()
                     .FirstOrDefault();
-
+                SLogger.Write(
+             $"[GetEdgePoint] UID={entity.LinkedWindow.UID}, " +
+             $"IsInspected={(edgeAlgo != null ? edgeAlgo.IsInspected : false)}, " +
+             $"pt={(edgeAlgo != null ? edgeAlgo.FoundEdgePoint.ToString() : "null")}"
+         );
                 if (edgeAlgo != null && edgeAlgo.IsInspected)
                 {
                     var pt = edgeAlgo.FoundEdgePoint; // EdgeAlgorithm.cs에 추가한 public property

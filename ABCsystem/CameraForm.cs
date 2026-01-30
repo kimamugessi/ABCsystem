@@ -177,13 +177,13 @@ namespace ABCsystem
 
         public Mat GetDisplayImage()
         {
-            return Global.Inst.InspStage.ImageSpace.GetMat(0,_currentImageChannel);
+            return Global.Inst.InspStage.ImageSpace.GetMat(0, _currentImageChannel);
         }
 
         private void CameraForm_Resize(object sender, EventArgs e)
         {
             int margin = 0;
-            imageViewer.Width = this.Width - mainViewToolbar.Width-margin * 2;
+            imageViewer.Width = this.Width - mainViewToolbar.Width - margin * 2;
             imageViewer.Height = this.Height - margin * 2;
 
             imageViewer.Location = new System.Drawing.Point(margin, margin);
@@ -194,7 +194,7 @@ namespace ABCsystem
             if (bitmap == null)
             {
                 //#6_INSP_STAGE#3 업데이트시 bitmap이 없다면 InspSpace에서 가져온다
-                bitmap = Global.Inst.InspStage.GetBitmap(0,_currentImageChannel);
+                bitmap = Global.Inst.InspStage.GetBitmap(0, _currentImageChannel);
                 if (bitmap == null)
                     return;
             }
@@ -205,6 +205,7 @@ namespace ABCsystem
 
         public void UpdateImageViewer()
         {
+
             imageViewer.UpdateInspParam();
             imageViewer.Invalidate();
         }
@@ -289,13 +290,14 @@ namespace ABCsystem
             imageViewer.Invalidate();
         }
 
-        private void Toolbar_ButtonChanged(object sender, ToolbarEventArgs e) {
+        private void Toolbar_ButtonChanged(object sender, ToolbarEventArgs e)
+        {
             switch (e.Button)
             {
                 case ToolbarButton.ShowROI:
-                    if(e.IsChecked)
+                    if (e.IsChecked)
                         UpdateDiagramEntity();
-                    else 
+                    else
                         imageViewer.ResetEntity();
                     break;
                 case ToolbarButton.ChannelColor:
@@ -335,31 +337,31 @@ namespace ABCsystem
 
             this.FormClosed -= CameraForm_FormClosed;
         }
-    public void SelectRoiByUid(string uid)
-{
-    // 1. 모델에서 데이터 찾기
-    var model = Global.Inst.InspStage.CurModel;
-    if (model == null) return;
-
-    var window = model.InspWindowList.FirstOrDefault(w => w.UID == uid);
-
-    if (window != null)
-    {
-        // 2. 중요: UI 스레드에서 실행되도록 보장 (반응이 없는 경우 대비)
-        if (this.InvokeRequired)
+        public void SelectRoiByUid(string uid)
         {
-            this.Invoke(new MethodInvoker(() => SelectRoiByUid(uid)));
-            return;
+            // 1. 모델에서 데이터 찾기
+            var model = Global.Inst.InspStage.CurModel;
+            if (model == null) return;
+
+            var window = model.InspWindowList.FirstOrDefault(w => w.UID == uid);
+
+            if (window != null)
+            {
+                // 2. 중요: UI 스레드에서 실행되도록 보장 (반응이 없는 경우 대비)
+                if (this.InvokeRequired)
+                {
+                    this.Invoke(new MethodInvoker(() => SelectRoiByUid(uid)));
+                    return;
+                }
+
+                // 3. ImageViewCtrl의 선택 로직 호출
+                // 이 메서드가 내부적으로 _multiSelectedEntities에 추가하고 Invalidate()를 호출합니다.
+                imageViewer.SelectDiagramEntity(window);
+
+                // 4. 추가 확인: 강제로 포커스를 주고 다시 그리기를 한 번 더 호출
+                imageViewer.Focus();
+                imageViewer.Invalidate();
+            }
         }
-
-        // 3. ImageViewCtrl의 선택 로직 호출
-        // 이 메서드가 내부적으로 _multiSelectedEntities에 추가하고 Invalidate()를 호출합니다.
-        imageViewer.SelectDiagramEntity(window);
-
-        // 4. 추가 확인: 강제로 포커스를 주고 다시 그리기를 한 번 더 호출
-        imageViewer.Focus();
-        imageViewer.Invalidate(); 
-    }
-}
     }
 }
