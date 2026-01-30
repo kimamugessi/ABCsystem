@@ -545,32 +545,12 @@ namespace ABCsystem
             // 초기 크기/위치 (예: panel의 45%)
             var bounds = panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle);
 
-            int w = (int)(bounds.Width * 0.25);
-            int h = (int)(bounds.Height * 0.25);
+            int w = (int)(bounds.Width * 0.45);
+            int h = (int)(bounds.Height * 0.6);
 
-            int gap = 10;
-            int lift = 54;
-            var wa = Screen.FromControl(this).WorkingArea;
+            int x = bounds.Left + 20;   // 왼쪽에 살짝 붙여도 좋고
+            int y = bounds.Top + 20;
 
-            // LogForm 기준으로 배치 (없으면 중앙하단)
-            var logForm = FormManager.GetForm<LogForm>();
-
-            int x, y;
-
-            if (logForm != null && !logForm.IsDisposed)
-            {
-                // 빨간 네모 느낌: LogForm 왼쪽 + 하단 라인 맞추기
-                x = logForm.Left - w - gap;
-                y = wa.Bottom - h - gap - lift;
-            }
-            else
-            {
-                // fallback: 화면 중앙 하단
-                x = wa.Left + (wa.Width - w) / 2;
-                y = wa.Bottom - h - gap - lift;
-            }
-
-            _modelTreeForm.StartPosition = FormStartPosition.Manual;
             _modelTreeForm.Bounds = new Rectangle(x, y, w, h);
 
             _modelTreeForm.FormClosed += (s, e) =>
