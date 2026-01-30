@@ -161,21 +161,10 @@ namespace ABCsystem
             // 콤보 선택값을 알고리즘에 반영
             ApplyComboToAlgorithm();
 
-            InspectType runType;
-            if (win.InspWindowType == InspWindowType.Body)
-            {
-                algo.UseAsAlignment = true;
-                algo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight;
-                runType = InspectType.InspAlignEdge;
-            }
-            else
-            {
-                algo.UseAsAlignment = false;
-                runType = InspectType.InspEdge;
-            }
-
-            if (algo.EdgeThreshold <= 0)
-                algo.EdgeThreshold = 30;
+            // 4. 검사 타입 결정 (Body 타입이면 AlignEdge로 실행)
+            InspectType runType = (win.InspWindowType == InspWindowType.Body)
+                                  ? InspectType.InspAlignEdge
+                                  : InspectType.InspEdge;
 
             Global.Inst.InspStage.InspWorker.TryInspect(win, runType);
 
