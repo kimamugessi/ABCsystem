@@ -56,22 +56,10 @@ namespace ABCsystem.Teach
         {
             switch (inspWindow.InspWindowType)
             {
-                case InspWindowType.Base:
+                case InspWindowType.NewROI:
                     inspWindow.AddInspAlgorithm(InspectType.InspEdge);
                     //inspWindow.AddInspAlgorithm(InspectType.InspMatch);
                     //inspWindow.AddInspAlgorithm(InspectType.InspBinary);
-                    break;
-                case InspWindowType.Body:
-                    inspWindow.AddInspAlgorithm(InspectType.InspEdge);
-                    //inspWindow.AddInspAlgorithm(InspectType.InspMatch);
-                    //inspWindow.AddInspAlgorithm(InspectType.InspBinary);
-                    break;
-                case InspWindowType.Sub:
-                    //inspWindow.AddInspAlgorithm(InspectType.InspMatch);
-                    //inspWindow.AddInspAlgorithm(InspectType.InspBinary);
-                    break;
-                case InspWindowType.ID:
-                    //inspWindow.AddInspAlgorithm(InspectType.InspMatch);
                     break;
 
             }
@@ -85,21 +73,9 @@ namespace ABCsystem.Teach
             prefix = string.Empty;
             switch (windowType)
             {
-                case InspWindowType.Base:
-                    name = "Base";
-                    prefix = "BAS";
-                    break;
-                case InspWindowType.Body:
-                    name = "Body";
-                    prefix = "BDY";
-                    break;
-                case InspWindowType.Sub:
-                    name = "Sub";
-                    prefix = "SUB";
-                    break;
-                case InspWindowType.ID:
-                    name = "ID";
-                    prefix = "ID";
+                case InspWindowType.NewROI:
+                    name = "NewROI";
+                    prefix = "ROI";
                     break;
                 default:
                     return false;

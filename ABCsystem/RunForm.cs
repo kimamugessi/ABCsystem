@@ -111,18 +111,11 @@ namespace ABCsystem
                 return;
             }
 
-            // 모든 타입(Body, Base 등)에서 화살표를 선택할 수 있도록 변경
+            // 모든 타입(Body, NewROI 등)에서 화살표를 선택할 수 있도록 변경
             cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
 
-            if (_win.InspWindowType == InspWindowType.Body)
-            {
-                // Body는 Align 용도로 쓰겠다는 체크만 유지하고 방향은 자유롭게
-                _algo.UseAsAlignment = true;
-            }
-            else
-            {
+            
                 _algo.UseAsAlignment = false;
-            }
 
             // [핵심] 알고리즘에 이미 저장되어 있는 방향을 UI에 표시
             cbEdgeType.SelectedItem = ToArrow(_algo.ScanDir);
@@ -143,9 +136,9 @@ namespace ABCsystem
 
             // 2. 완전히 새로운 알고리즘 객체 생성 및 주입
             EdgeAlgorithm newAlgo = new EdgeAlgorithm();
-            newAlgo.InspectType = (win.InspWindowType == InspWindowType.Body) ? InspectType.InspAlignEdge : InspectType.InspEdge;
+            
             newAlgo.ScanDir = FromArrow(cbEdgeType.SelectedItem.ToString());
-            newAlgo.UseAsAlignment = (win.InspWindowType == InspWindowType.Body);
+
 
             win.AlgorithmList.Add(newAlgo);
 
@@ -162,7 +155,6 @@ namespace ABCsystem
             if (string.IsNullOrEmpty(sel)) return;
 
             _algo.ScanDir = FromArrow(sel);
-            _algo.UseAsAlignment = (_win.InspWindowType == InspWindowType.Body);
         }
 
         private void OnSelectedWindowChanged(InspWindow win)

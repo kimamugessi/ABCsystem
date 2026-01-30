@@ -70,7 +70,7 @@ namespace ABCsystem.Inspect
         {
             if (windowList.Count <= 0) return false;
             Point alignOffset = new Point(0, 0);
-            InspWindow idWindow = windowList.Find(w => w.InspWindowType == Core.InspWindowType.ID);
+            InspWindow idWindow = windowList.Find(w => w.InspWindowType == Core.InspWindowType.NewROI);
             if (idWindow != null)
             {
                 MatchAlgorithm matchAlgo = (MatchAlgorithm)idWindow.FindInspAlgorithm(InspectType.InspMatch);

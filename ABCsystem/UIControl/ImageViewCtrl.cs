@@ -115,8 +115,6 @@ namespace ABCsystem.UIControl
 
         private Size _extSize = new Size(0, 0);
 
-
-        private bool _drawLineEnabled = false; //라인 그리기 활성화 여부(20260125)
         private List<DiagramEntity[]> _heightLineList = new List<DiagramEntity[]>();
         private bool _drawVerticalEnabled = false; // 수직선 그리기 활성화 여부
 
@@ -170,17 +168,8 @@ namespace ABCsystem.UIControl
 
             switch (inspWindowType)
             {
-                case InspWindowType.Base:
+                case InspWindowType.NewROI:
                     color = Color.LightBlue;
-                    break;
-                case InspWindowType.Body:
-                    color = Color.Red;
-                    break;
-                case InspWindowType.Sub:
-                    color = Color.Orange;
-                    break;
-                case InspWindowType.ID:
-                    color = Color.Magenta;
                     break;
             }
 
@@ -1275,8 +1264,8 @@ namespace ABCsystem.UIControl
 
             //song : 원하는 것만 남기기
             // 엣지 점: UsePoint == true
-            // BaseROI: (예시) inspectType == InspectType.InspNone 이면서 rect가 유효한 것
-            // BaseROI가 어떤 inspectType/decision으로 들어오는지에 따라 조건을 조정해야 함
+            // NewROIROI: (예시) inspectType == InspectType.InspNone 이면서 rect가 유효한 것
+            // NewROIROI가 어떤 inspectType/decision으로 들어오는지에 따라 조건을 조정해야 함
             var filtered = rectInfos.Where(x =>
                 x.UsePoint == true || (
                 x.UsePoint == false &&

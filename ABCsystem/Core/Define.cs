@@ -23,10 +23,7 @@ namespace ABCsystem.Core
     public enum InspWindowType
     {
         None = 0,
-        Base,
-        Body,
-        Sub,
-        ID
+        NewROI
     }
 
     public enum DecisionType
