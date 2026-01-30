@@ -126,12 +126,12 @@ namespace ABCsystem.Inspect
                         float pixelLength = Math.Abs(targetY - vP3.Y);
 
                         // --- DrawHeightLine 판정 기준과 100% 동일화 ---
-                        if (pixelLength >= 1000)
+                        if (pixelLength >= 1000)    //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
                         {
                             imageStatus = "NO CAP"; // NO CAP은 불량으로 간주
                             break;
                         }
-                        else if (pixelLength >= 870 && pixelLength <= 900)
+                        else if (pixelLength >= 870 && pixelLength <= 900)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
                         {
                             // 이 라인은 OK, 다음 라인 계속 체크
                         }
