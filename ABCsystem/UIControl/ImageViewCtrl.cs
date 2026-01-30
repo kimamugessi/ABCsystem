@@ -237,29 +237,43 @@ namespace ABCsystem.UIControl
         // 이미지 로딩 함수
         public void LoadBitmap(Bitmap bitmap)
         {
-            if (this.InvokeRequired)    //스레드에서 검사시, 멈추는 현상 방지
+            if (this.InvokeRequired)
             {
-                this.BeginInvoke(new Action<Bitmap>(LoadBitmap), bitmap); return;
+                this.BeginInvoke(new Action<Bitmap>(LoadBitmap), bitmap);
+                return;
             }
-            if (_bitmapImage != null)   // 기존에 로드된 이미지가 있다면 해제 후 초기화, 메모리누수 방지
+
+            if (bitmap == null)
+                return;
+
+            if (_bitmapImage != null)
             {
-                if (_bitmapImage.Width == bitmap.Width && _bitmapImage.Height == bitmap.Height) //이미지 크기가 같다면, 이미지 변경 후, 화면 갱신
+                // ✅ 해상도 같아도 'ResizeCanvas'는 반드시 해줘야 함 (DockPanel 제거 후 타이밍/좌표 문제 방지)
+                if (_bitmapImage.Width == bitmap.Width && _bitmapImage.Height == bitmap.Height)
                 {
-                    _bitmapImage.Dispose();   // 기존 이미지 해제 후 교체
+                    _bitmapImage.Dispose();
                     _bitmapImage = bitmap;
+
+                    // 🔥 핵심 추가 3줄
+                    ResizeCanvas();
+                    FitImageToScreen();   // 기존 동작 유지
                     Invalidate();
                     return;
                 }
-                _bitmapImage.Dispose(); //birmap 객체가 사요하던 메모리 리소스 해제
-                _bitmapImage = null;  //객체 해제하여 GC을 수집할 수 있도록 설정
+
+                _bitmapImage.Dispose();
+                _bitmapImage = null;
             }
-            _bitmapImage = bitmap;  //새 이미지 로드;
-            if (_isInitialized == false)    ////bitmap==null 예외처리도 초기화되지않은 변수들 초기화
-            {
+
+            _bitmapImage = bitmap;
+
+            // ✅ 초기화 여부와 상관없이, 이미지가 바뀌면 Canvas는 갱신되는 게 안전
+            if (_isInitialized == false)
                 _isInitialized = true;
-                ResizeCanvas();
-            }
+
+            ResizeCanvas();
             FitImageToScreen();
+            Invalidate();
         }
 
         // 이미지 화면에 맞게 조정 함수
