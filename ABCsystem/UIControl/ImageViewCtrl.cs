@@ -150,6 +150,11 @@ namespace ABCsystem.UIControl
 
         private List<InspWindow> _inspWindowList = new List<InspWindow>();
 
+        public List<DiagramEntity[]> GetHeightLineList()
+        {
+            return _heightLineList;
+        }
+
         public void SetInspWindowList(List<InspWindow> inspWindowList)
         {
             // 외부(InspStage 등)에서 받은 리스트를 컨트롤 내부 변수에 저장
@@ -331,7 +336,7 @@ namespace ABCsystem.UIControl
         }
 
         //EdgeAlgorithm에서 검출된 엣지 포인트를 가져오는 함수
-        private PointF GetEdgePoint(DiagramEntity entity)
+        public PointF GetEdgePoint(DiagramEntity entity)
         {
             if (entity?.LinkedWindow != null)   //1. 엔티티에 연결된 InspWindow 확인
             {
@@ -595,14 +600,54 @@ namespace ABCsystem.UIControl
             //#13_INSP_RESULT#5 검사 양불판정 갯수 화면에 표시
             if (_inspectResultCount.Total > 0)
             {
-                string resultText = $"Total: {_inspectResultCount.Total}\r\nOK: {_inspectResultCount.OK}\r\nNG: {_inspectResultCount.NG}";
+                double ngRate = ((double)_inspectResultCount.NG / _inspectResultCount.Total) * 100;
+                string resultText = $"TOTAL : {_inspectResultCount.Total}\n" +
+                        $"OK    : {_inspectResultCount.OK}\n" +
+                        $"NG    : {_inspectResultCount.NG}\n" +
+                        $"RATE  : {ngRate:F1}%";
 
                 float fontSize = 12.0f;
-                Color resultColor = Color.FromArgb(255, 255, 255);
-                PointF textPos = new PointF(Width -120, 10);
-                DrawText(g, resultText, textPos, fontSize, resultColor);
+                using (Font font = new Font("Consolas", fontSize, FontStyle.Bold)) // 숫자가 일정한 Consolas 권장
+                {
+                    // 텍스트의 실제 가로/세로 크기 측정
+                    SizeF textSize = g.MeasureString(resultText, font);
+
+                    int padding = 15; // 박스 안쪽 여백
+                    int margin = 80;  // 화면 끝에서 띄울 거리
+
+                    // 3. 배경 박스 좌표 계산 (우측 상단 고정)
+                    // 화면 너비(Width)에서 박스 너비와 마진을 빼서 X좌표 결정
+                    float boxWidth = textSize.Width + (padding * 2);
+                    float boxHeight = textSize.Height + (padding * 2);
+                    float boxX = Width - boxWidth - margin;
+                    float boxY = 20;
+
+                    RectangleF boxRect = new RectangleF(boxX, boxY, boxWidth, boxHeight);
+
+                    // 4. 그리기 작업 (SmoothingMode 설정으로 테두리를 부드럽게)
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                    // 배경 그리기 (반투명 검정: 180 정도가 적당히 비치고 잘 보임)
+                    using (SolidBrush backBrush = new SolidBrush(Color.FromArgb(180, 0, 0, 0)))
+                    {
+                        g.FillRectangle(backBrush, boxRect);
+                    }
+
+                    // 테두리 그리기 (흰색)
+                    using (Pen borderPen = new Pen(Color.White, 2.0f))
+                    {
+                        g.DrawRectangle(borderPen, boxRect.X, boxRect.Y, boxRect.Width, boxRect.Height);
+                    }
+
+                    // 텍스트 그리기 (흰색)
+                    using (SolidBrush textBrush = new SolidBrush(Color.White))
+                    {
+                        // 박스 시작 좌표에 패딩만큼 더해서 텍스트 배치
+                        g.DrawString(resultText, font, textBrush, boxRect.X + padding, boxRect.Y + padding);
+                    }
+                }
             }
-        }
+            }
 
         // 검사 정보(사각형 및 점 등) 그리기 함수
         private void DrawRectInfo(Graphics g)

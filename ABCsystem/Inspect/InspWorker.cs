@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Deployment.Application;
 using System.Diagnostics.Eventing.Reader;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -52,53 +53,94 @@ namespace ABCsystem.Inspect
             SLogger.Write("InspectionLoop End");
             
         }
+
+        private int _totalAccumulatedCount = 0;
+        private int _okAccumulatedCount = 0;
+        private int _ngAccumulatedCount = 0;
+
         public bool RunInspect(out bool isDefect)
         {
             isDefect = false;
             Model curMode = Global.Inst.InspStage.CurModel;
-            List<InspWindow> inspWindowList = curMode.InspWindowList;
-            foreach (var inspWindow in inspWindowList)
+
+            // 1. 기존 알고리즘 검사 로직 실행
+            foreach (var win in curMode.InspWindowList) { if (win != null) UpdateInspData(win); }
+            _inspectBoard.InspectWindowList(curMode.InspWindowList);
+
+            // 2. UI 객체(Viewer) 데이터 가져오기
+            var cameraForm = MainForm.GetDockForm<CameraForm>();
+            if (cameraForm == null) return false;
+
+            var viewer = cameraForm.ImageViewer;
+            var heightLines = viewer.GetHeightLineList(); // List<DiagramEntity[]>
+
+            // 3. DrawHeightLine과 동일한 수식으로 이미지 판정
+            string imageStatus = "OK"; // 기본값은 OK
+
+            if (heightLines == null || heightLines.Count == 0)
             {
-                if (inspWindow == null) continue;
-                UpdateInspData(inspWindow);
+                imageStatus = "NG"; // 검사 라인이 없으면 NG 처리
+            }
+            else
+            {
+                foreach (var lineSet in heightLines)
+                {
+                    if (lineSet == null || lineSet.Length < 3) continue;
+
+                    // 좌표 획득 (Public으로 변경한 메서드 사용)
+                    PointF vP1 = viewer.GetEdgePoint(lineSet[0]);
+                    PointF vP2 = viewer.GetEdgePoint(lineSet[1]);
+                    PointF vP3 = viewer.GetEdgePoint(lineSet[2]);
+
+                    float dx = vP2.X - vP1.X;
+                    float dy = vP2.Y - vP1.Y;
+
+                    if (Math.Abs(dx) > 0.0001f)
+                    {
+                        float slope = Math.Abs(dy / dx);
+                        if (slope > 0.1f) { imageStatus = "NG"; break; } // 기울기 불량
+
+                        float targetY = vP1.Y + (dy / dx) * (vP3.X - vP1.X);
+                        float pixelLength = Math.Abs(targetY - vP3.Y);
+
+                        // --- DrawHeightLine 판정 기준과 100% 동일화 ---
+                        if (pixelLength >= 500)
+                        {
+                            imageStatus = "NO CAP"; // NO CAP은 불량으로 간주
+                            break;
+                        }
+                        else if (pixelLength >= 350 && pixelLength <= 360)
+                        {
+                            // 이 라인은 OK, 다음 라인 계속 체크
+                        }
+                        else
+                        {
+                            imageStatus = "NG";
+                            break;
+                        }
+                    }
+                    else { imageStatus = "NG"; break; }
+                }
             }
 
-            _inspectBoard.InspectWindowList(inspWindowList);
+            // 4. 누적 카운트 업데이트 (이미지 단위)
+            _totalAccumulatedCount++;
 
-            int totalCnt = 0;
-            int okCnt = 0;
-            int ngCnt = 0;
-            foreach (var inspWindow in inspWindowList)
+            if (imageStatus == "OK")
             {
-                if (inspWindow == null) continue; //song
-
-                totalCnt++;
-
-                if (inspWindow.IsDefect())
-                {
-                    if (!isDefect)
-                        isDefect = true;
-
-                    ngCnt++;
-                }
-                else
-                {
-                    okCnt++;
-                }
-
-                //DisplayResult(inspWindow, InspectType.InspNone); //song
+                _okAccumulatedCount++;
+                isDefect = false;
             }
-            //song 모든 window의 결과를 한 번에 합쳐서 그리기(기존 ROI 결과 유지)
-            DisplayResultAll(inspWindowList, InspectType.InspNone);
-
-            if (totalCnt > 0)
+            else
             {
-                var cameraForm = MainForm.GetDockForm<CameraForm>();
-                if (cameraForm != null)
-                {
-                    cameraForm.SetInspResultCount(totalCnt, okCnt, ngCnt);
-                }
+                _ngAccumulatedCount++; // NG 또는 NO CAP일 때
+                isDefect = true;
             }
+
+            // 5. UI 결과 업데이트
+            // 이제 파라미터로 넘기는 값들은 ROI 개수가 아닌 '누적 이미지 수'입니다.
+            cameraForm.SetInspResultCount(_totalAccumulatedCount, _okAccumulatedCount, _ngAccumulatedCount);
+
             return true;
         }
         public bool TryInspect(InspWindow inspObj, InspectType inspType)
@@ -133,7 +175,6 @@ namespace ABCsystem.Inspect
                     resultForm.AddModelResult(curMode);
                 }
             }
-             
             return true;
         }
 
