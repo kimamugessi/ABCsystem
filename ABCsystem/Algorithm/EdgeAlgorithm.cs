@@ -211,6 +211,7 @@ namespace ABCsystem.Algorithm
 
             // 원본 취득
             Mat srcImage = Global.Inst.InspStage.GetMat(0, ImageChannel);
+            SLogger.Write($"[Edge] ch={ImageChannel} src={(srcImage == null ? "NULL" : $"{srcImage.Width}x{srcImage.Height} c={srcImage.Channels()}")}");
             if (srcImage == null || srcImage.Empty()) return false;
 
             Rect roi = InspRect;

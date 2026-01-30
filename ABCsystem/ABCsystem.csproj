@@ -169,12 +169,6 @@
     <Compile Include="Property\BinaryProp.Designer.cs">
       <DependentUpon>BinaryProp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Property\EdgeProp.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Property\EdgeProp.Designer.cs">
-      <DependentUpon>EdgeProp.cs</DependentUpon>
-    </Compile>
     <Compile Include="Property\ImageFilterProp.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -299,9 +293,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Property\BinaryProp.resx">
       <DependentUpon>BinaryProp.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Property\EdgeProp.resx">
-      <DependentUpon>EdgeProp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Property\ImageFilterProp.resx">
       <DependentUpon>ImageFilterProp.cs</DependentUpon>

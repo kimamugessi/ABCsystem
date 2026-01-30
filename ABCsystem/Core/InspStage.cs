@@ -339,6 +339,7 @@ namespace ABCsystem.Core
             UpdateProperty(inspWindow);
 
             Global.Inst.InspStage.PreView.SetInspWindow(inspWindow);
+
         }
         public void AddInspWindow(InspWindowType windowType, Rect rect)
         {

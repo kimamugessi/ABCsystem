@@ -103,6 +103,8 @@ namespace ABCsystem.Inspect
         }
         public bool TryInspect(InspWindow inspObj, InspectType inspType)
         {
+            SLogger.Write($"[TryInspect] win={inspObj?.UID} inspTypeParam={inspType}");
+
             if (inspObj != null)
             {
                 if (!UpdateInspData(inspObj))

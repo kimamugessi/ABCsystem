@@ -41,6 +41,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.chkCycleMode = new System.Windows.Forms.CheckBox();
+            this.cbEdgeType = new System.Windows.Forms.ComboBox();
+            this.btnEdge = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnGrab
@@ -152,7 +155,7 @@
             // btnClose
             // 
             this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
-            this.btnClose.Location = new System.Drawing.Point(897, 10);
+            this.btnClose.Location = new System.Drawing.Point(987, 10);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(36, 31);
@@ -172,11 +175,50 @@
             this.chkCycleMode.UseVisualStyleBackColor = true;
             this.chkCycleMode.CheckedChanged += new System.EventHandler(this.chkCycleMode_CheckedChanged);
             // 
+            // cbEdgeType
+            // 
+            this.cbEdgeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEdgeType.FormattingEnabled = true;
+            this.cbEdgeType.Items.AddRange(new object[] {
+            "→",
+            "←",
+            "↑",
+            "↓"});
+            this.cbEdgeType.Location = new System.Drawing.Point(742, 30);
+            this.cbEdgeType.Margin = new System.Windows.Forms.Padding(2);
+            this.cbEdgeType.Name = "cbEdgeType";
+            this.cbEdgeType.Size = new System.Drawing.Size(88, 26);
+            this.cbEdgeType.TabIndex = 6;
+            this.cbEdgeType.SelectedIndexChanged += new System.EventHandler(this.cbEdgeType_SelectedIndexChanged);
+            // 
+            // btnEdge
+            // 
+            this.btnEdge.Location = new System.Drawing.Point(843, 20);
+            this.btnEdge.Margin = new System.Windows.Forms.Padding(2);
+            this.btnEdge.Name = "btnEdge";
+            this.btnEdge.Size = new System.Drawing.Size(78, 44);
+            this.btnEdge.TabIndex = 7;
+            this.btnEdge.Text = "Inspect";
+            this.btnEdge.UseVisualStyleBackColor = true;
+            this.btnEdge.Click += new System.EventHandler(this.btnEdge_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(688, 33);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(49, 18);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "Edge";
+            // 
             // RunForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(945, 107);
+            this.ClientSize = new System.Drawing.Size(1045, 107);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.btnEdge);
+            this.Controls.Add(this.cbEdgeType);
             this.Controls.Add(this.chkCycleMode);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.label5);
@@ -212,5 +254,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.CheckBox chkCycleMode;
+        private System.Windows.Forms.ComboBox cbEdgeType;
+        private System.Windows.Forms.Button btnEdge;
+        private System.Windows.Forms.Label label7;
     }
 }
