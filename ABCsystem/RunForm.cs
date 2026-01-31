@@ -105,23 +105,21 @@ namespace ABCsystem
             cbEdgeType.SelectedIndexChanged -= cbEdgeType_SelectedIndexChanged;
             cbEdgeType.Items.Clear();
 
+            // 아이템을 무조건 추가 (ROI를 선택했을 때 목록이 비어있지 않게 함)
+            cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+
             if (_win == null || _algo == null)
             {
+                // 알고리즘이 없더라도 기본적으로 첫 번째 아이템 선택
+                cbEdgeType.SelectedIndex = 0;
                 cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
                 return;
             }
 
-            // 모든 타입(Body, NewROI 등)에서 화살표를 선택할 수 있도록 변경
-            cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
-
-            
-                _algo.UseAsAlignment = false;
-
-            // [핵심] 알고리즘에 이미 저장되어 있는 방향을 UI에 표시
+            _algo.UseAsAlignment = false;
             cbEdgeType.SelectedItem = ToArrow(_algo.ScanDir);
 
-            // 만약 선택된 게 없다면 기본값 설정
-            if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedItem = "→";
+            if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedIndex = 0;
 
             cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
         }
@@ -131,14 +129,19 @@ namespace ABCsystem
             var win = Global.Inst.CurTeachWindow;
             if (win == null) return;
 
-            // 1. 기존 알고리즘 제거 (중복 방지)
+            // 1. 기존 알고리즘 제거
             win.AlgorithmList.RemoveAll(a => a.InspectType == InspectType.InspEdge || a.InspectType == InspectType.InspAlignEdge);
 
-            // 2. 완전히 새로운 알고리즘 객체 생성 및 주입
+            // 2. 새로운 알고리즘 객체 생성
             EdgeAlgorithm newAlgo = new EdgeAlgorithm();
-            
-            newAlgo.ScanDir = FromArrow(cbEdgeType.SelectedItem.ToString());
 
+            // 수정된 부분: SelectedItem이 null인지 확인하고, null이면 기본값 "→" 사용
+            string selectedArrow = "→";
+            if (cbEdgeType.SelectedItem != null)
+            {
+                selectedArrow = cbEdgeType.SelectedItem.ToString();
+            }
+            newAlgo.ScanDir = FromArrow(selectedArrow);
 
             win.AlgorithmList.Add(newAlgo);
 
