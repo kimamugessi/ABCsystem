@@ -1486,7 +1486,6 @@ namespace ABCsystem.UIControl
             }
         }
 
-
         private void DeleteSelEntity()
         {
             List<InspWindow> selected = _multiSelectedEntities
@@ -1496,10 +1495,15 @@ namespace ABCsystem.UIControl
 
             if (selected.Count > 0)
             {
-                // 1. 다중 선택된 항목 중 선 그리기와 관련된 ROI가 있는지 확인하고 초기화
                 foreach (var entity in _multiSelectedEntities)
                 {
                     CheckAndResetLineRois(entity);
+
+                    // [추가] 다중 선택된 각 ROI의 알고리즘 데이터 삭제
+                    if (entity.LinkedWindow != null)
+                    {
+                        entity.LinkedWindow.AlgorithmList.Clear();
+                    }
                 }
 
                 DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.DeleteList, selected));
@@ -1509,13 +1513,18 @@ namespace ABCsystem.UIControl
                 InspWindow linkedWindow = _selEntity.LinkedWindow;
                 if (linkedWindow == null) return;
 
-                // 2. 단일 선택된 항목이 선 그리기와 관련된 ROI인지 확인하고 초기화
                 CheckAndResetLineRois(_selEntity);
+
+                // [추가] 단일 선택된 ROI의 알고리즘 데이터 삭제
+                linkedWindow.AlgorithmList.Clear();
 
                 DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.Delete, linkedWindow));
             }
 
-            // 삭제 후 화면 갱신
+            // [중요] 삭제 후 메인 화면의 검사 결과 잔상을 지우기 위해 호출
+            Global.Inst.InspStage.RedrawMainView();
+
+            // 현재 컨트롤(ImageViewCtrl) 갱신
             Invalidate();
         }
 
