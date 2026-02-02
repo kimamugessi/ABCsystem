@@ -589,13 +589,15 @@ namespace ABCsystem
             int w = colW;
             int h = (int)(bounds.Height * 0.25);
 
+            int yOffset = 8;
+
             int x = colX;
             int y;
 
             // 티칭창이 있으면: "티칭창 위"에 고정 (중간)
             if (_modelTreeForm != null && !_modelTreeForm.IsDisposed && _modelTreeForm.Visible)
             {
-                y = _modelTreeForm.Top - h - margin;
+                y = _modelTreeForm.Top - h - margin + yOffset;
             }
             else
             {
