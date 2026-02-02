@@ -36,10 +36,10 @@
             // btnApply
             // 
             this.btnApply.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.btnApply.Location = new System.Drawing.Point(158, 110);
+            this.btnApply.Location = new System.Drawing.Point(199, 56);
             this.btnApply.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(104, 39);
+            this.btnApply.Size = new System.Drawing.Size(86, 35);
             this.btnApply.TabIndex = 5;
             this.btnApply.Text = "적용";
             this.btnApply.UseVisualStyleBackColor = true;
@@ -50,10 +50,10 @@
             this.cbCameraType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCameraType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.cbCameraType.FormattingEnabled = true;
-            this.cbCameraType.Location = new System.Drawing.Point(101, 17);
+            this.cbCameraType.Location = new System.Drawing.Point(124, 17);
             this.cbCameraType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbCameraType.Name = "cbCameraType";
-            this.cbCameraType.Size = new System.Drawing.Size(161, 26);
+            this.cbCameraType.Size = new System.Drawing.Size(161, 31);
             this.cbCameraType.TabIndex = 4;
             // 
             // lbCameraType
@@ -62,13 +62,13 @@
             this.lbCameraType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.lbCameraType.Location = new System.Drawing.Point(13, 21);
             this.lbCameraType.Name = "lbCameraType";
-            this.lbCameraType.Size = new System.Drawing.Size(77, 18);
+            this.lbCameraType.Size = new System.Drawing.Size(107, 25);
             this.lbCameraType.TabIndex = 3;
             this.lbCameraType.Text = "카메라 종류";
             // 
             // CameraSetting
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.cbCameraType);
@@ -76,7 +76,7 @@
             this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CameraSetting";
-            this.Size = new System.Drawing.Size(283, 164);
+            this.Size = new System.Drawing.Size(313, 137);
             this.ResumeLayout(false);
             this.PerformLayout();
 

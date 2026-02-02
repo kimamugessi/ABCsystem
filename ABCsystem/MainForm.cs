@@ -30,6 +30,9 @@ namespace ABCsystem
         private ModelTreeForm _modelTreeForm;
         private WindowConstraintBehavior _modelTreeConstraint;
 
+        private SetupForm _setupForm;
+        private WindowConstraintBehavior _setupConstraint;
+
         private bool _startupFormsShown = false;
         private Rectangle GetPanelBoundsScreen()
         {
@@ -188,16 +191,82 @@ namespace ABCsystem
 
         private void btnModelNew_Click(object sender, EventArgs e)
         {
-            openViewForm(new NewModel());
-            ////신규 모델 추가를 위한 모델 정보를 받기 위한 창 띄우기
-            //NewModel newModel = new NewModel();
-            //newModel.ShowDialog();
+            //openViewForm(new NewModel());
+
+            NewModel newModel = new NewModel();
+
+            newModel.StartPosition = FormStartPosition.Manual;
+            newModel.FormBorderStyle = FormBorderStyle.FixedSingle;
+            newModel.MaximizeBox = false;
+            newModel.MinimizeBox = false;
+
+            newModel.Show(this);
+            newModel.PerformLayout();
+
+            var bounds = GetPanelBoundsScreen();
+            int margin = 12;
+            int gap = 10;
+
+            // 기준: CameraForm 우측 상단
+            int x, y, w, h;
+
+            if (_cameraForm != null && !_cameraForm.IsDisposed && _cameraForm.Visible)
+            {
+                x = _cameraForm.Bounds.Right + margin;
+                y = _cameraForm.Bounds.Top; 
+            }
+            else
+            {
+                x = bounds.Right - newModel.Width - margin;
+                y = bounds.Top + margin;
+            }
+
+            // 우측 컬럼 폭: panel 오른쪽 끝까지 채우기
+            w = bounds.Right - x - margin;
+            if (w < newModel.Width) w = newModel.Width;
+            h = 200;
+
+            // 화면 밖 보정
+            if (x + w > bounds.Right - margin) w = bounds.Right - margin - x;
+            if (y + h > bounds.Bottom - margin) y = bounds.Bottom - margin - h;
+
+            newModel.Bounds = new Rectangle(x, y, w, h);
+            newModel.BringToFront();
+
+            // SetupForm / 티칭창 재배치(있으면)
+            int rightX = x;
+            int rightW = w;
+
+            int bottomY = (_cameraForm != null && !_cameraForm.IsDisposed && _cameraForm.Visible)
+                ? _cameraForm.Bounds.Bottom
+                : bounds.Bottom - margin;
+
+            // 티칭창은 CameraForm 우측 하단에 붙일 거라서, 먼저 teach 높이 확보
+            int teachH = 180;
+            int teachY = bottomY - teachH;
+
+            if (_modelTreeForm != null && !_modelTreeForm.IsDisposed && _modelTreeForm.Visible)
+            {
+                _modelTreeForm.Bounds = new Rectangle(rightX, teachY, rightW, teachH);
+            }
+
+            // SetupForm은 NewModel 아래 ~ Teach 위 사이에 넣기
+            if (_setupForm != null && !_setupForm.IsDisposed && _setupForm.Visible)
+            {
+                int setupH = 220;
+                int setupY = newModel.Bottom + gap;
+
+                // 사이 공간 계산
+                int maxH = teachY - gap - setupY;
+                if (maxH < 120) maxH = 120;                // 너무 작으면 최소 확보
+                if (setupH > maxH) setupH = maxH;
+
+                _setupForm.Bounds = new Rectangle(rightX, setupY, rightW, setupH);
+            }
 
             Model curModel = Global.Inst.InspStage.CurModel;
-            if (curModel != null)
-            {
-                this.Text = GetMdoelTitle(curModel);
-            }
+            if (curModel != null) this.Text = GetMdoelTitle(curModel);
+
             hideSubMenu();
         }
 
@@ -351,13 +420,14 @@ namespace ABCsystem
 
             // 좌우 여백
             int margin = 12;
+            int topOffset = panelChlid.Height + 8;
 
             // Camera: 좌측 70% 폭, 전체 높이의 60% 정도
             int w = (int)(bounds.Width * 0.70);
             int h = (int)(bounds.Height * 0.80);
 
             int x = bounds.Left + margin;
-            int y = bounds.Top + margin;
+            int y = bounds.Top + margin + topOffset;
 
             _cameraForm.Bounds = new Rectangle(x, y, w, h);
 
@@ -385,6 +455,7 @@ namespace ABCsystem
 
             // 좌우 여백
             int margin = 12;
+            int topOffset = panelChlid.Height + 8;
 
             // Camera: 초기 크기/위치 (폭의 70%, 높이의 85%)
             var bounds = GetPanelBoundsScreen();
@@ -393,7 +464,7 @@ namespace ABCsystem
             int h = (int)(bounds.Height * 0.65);
 
             int x = bounds.Left + margin;
-            int y = bounds.Top + margin;
+            int y = bounds.Top + margin + topOffset;
 
             _cameraForm.Bounds = new Rectangle(x, y, w, h);
 
@@ -424,14 +495,12 @@ namespace ABCsystem
             _logConstraint = new WindowConstraintBehavior(_logForm, GetPanelBoundsScreen);
 
             var bounds = GetPanelBoundsScreen();
-            // 초기 크기
             int margin = 12;
 
-            // Log: 우측 28% 폭, 아래쪽 35% 높이
-            int w = (int)(bounds.Width * 0.30);
-            int h = (int)(bounds.Height * 0.35);
+            int w = _cameraForm.Width;
+            int h = (int)(bounds.Height * 0.28);
 
-            int x = bounds.Right - w - margin;
+            int x = bounds.Left + margin;
             int y = bounds.Bottom - h - margin;
 
             _logForm.Bounds = new Rectangle(x, y, w, h);
@@ -483,7 +552,66 @@ namespace ABCsystem
         private void btnSetting_Click(object sender, EventArgs e)
         {
             SLogger.Write($"환경설정창 열기");
-            openViewForm(new SetupForm());
+
+            // 이미 떠있으면 앞으로
+            if (_setupForm != null && !_setupForm.IsDisposed && _setupForm.Visible)
+            {
+                _setupForm.BringToFront();
+                _setupForm.Activate();
+                hideSubMenu();
+                return;
+            }
+
+            _setupForm = new SetupForm();
+
+            // 팝업 형태로
+            _setupForm.StartPosition = FormStartPosition.Manual;
+            _setupForm.FormBorderStyle = FormBorderStyle.Sizable; 
+            _setupForm.Show(this);
+
+            // 여기부터 추가: 세팅창을 티칭창 위로 배치
+            var bounds = GetPanelBoundsScreen();
+            int margin = 12;
+
+            // 우측 컬럼 폭: 티칭창 기준
+            int colW = (_modelTreeForm != null && !_modelTreeForm.IsDisposed && _modelTreeForm.Visible)
+                ? _modelTreeForm.Width
+                : (int)(bounds.Width * 0.27);
+
+            // 우측 컬럼 x: CameraForm 오른쪽 기준
+            int colX;
+            if (_cameraForm != null && !_cameraForm.IsDisposed && _cameraForm.Visible)
+                colX = _cameraForm.Bounds.Right + margin;
+            else
+                colX = bounds.Right - colW - margin;
+
+            // SetupForm 크기
+            int w = colW;
+            int h = (int)(bounds.Height * 0.25);
+
+            int x = colX;
+            int y;
+
+            // 티칭창이 있으면: "티칭창 위"에 고정 (중간)
+            if (_modelTreeForm != null && !_modelTreeForm.IsDisposed && _modelTreeForm.Visible)
+            {
+                y = _modelTreeForm.Top - h - margin;
+            }
+            else
+            {
+                // 티칭창 없으면: 그냥 컬럼 아래쪽(대충 중간쯤)으로
+                y = bounds.Top + margin + 220;
+            }
+
+            // 화면 밖 보정
+            if (x + w > bounds.Right - margin) x = bounds.Right - w - margin;
+            if (x < bounds.Left + margin) x = bounds.Left + margin;
+            if (y < bounds.Top + margin) y = bounds.Top + margin;
+            if (y + h > bounds.Bottom - margin) y = bounds.Bottom - h - margin;
+
+            _setupForm.Bounds = new Rectangle(x, y, w, h);
+
+            //openViewForm(new SetupForm());
             hideSubMenu();
         }
         #endregion
@@ -550,32 +678,33 @@ namespace ABCsystem
             // 초기 크기/위치 (panel의 25%)
             var bounds = panelChildForm.RectangleToScreen(panelChildForm.ClientRectangle);
 
-            int w = (int)(bounds.Width * 0.25);
-            int h = (int)(bounds.Height * 0.25);
+            int margin = 12;
 
-            int gap = 10;
-            int lift = 54;
-            var wa = Screen.FromControl(this).WorkingArea;
+            // 티칭창 크기: 패널의 25~30% 정도 (취향)
+            int w = (int)(bounds.Width * 0.27);
+            int h = (int)(bounds.Height * 0.15);
 
-            // LogForm 기준으로 배치
-            var logForm = FormManager.GetForm<LogForm>();
+            int x;
+            int y;
 
-            int x, y;
-
-            if (logForm != null && !logForm.IsDisposed)
+            // CameraForm이 떠있으면: CameraForm 오른쪽 아래로
+            if (_cameraForm != null && !_cameraForm.IsDisposed && _cameraForm.Visible)
             {
-                // LogForm 왼쪽 + 하단 라인 맞추기
-                x = logForm.Left - w - gap;
-                y = wa.Bottom - h - gap - lift;
+                x = _cameraForm.Bounds.Right + margin;
+                y = _cameraForm.Bounds.Bottom - h;
+
+                // 화면 밖으로 나가면 보정
+                if (x + w > bounds.Right - margin) x = bounds.Right - w - margin;
+                if (y + h > bounds.Bottom - margin) y = bounds.Bottom - h - margin;
+                if (y < bounds.Top + margin) y = bounds.Top + margin;
             }
             else
             {
-                // fallback: 화면 중앙 하단
-                x = wa.Left + (wa.Width - w) / 2;
-                y = wa.Bottom - h - gap - lift;
+                // CameraForm이 없으면: 우측 아래
+                x = bounds.Right - w - margin;
+                y = bounds.Bottom - h - margin;
             }
 
-            _modelTreeForm.StartPosition = FormStartPosition.Manual;
             _modelTreeForm.Bounds = new Rectangle(x, y, w, h);
 
             _modelTreeForm.FormClosed += (s, e) =>
@@ -591,8 +720,8 @@ namespace ABCsystem
             _startupFormsShown = true;
 
             ShowCameraForm();
-            ShowLogForm();
+            ShowModelTreeForm();
+            OpenOperationForm(new RunForm());
         }
-
     }
 }

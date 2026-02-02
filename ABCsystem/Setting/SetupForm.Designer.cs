@@ -40,7 +40,7 @@
             this.tabSetting.Margin = new System.Windows.Forms.Padding(4);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.SelectedIndex = 0;
-            this.tabSetting.Size = new System.Drawing.Size(329, 444);
+            this.tabSetting.Size = new System.Drawing.Size(619, 444);
             this.tabSetting.TabIndex = 1;
             // 
             // btnClose

@@ -39,10 +39,11 @@
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(263, 234);
+            this.btnCreate.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnCreate.Location = new System.Drawing.Point(290, 181);
             this.btnCreate.Margin = new System.Windows.Forms.Padding(4);
             this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(113, 45);
+            this.btnCreate.Size = new System.Drawing.Size(86, 35);
             this.btnCreate.TabIndex = 9;
             this.btnCreate.Text = "만들기";
             this.btnCreate.UseVisualStyleBackColor = true;
@@ -53,7 +54,7 @@
             this.txtModelInfo.Location = new System.Drawing.Point(106, 70);
             this.txtModelInfo.Margin = new System.Windows.Forms.Padding(4);
             this.txtModelInfo.Name = "txtModelInfo";
-            this.txtModelInfo.Size = new System.Drawing.Size(270, 154);
+            this.txtModelInfo.Size = new System.Drawing.Size(270, 88);
             this.txtModelInfo.TabIndex = 8;
             this.txtModelInfo.Text = "";
             // 
