@@ -50,10 +50,10 @@
             this.btnGrab.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnGrab.Font = new System.Drawing.Font("Segoe UI", 18.32727F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGrab.ForeColor = System.Drawing.Color.White;
-            this.btnGrab.Location = new System.Drawing.Point(46, 33);
-            this.btnGrab.Margin = new System.Windows.Forms.Padding(2);
+            this.btnGrab.Location = new System.Drawing.Point(58, 42);
+            this.btnGrab.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnGrab.Name = "btnGrab";
-            this.btnGrab.Size = new System.Drawing.Size(50, 50);
+            this.btnGrab.Size = new System.Drawing.Size(62, 64);
             this.btnGrab.TabIndex = 0;
             this.btnGrab.Text = "📸";
             this.btnGrab.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -66,10 +66,10 @@
             this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnStart.Font = new System.Drawing.Font("Segoe UI", 18.32727F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStart.ForeColor = System.Drawing.Color.White;
-            this.btnStart.Location = new System.Drawing.Point(232, 33);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(2);
+            this.btnStart.Location = new System.Drawing.Point(290, 42);
+            this.btnStart.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(50, 50);
+            this.btnStart.Size = new System.Drawing.Size(62, 64);
             this.btnStart.TabIndex = 1;
             this.btnStart.Text = "▶️";
             this.btnStart.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -81,10 +81,10 @@
             this.btnLive.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnLive.Font = new System.Drawing.Font("Segoe UI", 18.32727F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLive.ForeColor = System.Drawing.Color.White;
-            this.btnLive.Location = new System.Drawing.Point(106, 33);
-            this.btnLive.Margin = new System.Windows.Forms.Padding(2);
+            this.btnLive.Location = new System.Drawing.Point(132, 42);
+            this.btnLive.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnLive.Name = "btnLive";
-            this.btnLive.Size = new System.Drawing.Size(50, 50);
+            this.btnLive.Size = new System.Drawing.Size(62, 64);
             this.btnLive.TabIndex = 2;
             this.btnLive.Text = "🎥";
             this.btnLive.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -97,10 +97,10 @@
             this.btmStop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btmStop.Font = new System.Drawing.Font("Segoe UI", 18.32727F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btmStop.ForeColor = System.Drawing.Color.White;
-            this.btmStop.Location = new System.Drawing.Point(292, 33);
-            this.btmStop.Margin = new System.Windows.Forms.Padding(2);
+            this.btmStop.Location = new System.Drawing.Point(365, 42);
+            this.btmStop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btmStop.Name = "btmStop";
-            this.btmStop.Size = new System.Drawing.Size(50, 50);
+            this.btmStop.Size = new System.Drawing.Size(62, 64);
             this.btmStop.TabIndex = 1;
             this.btmStop.Text = "⏹️";
             this.btmStop.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -112,10 +112,10 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(53, 86);
+            this.label1.Location = new System.Drawing.Point(66, 111);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 19);
+            this.label1.Size = new System.Drawing.Size(50, 25);
             this.label1.TabIndex = 3;
             this.label1.Text = "촬상";
             // 
@@ -124,10 +124,10 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(113, 86);
+            this.label2.Location = new System.Drawing.Point(141, 111);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 19);
+            this.label2.Size = new System.Drawing.Size(48, 25);
             this.label2.TabIndex = 3;
             this.label2.Text = "LIVE";
             // 
@@ -136,10 +136,10 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(228, 5);
+            this.label3.Location = new System.Drawing.Point(285, 6);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 19);
+            this.label3.Size = new System.Drawing.Size(50, 25);
             this.label3.TabIndex = 3;
             this.label3.Text = "검사";
             // 
@@ -148,10 +148,10 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(239, 87);
+            this.label4.Location = new System.Drawing.Point(299, 112);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 19);
+            this.label4.Size = new System.Drawing.Size(50, 25);
             this.label4.TabIndex = 3;
             this.label4.Text = "시작";
             // 
@@ -160,10 +160,10 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(299, 87);
+            this.label5.Location = new System.Drawing.Point(374, 112);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(37, 19);
+            this.label5.Size = new System.Drawing.Size(50, 25);
             this.label5.TabIndex = 3;
             this.label5.Text = "중지";
             // 
@@ -172,10 +172,10 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(42, 6);
+            this.label6.Location = new System.Drawing.Point(52, 8);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(37, 19);
+            this.label6.Size = new System.Drawing.Size(50, 25);
             this.label6.TabIndex = 3;
             this.label6.Text = "사진";
             // 
@@ -184,10 +184,10 @@
             this.btnClose.BackColor = System.Drawing.Color.Gray;
             this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnClose.ForeColor = System.Drawing.Color.White;
-            this.btnClose.Location = new System.Drawing.Point(635, 6);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(2);
+            this.btnClose.Location = new System.Drawing.Point(794, 8);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(23, 21);
+            this.btnClose.Size = new System.Drawing.Size(29, 27);
             this.btnClose.TabIndex = 4;
             this.btnClose.Text = "❌";
             this.btnClose.UseVisualStyleBackColor = false;
@@ -198,10 +198,10 @@
             this.chkCycleMode.AutoSize = true;
             this.chkCycleMode.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkCycleMode.ForeColor = System.Drawing.Color.White;
-            this.chkCycleMode.Location = new System.Drawing.Point(278, 4);
-            this.chkCycleMode.Margin = new System.Windows.Forms.Padding(2);
+            this.chkCycleMode.Location = new System.Drawing.Point(348, 5);
+            this.chkCycleMode.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.chkCycleMode.Name = "chkCycleMode";
-            this.chkCycleMode.Size = new System.Drawing.Size(100, 23);
+            this.chkCycleMode.Size = new System.Drawing.Size(137, 29);
             this.chkCycleMode.TabIndex = 5;
             this.chkCycleMode.Text = "Cycle Mode";
             this.chkCycleMode.UseVisualStyleBackColor = true;
@@ -212,10 +212,10 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(427, 6);
+            this.label7.Location = new System.Drawing.Point(534, 8);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(39, 19);
+            this.label7.Size = new System.Drawing.Size(54, 25);
             this.label7.TabIndex = 6;
             this.label7.Text = "Edge";
             // 
@@ -230,10 +230,10 @@
             "←",
             "↑",
             "↓"});
-            this.cbEdgeType.Location = new System.Drawing.Point(431, 44);
-            this.cbEdgeType.Margin = new System.Windows.Forms.Padding(2);
+            this.cbEdgeType.Location = new System.Drawing.Point(539, 57);
+            this.cbEdgeType.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.cbEdgeType.Name = "cbEdgeType";
-            this.cbEdgeType.Size = new System.Drawing.Size(82, 27);
+            this.cbEdgeType.Size = new System.Drawing.Size(102, 33);
             this.cbEdgeType.TabIndex = 7;
             // 
             // btnEdge
@@ -241,10 +241,10 @@
             this.btnEdge.BackColor = System.Drawing.Color.White;
             this.btnEdge.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnEdge.Font = new System.Drawing.Font("Segoe UI", 9.163636F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEdge.Location = new System.Drawing.Point(520, 40);
-            this.btnEdge.Margin = new System.Windows.Forms.Padding(2);
+            this.btnEdge.Location = new System.Drawing.Point(650, 51);
+            this.btnEdge.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnEdge.Name = "btnEdge";
-            this.btnEdge.Size = new System.Drawing.Size(83, 34);
+            this.btnEdge.Size = new System.Drawing.Size(104, 44);
             this.btnEdge.TabIndex = 8;
             this.btnEdge.Text = "Inspect";
             this.btnEdge.UseVisualStyleBackColor = false;
@@ -252,10 +252,10 @@
             // 
             // RunForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(52)))), ((int)(((byte)(59)))));
-            this.ClientSize = new System.Drawing.Size(831, 115);
+            this.ClientSize = new System.Drawing.Size(1039, 148);
             this.Controls.Add(this.btnEdge);
             this.Controls.Add(this.cbEdgeType);
             this.Controls.Add(this.label7);
@@ -272,7 +272,7 @@
             this.Controls.Add(this.btnLive);
             this.Controls.Add(this.btnGrab);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "RunForm";
             this.Text = "RunForm";
             this.ResumeLayout(false);
