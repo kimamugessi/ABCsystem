@@ -38,17 +38,17 @@
             this.tvModelTree.Location = new System.Drawing.Point(0, 0);
             this.tvModelTree.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.tvModelTree.Name = "tvModelTree";
-            this.tvModelTree.Size = new System.Drawing.Size(446, 373);
+            this.tvModelTree.Size = new System.Drawing.Size(405, 261);
             this.tvModelTree.TabIndex = 1;
             this.tvModelTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tvModelTree_MouseDown);
             // 
             // ModelTreeForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(446, 373);
+            this.ClientSize = new System.Drawing.Size(405, 261);
             this.Controls.Add(this.tvModelTree);
-            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "ModelTreeForm";

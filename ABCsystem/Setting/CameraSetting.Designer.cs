@@ -35,7 +35,7 @@
             // 
             // btnApply
             // 
-            this.btnApply.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnApply.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.btnApply.Location = new System.Drawing.Point(199, 56);
             this.btnApply.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnApply.Name = "btnApply";
@@ -48,21 +48,21 @@
             // cbCameraType
             // 
             this.cbCameraType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbCameraType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.cbCameraType.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.cbCameraType.FormattingEnabled = true;
             this.cbCameraType.Location = new System.Drawing.Point(124, 17);
             this.cbCameraType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbCameraType.Name = "cbCameraType";
-            this.cbCameraType.Size = new System.Drawing.Size(161, 31);
+            this.cbCameraType.Size = new System.Drawing.Size(161, 33);
             this.cbCameraType.TabIndex = 4;
             // 
             // lbCameraType
             // 
             this.lbCameraType.AutoSize = true;
-            this.lbCameraType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbCameraType.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.lbCameraType.Location = new System.Drawing.Point(13, 21);
             this.lbCameraType.Name = "lbCameraType";
-            this.lbCameraType.Size = new System.Drawing.Size(107, 25);
+            this.lbCameraType.Size = new System.Drawing.Size(112, 25);
             this.lbCameraType.TabIndex = 3;
             this.lbCameraType.Text = "카메라 종류";
             // 
@@ -76,7 +76,7 @@
             this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CameraSetting";
-            this.Size = new System.Drawing.Size(313, 137);
+            this.Size = new System.Drawing.Size(314, 137);
             this.ResumeLayout(false);
             this.PerformLayout();
 
