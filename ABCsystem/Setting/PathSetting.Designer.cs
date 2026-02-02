@@ -39,7 +39,7 @@
             // 
             // btnSelImageDir
             // 
-            this.btnSelImageDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnSelImageDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.btnSelImageDir.Location = new System.Drawing.Point(299, 56);
             this.btnSelImageDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnSelImageDir.Name = "btnSelImageDir";
@@ -51,28 +51,28 @@
             // 
             // txtImageDir
             // 
-            this.txtImageDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.txtImageDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.txtImageDir.Location = new System.Drawing.Point(105, 57);
             this.txtImageDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtImageDir.Name = "txtImageDir";
-            this.txtImageDir.Size = new System.Drawing.Size(188, 31);
+            this.txtImageDir.Size = new System.Drawing.Size(188, 32);
             this.txtImageDir.TabIndex = 12;
             this.txtImageDir.TextChanged += new System.EventHandler(this.txtImageDir_TextChanged);
             // 
             // lbImageDir
             // 
             this.lbImageDir.AutoSize = true;
-            this.lbImageDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbImageDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.lbImageDir.Location = new System.Drawing.Point(14, 62);
             this.lbImageDir.Name = "lbImageDir";
-            this.lbImageDir.Size = new System.Drawing.Size(107, 25);
+            this.lbImageDir.Size = new System.Drawing.Size(112, 25);
             this.lbImageDir.TabIndex = 11;
             this.lbImageDir.Text = "이미지 경로";
             this.lbImageDir.Click += new System.EventHandler(this.lbImageDir_Click);
             // 
             // btnApply
             // 
-            this.btnApply.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnApply.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.btnApply.Location = new System.Drawing.Point(258, 98);
             this.btnApply.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnApply.Name = "btnApply";
@@ -84,7 +84,7 @@
             // 
             // btnSelModelDir
             // 
-            this.btnSelModelDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.btnSelModelDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.btnSelModelDir.Location = new System.Drawing.Point(299, 15);
             this.btnSelModelDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnSelModelDir.Name = "btnSelModelDir";
@@ -96,21 +96,21 @@
             // 
             // txtModelDir
             // 
-            this.txtModelDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.txtModelDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.txtModelDir.Location = new System.Drawing.Point(105, 15);
             this.txtModelDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtModelDir.Name = "txtModelDir";
-            this.txtModelDir.Size = new System.Drawing.Size(188, 31);
+            this.txtModelDir.Size = new System.Drawing.Size(188, 32);
             this.txtModelDir.TabIndex = 8;
             this.txtModelDir.TextChanged += new System.EventHandler(this.txtModelDir_TextChanged);
             // 
             // lbModelDir
             // 
             this.lbModelDir.AutoSize = true;
-            this.lbModelDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.lbModelDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.lbModelDir.Location = new System.Drawing.Point(14, 20);
             this.lbModelDir.Name = "lbModelDir";
-            this.lbModelDir.Size = new System.Drawing.Size(89, 25);
+            this.lbModelDir.Size = new System.Drawing.Size(93, 25);
             this.lbModelDir.TabIndex = 7;
             this.lbModelDir.Text = "모델 경로";
             this.lbModelDir.Click += new System.EventHandler(this.lbModelDir_Click);

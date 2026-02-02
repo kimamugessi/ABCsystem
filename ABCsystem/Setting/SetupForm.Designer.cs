@@ -37,34 +37,36 @@
             // 
             this.tabSetting.Dock = System.Windows.Forms.DockStyle.Left;
             this.tabSetting.Location = new System.Drawing.Point(0, 0);
-            this.tabSetting.Margin = new System.Windows.Forms.Padding(4);
+            this.tabSetting.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.tabSetting.Name = "tabSetting";
             this.tabSetting.SelectedIndex = 0;
-            this.tabSetting.Size = new System.Drawing.Size(619, 444);
+            this.tabSetting.Size = new System.Drawing.Size(619, 617);
             this.tabSetting.TabIndex = 1;
             // 
             // btnClose
             // 
             this.btnClose.Image = ((System.Drawing.Image)(resources.GetObject("btnClose.Image")));
-            this.btnClose.Location = new System.Drawing.Point(626, 12);
+            this.btnClose.Location = new System.Drawing.Point(626, 17);
+            this.btnClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(40, 40);
+            this.btnClose.Size = new System.Drawing.Size(40, 42);
             this.btnClose.TabIndex = 2;
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // SetupForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(678, 444);
+            this.ClientSize = new System.Drawing.Size(678, 617);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.tabSetting);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "SetupForm";
-            this.Text = "SetupForm";
+            this.Text = "Setup";
             this.ResumeLayout(false);
 
         }

@@ -50,12 +50,12 @@
             // 
             // MainViewToolbar
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
+            this.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "MainViewToolbar";
-            this.Size = new System.Drawing.Size(125, 627);
+            this.Size = new System.Drawing.Size(114, 682);
             this.ResumeLayout(false);
 
         }
