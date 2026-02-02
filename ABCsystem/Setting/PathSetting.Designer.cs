@@ -40,10 +40,10 @@
             // btnSelImageDir
             // 
             this.btnSelImageDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.btnSelImageDir.Location = new System.Drawing.Point(299, 56);
+            this.btnSelImageDir.Location = new System.Drawing.Point(331, 36);
             this.btnSelImageDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnSelImageDir.Name = "btnSelImageDir";
-            this.btnSelImageDir.Size = new System.Drawing.Size(45, 31);
+            this.btnSelImageDir.Size = new System.Drawing.Size(30, 30);
             this.btnSelImageDir.TabIndex = 13;
             this.btnSelImageDir.Text = "...";
             this.btnSelImageDir.UseVisualStyleBackColor = true;
@@ -52,10 +52,10 @@
             // txtImageDir
             // 
             this.txtImageDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.txtImageDir.Location = new System.Drawing.Point(105, 57);
+            this.txtImageDir.Location = new System.Drawing.Point(106, 38);
             this.txtImageDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtImageDir.Name = "txtImageDir";
-            this.txtImageDir.Size = new System.Drawing.Size(188, 32);
+            this.txtImageDir.Size = new System.Drawing.Size(219, 32);
             this.txtImageDir.TabIndex = 12;
             this.txtImageDir.TextChanged += new System.EventHandler(this.txtImageDir_TextChanged);
             // 
@@ -63,7 +63,7 @@
             // 
             this.lbImageDir.AutoSize = true;
             this.lbImageDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.lbImageDir.Location = new System.Drawing.Point(14, 62);
+            this.lbImageDir.Location = new System.Drawing.Point(13, 41);
             this.lbImageDir.Name = "lbImageDir";
             this.lbImageDir.Size = new System.Drawing.Size(112, 25);
             this.lbImageDir.TabIndex = 11;
@@ -73,10 +73,10 @@
             // btnApply
             // 
             this.btnApply.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.btnApply.Location = new System.Drawing.Point(258, 98);
+            this.btnApply.Location = new System.Drawing.Point(292, 99);
             this.btnApply.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(86, 35);
+            this.btnApply.Size = new System.Drawing.Size(78, 30);
             this.btnApply.TabIndex = 10;
             this.btnApply.Text = "적용";
             this.btnApply.UseVisualStyleBackColor = true;
@@ -85,10 +85,10 @@
             // btnSelModelDir
             // 
             this.btnSelModelDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.btnSelModelDir.Location = new System.Drawing.Point(299, 15);
+            this.btnSelModelDir.Location = new System.Drawing.Point(331, 3);
             this.btnSelModelDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnSelModelDir.Name = "btnSelModelDir";
-            this.btnSelModelDir.Size = new System.Drawing.Size(45, 31);
+            this.btnSelModelDir.Size = new System.Drawing.Size(30, 30);
             this.btnSelModelDir.TabIndex = 9;
             this.btnSelModelDir.Text = "...";
             this.btnSelModelDir.UseVisualStyleBackColor = true;
@@ -97,10 +97,10 @@
             // txtModelDir
             // 
             this.txtModelDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.txtModelDir.Location = new System.Drawing.Point(105, 15);
+            this.txtModelDir.Location = new System.Drawing.Point(106, 5);
             this.txtModelDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtModelDir.Name = "txtModelDir";
-            this.txtModelDir.Size = new System.Drawing.Size(188, 32);
+            this.txtModelDir.Size = new System.Drawing.Size(219, 32);
             this.txtModelDir.TabIndex = 8;
             this.txtModelDir.TextChanged += new System.EventHandler(this.txtModelDir_TextChanged);
             // 
@@ -108,7 +108,7 @@
             // 
             this.lbModelDir.AutoSize = true;
             this.lbModelDir.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.lbModelDir.Location = new System.Drawing.Point(14, 20);
+            this.lbModelDir.Location = new System.Drawing.Point(13, 9);
             this.lbModelDir.Name = "lbModelDir";
             this.lbModelDir.Size = new System.Drawing.Size(93, 25);
             this.lbModelDir.TabIndex = 7;

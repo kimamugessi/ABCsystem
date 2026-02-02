@@ -40,10 +40,10 @@
             // txtMachine
             // 
             this.txtMachine.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.txtMachine.Location = new System.Drawing.Point(85, 14);
+            this.txtMachine.Location = new System.Drawing.Point(106, 5);
             this.txtMachine.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtMachine.Name = "txtMachine";
-            this.txtMachine.Size = new System.Drawing.Size(148, 32);
+            this.txtMachine.Size = new System.Drawing.Size(219, 32);
             this.txtMachine.TabIndex = 13;
             this.txtMachine.TextChanged += new System.EventHandler(this.txtMachine_TextChanged);
             // 
@@ -51,7 +51,7 @@
             // 
             this.lbMachine.AutoSize = true;
             this.lbMachine.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.lbMachine.Location = new System.Drawing.Point(13, 20);
+            this.lbMachine.Location = new System.Drawing.Point(13, 9);
             this.lbMachine.Name = "lbMachine";
             this.lbMachine.Size = new System.Drawing.Size(69, 25);
             this.lbMachine.TabIndex = 12;
@@ -61,10 +61,10 @@
             // btnApply
             // 
             this.btnApply.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.btnApply.Location = new System.Drawing.Point(155, 124);
+            this.btnApply.Location = new System.Drawing.Point(292, 99);
             this.btnApply.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(78, 38);
+            this.btnApply.Size = new System.Drawing.Size(78, 30);
             this.btnApply.TabIndex = 11;
             this.btnApply.Text = "적용";
             this.btnApply.UseVisualStyleBackColor = true;
@@ -73,10 +73,10 @@
             // txtIpAddr
             // 
             this.txtIpAddr.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.txtIpAddr.Location = new System.Drawing.Point(85, 85);
+            this.txtIpAddr.Location = new System.Drawing.Point(106, 70);
             this.txtIpAddr.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtIpAddr.Name = "txtIpAddr";
-            this.txtIpAddr.Size = new System.Drawing.Size(148, 32);
+            this.txtIpAddr.Size = new System.Drawing.Size(219, 32);
             this.txtIpAddr.TabIndex = 10;
             this.txtIpAddr.TextChanged += new System.EventHandler(this.txtIpAddr_TextChanged);
             // 
@@ -85,10 +85,10 @@
             this.cbCommType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCommType.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.cbCommType.FormattingEnabled = true;
-            this.cbCommType.Location = new System.Drawing.Point(85, 49);
+            this.cbCommType.Location = new System.Drawing.Point(106, 38);
             this.cbCommType.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cbCommType.Name = "cbCommType";
-            this.cbCommType.Size = new System.Drawing.Size(148, 33);
+            this.cbCommType.Size = new System.Drawing.Size(219, 33);
             this.cbCommType.TabIndex = 9;
             this.cbCommType.SelectedIndexChanged += new System.EventHandler(this.cbCommType_SelectedIndexChanged);
             // 
@@ -96,7 +96,7 @@
             // 
             this.laIpAddr.AutoSize = true;
             this.laIpAddr.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.laIpAddr.Location = new System.Drawing.Point(13, 90);
+            this.laIpAddr.Location = new System.Drawing.Point(13, 74);
             this.laIpAddr.Name = "laIpAddr";
             this.laIpAddr.Size = new System.Drawing.Size(71, 25);
             this.laIpAddr.TabIndex = 8;
@@ -107,7 +107,7 @@
             // 
             this.lbCommType.AutoSize = true;
             this.lbCommType.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.lbCommType.Location = new System.Drawing.Point(13, 54);
+            this.lbCommType.Location = new System.Drawing.Point(13, 41);
             this.lbCommType.Name = "lbCommType";
             this.lbCommType.Size = new System.Drawing.Size(88, 25);
             this.lbCommType.TabIndex = 7;
@@ -128,7 +128,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "CommunicatorSetting";
-            this.Size = new System.Drawing.Size(298, 252);
+            this.Size = new System.Drawing.Size(538, 252);
             this.Load += new System.EventHandler(this.CommunicatorSetting_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
