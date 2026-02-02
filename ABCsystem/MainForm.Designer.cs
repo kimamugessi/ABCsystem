@@ -56,6 +56,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.picChlid = new System.Windows.Forms.PictureBox();
             this.nightCtlChlid = new ReaLTaiizor.Controls.NightControlBox();
+            this.btnCpk = new System.Windows.Forms.Button();
             this.panelSideMenu.SuspendLayout();
             this.panelViewSubmenu.SuspendLayout();
             this.panelTeachSubmenu.SuspendLayout();
@@ -94,10 +95,10 @@
             this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHelp.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHelp.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnHelp.Location = new System.Drawing.Point(0, 800);
+            this.btnHelp.Location = new System.Drawing.Point(0, 850);
             this.btnHelp.Name = "btnHelp";
             this.btnHelp.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnHelp.Size = new System.Drawing.Size(231, 50);
+            this.btnHelp.Size = new System.Drawing.Size(224, 50);
             this.btnHelp.TabIndex = 9;
             this.btnHelp.Text = "Help";
             this.btnHelp.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -110,10 +111,10 @@
             this.btnSetting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSetting.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSetting.ForeColor = System.Drawing.Color.Gainsboro;
-            this.btnSetting.Location = new System.Drawing.Point(0, 750);
+            this.btnSetting.Location = new System.Drawing.Point(0, 800);
             this.btnSetting.Name = "btnSetting";
             this.btnSetting.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnSetting.Size = new System.Drawing.Size(231, 50);
+            this.btnSetting.Size = new System.Drawing.Size(224, 50);
             this.btnSetting.TabIndex = 8;
             this.btnSetting.Text = "Setting";
             this.btnSetting.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -122,13 +123,15 @@
             // 
             // panelViewSubmenu
             // 
+            this.panelViewSubmenu.AutoSize = true;
             this.panelViewSubmenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(32)))), ((int)(((byte)(39)))));
+            this.panelViewSubmenu.Controls.Add(this.btnCpk);
             this.panelViewSubmenu.Controls.Add(this.btnLog);
             this.panelViewSubmenu.Controls.Add(this.btnCamera);
             this.panelViewSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelViewSubmenu.Location = new System.Drawing.Point(0, 650);
             this.panelViewSubmenu.Name = "panelViewSubmenu";
-            this.panelViewSubmenu.Size = new System.Drawing.Size(231, 100);
+            this.panelViewSubmenu.Size = new System.Drawing.Size(224, 150);
             this.panelViewSubmenu.TabIndex = 7;
             // 
             // btnLog
@@ -141,7 +144,7 @@
             this.btnLog.Location = new System.Drawing.Point(0, 50);
             this.btnLog.Name = "btnLog";
             this.btnLog.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnLog.Size = new System.Drawing.Size(231, 50);
+            this.btnLog.Size = new System.Drawing.Size(224, 50);
             this.btnLog.TabIndex = 1;
             this.btnLog.Text = "Log";
             this.btnLog.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -158,7 +161,7 @@
             this.btnCamera.Location = new System.Drawing.Point(0, 0);
             this.btnCamera.Name = "btnCamera";
             this.btnCamera.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnCamera.Size = new System.Drawing.Size(231, 50);
+            this.btnCamera.Size = new System.Drawing.Size(224, 50);
             this.btnCamera.TabIndex = 0;
             this.btnCamera.Text = "Camera Viewer";
             this.btnCamera.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -175,7 +178,7 @@
             this.btnView.Location = new System.Drawing.Point(0, 600);
             this.btnView.Name = "btnView";
             this.btnView.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnView.Size = new System.Drawing.Size(231, 50);
+            this.btnView.Size = new System.Drawing.Size(224, 50);
             this.btnView.TabIndex = 6;
             this.btnView.Text = "View";
             this.btnView.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -189,7 +192,7 @@
             this.panelTeachSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTeachSubmenu.Location = new System.Drawing.Point(0, 550);
             this.panelTeachSubmenu.Name = "panelTeachSubmenu";
-            this.panelTeachSubmenu.Size = new System.Drawing.Size(231, 50);
+            this.panelTeachSubmenu.Size = new System.Drawing.Size(224, 50);
             this.panelTeachSubmenu.TabIndex = 5;
             // 
             // btnROI
@@ -202,7 +205,7 @@
             this.btnROI.Location = new System.Drawing.Point(0, 0);
             this.btnROI.Name = "btnROI";
             this.btnROI.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnROI.Size = new System.Drawing.Size(231, 50);
+            this.btnROI.Size = new System.Drawing.Size(224, 50);
             this.btnROI.TabIndex = 0;
             this.btnROI.Text = "ROI";
             this.btnROI.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -219,7 +222,7 @@
             this.btnTeach.Location = new System.Drawing.Point(0, 500);
             this.btnTeach.Name = "btnTeach";
             this.btnTeach.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnTeach.Size = new System.Drawing.Size(231, 50);
+            this.btnTeach.Size = new System.Drawing.Size(224, 50);
             this.btnTeach.TabIndex = 4;
             this.btnTeach.Text = "Teach";
             this.btnTeach.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -236,7 +239,7 @@
             this.btnOperation.Location = new System.Drawing.Point(0, 450);
             this.btnOperation.Name = "btnOperation";
             this.btnOperation.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnOperation.Size = new System.Drawing.Size(231, 50);
+            this.btnOperation.Size = new System.Drawing.Size(224, 50);
             this.btnOperation.TabIndex = 3;
             this.btnOperation.Text = "Operation";
             this.btnOperation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -255,7 +258,7 @@
             this.panelFileSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelFileSubmenu.Location = new System.Drawing.Point(0, 150);
             this.panelFileSubmenu.Name = "panelFileSubmenu";
-            this.panelFileSubmenu.Size = new System.Drawing.Size(231, 300);
+            this.panelFileSubmenu.Size = new System.Drawing.Size(224, 300);
             this.panelFileSubmenu.TabIndex = 2;
             // 
             // btnImageSave
@@ -268,7 +271,7 @@
             this.btnImageSave.Location = new System.Drawing.Point(0, 250);
             this.btnImageSave.Name = "btnImageSave";
             this.btnImageSave.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnImageSave.Size = new System.Drawing.Size(231, 50);
+            this.btnImageSave.Size = new System.Drawing.Size(224, 50);
             this.btnImageSave.TabIndex = 5;
             this.btnImageSave.Text = "Image Save";
             this.btnImageSave.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -285,7 +288,7 @@
             this.btnImageOpen.Location = new System.Drawing.Point(0, 200);
             this.btnImageOpen.Name = "btnImageOpen";
             this.btnImageOpen.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnImageOpen.Size = new System.Drawing.Size(231, 50);
+            this.btnImageOpen.Size = new System.Drawing.Size(224, 50);
             this.btnImageOpen.TabIndex = 4;
             this.btnImageOpen.Text = "Image Open";
             this.btnImageOpen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -302,7 +305,7 @@
             this.btnModelSaveAs.Location = new System.Drawing.Point(0, 150);
             this.btnModelSaveAs.Name = "btnModelSaveAs";
             this.btnModelSaveAs.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnModelSaveAs.Size = new System.Drawing.Size(231, 50);
+            this.btnModelSaveAs.Size = new System.Drawing.Size(224, 50);
             this.btnModelSaveAs.TabIndex = 3;
             this.btnModelSaveAs.Text = "Model Save As";
             this.btnModelSaveAs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -319,7 +322,7 @@
             this.btnModelSave.Location = new System.Drawing.Point(0, 100);
             this.btnModelSave.Name = "btnModelSave";
             this.btnModelSave.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnModelSave.Size = new System.Drawing.Size(231, 50);
+            this.btnModelSave.Size = new System.Drawing.Size(224, 50);
             this.btnModelSave.TabIndex = 2;
             this.btnModelSave.Text = "Model Save";
             this.btnModelSave.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -336,7 +339,7 @@
             this.btnModelOpen.Location = new System.Drawing.Point(0, 50);
             this.btnModelOpen.Name = "btnModelOpen";
             this.btnModelOpen.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnModelOpen.Size = new System.Drawing.Size(231, 50);
+            this.btnModelOpen.Size = new System.Drawing.Size(224, 50);
             this.btnModelOpen.TabIndex = 1;
             this.btnModelOpen.Text = "Model Open";
             this.btnModelOpen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -353,7 +356,7 @@
             this.btnModelNew.Location = new System.Drawing.Point(0, 0);
             this.btnModelNew.Name = "btnModelNew";
             this.btnModelNew.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btnModelNew.Size = new System.Drawing.Size(231, 50);
+            this.btnModelNew.Size = new System.Drawing.Size(224, 50);
             this.btnModelNew.TabIndex = 0;
             this.btnModelNew.Text = "Model New";
             this.btnModelNew.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -370,7 +373,7 @@
             this.btnFile.Location = new System.Drawing.Point(0, 100);
             this.btnFile.Name = "btnFile";
             this.btnFile.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.btnFile.Size = new System.Drawing.Size(231, 50);
+            this.btnFile.Size = new System.Drawing.Size(224, 50);
             this.btnFile.TabIndex = 1;
             this.btnFile.Text = "File";
             this.btnFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -383,7 +386,7 @@
             this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelLogo.Location = new System.Drawing.Point(0, 0);
             this.panelLogo.Name = "panelLogo";
-            this.panelLogo.Size = new System.Drawing.Size(231, 100);
+            this.panelLogo.Size = new System.Drawing.Size(224, 100);
             this.panelLogo.TabIndex = 0;
             // 
             // picABC
@@ -392,7 +395,7 @@
             this.picABC.Image = ((System.Drawing.Image)(resources.GetObject("picABC.Image")));
             this.picABC.Location = new System.Drawing.Point(0, 0);
             this.picABC.Name = "picABC";
-            this.picABC.Size = new System.Drawing.Size(231, 100);
+            this.picABC.Size = new System.Drawing.Size(224, 100);
             this.picABC.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picABC.TabIndex = 0;
             this.picABC.TabStop = false;
@@ -434,7 +437,7 @@
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(43, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(88, 21);
+            this.label1.Size = new System.Drawing.Size(108, 28);
             this.label1.TabIndex = 1;
             this.label1.Text = "ABCsystem";
             // 
@@ -472,9 +475,26 @@
             this.nightCtlChlid.Size = new System.Drawing.Size(139, 31);
             this.nightCtlChlid.TabIndex = 1;
             // 
+            // btnCpk
+            // 
+            this.btnCpk.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnCpk.FlatAppearance.BorderSize = 0;
+            this.btnCpk.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCpk.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCpk.ForeColor = System.Drawing.Color.LightGray;
+            this.btnCpk.Location = new System.Drawing.Point(0, 100);
+            this.btnCpk.Name = "btnCpk";
+            this.btnCpk.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btnCpk.Size = new System.Drawing.Size(224, 50);
+            this.btnCpk.TabIndex = 2;
+            this.btnCpk.Text = "CPK";
+            this.btnCpk.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCpk.UseVisualStyleBackColor = true;
+            this.btnCpk.Click += new System.EventHandler(this.btnCpk_Click);
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(950, 600);
             this.Controls.Add(this.panelChildForm);
@@ -487,6 +507,7 @@
             this.Text = "MainForm";
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.panelSideMenu.ResumeLayout(false);
+            this.panelSideMenu.PerformLayout();
             this.panelViewSubmenu.ResumeLayout(false);
             this.panelTeachSubmenu.ResumeLayout(false);
             this.panelFileSubmenu.ResumeLayout(false);
@@ -529,5 +550,6 @@
         private ReaLTaiizor.Controls.NightControlBox nightCtlChlid;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox picChlid;
+        private System.Windows.Forms.Button btnCpk;
     }
 }

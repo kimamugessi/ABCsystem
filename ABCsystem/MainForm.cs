@@ -33,6 +33,9 @@ namespace ABCsystem
         private SetupForm _setupForm;
         private WindowConstraintBehavior _setupConstraint;
 
+        private CpkForm _cpkForm;
+        private WindowConstraintBehavior _cpkConstraint;
+
         private bool _startupFormsShown = false;
         private Rectangle GetPanelBoundsScreen()
         {
@@ -724,6 +727,45 @@ namespace ABCsystem
             ShowCameraForm();
             ShowModelTreeForm();
             OpenOperationForm(new RunForm());
+        }
+
+        private void btnCpk_Click(object sender, EventArgs e)
+        {
+            _cpkForm = FormManager.GetForm<CpkForm>();
+
+            if (_cpkForm.Visible)
+            {
+                _cpkForm.BringToFront();
+                _cpkForm.Activate();
+                return;
+            }
+
+            _cpkForm.Show(this);
+
+            _cpkConstraint = new WindowConstraintBehavior(_cpkForm, GetPanelBoundsScreen);
+
+            var bounds = GetPanelBoundsScreen();
+            var logBounds = _logForm.Bounds;
+            int margin = 20;
+
+            int w = _modelTreeForm.Width;
+            int h = (int)(bounds.Height * 0.28);
+
+            int x = bounds.Right - w - margin;
+            int y = logBounds.Top;
+
+            _cpkForm.Bounds = new Rectangle(x, y, w, h);
+
+            _cpkForm.FormClosed -= CpkForm_FormClosed;
+            _cpkForm.FormClosed += CpkForm_FormClosed;
+
+            hideSubMenu();
+        }
+
+        private void CpkForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _cpkConstraint = null;
+            _cpkForm = null;
         }
     }
 }
