@@ -61,7 +61,7 @@
             // btnApply
             // 
             this.btnApply.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.btnApply.Location = new System.Drawing.Point(170, 134);
+            this.btnApply.Location = new System.Drawing.Point(170, 114);
             this.btnApply.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(86, 35);
@@ -73,7 +73,7 @@
             // txtIpAddr
             // 
             this.txtIpAddr.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.txtIpAddr.Location = new System.Drawing.Point(94, 93);
+            this.txtIpAddr.Location = new System.Drawing.Point(94, 78);
             this.txtIpAddr.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtIpAddr.Name = "txtIpAddr";
             this.txtIpAddr.Size = new System.Drawing.Size(162, 31);
@@ -85,7 +85,7 @@
             this.cbCommType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCommType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.cbCommType.FormattingEnabled = true;
-            this.cbCommType.Location = new System.Drawing.Point(94, 54);
+            this.cbCommType.Location = new System.Drawing.Point(94, 45);
             this.cbCommType.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.cbCommType.Name = "cbCommType";
             this.cbCommType.Size = new System.Drawing.Size(162, 31);
@@ -96,7 +96,7 @@
             // 
             this.laIpAddr.AutoSize = true;
             this.laIpAddr.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.laIpAddr.Location = new System.Drawing.Point(14, 98);
+            this.laIpAddr.Location = new System.Drawing.Point(14, 83);
             this.laIpAddr.Name = "laIpAddr";
             this.laIpAddr.Size = new System.Drawing.Size(69, 25);
             this.laIpAddr.TabIndex = 8;
@@ -107,7 +107,7 @@
             // 
             this.lbCommType.AutoSize = true;
             this.lbCommType.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.lbCommType.Location = new System.Drawing.Point(14, 59);
+            this.lbCommType.Location = new System.Drawing.Point(14, 50);
             this.lbCommType.Name = "lbCommType";
             this.lbCommType.Size = new System.Drawing.Size(84, 25);
             this.lbCommType.TabIndex = 7;
@@ -128,7 +128,7 @@
             this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "CommunicatorSetting";
-            this.Size = new System.Drawing.Size(295, 185);
+            this.Size = new System.Drawing.Size(328, 232);
             this.Load += new System.EventHandler(this.CommunicatorSetting_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
