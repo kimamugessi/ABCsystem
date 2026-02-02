@@ -147,6 +147,10 @@ namespace ABCsystem.UIControl
 
         private List<InspWindow> _inspWindowList = new List<InspWindow>();
 
+        public Bitmap CanvasBitmap
+        {
+            get { return Canvas; }
+        }
         public List<DiagramEntity[]> GetHeightLineList()
         {
             return _heightLineList;
@@ -640,6 +644,9 @@ namespace ABCsystem.UIControl
         }
 
         // 검사 정보(사각형 및 점 등) 그리기 함수
+        private string _finalStatus = "";    // 전체 판정 결과 저장 (OK, NG, NO CAP)
+private bool _isImageSaved = false;
+
         private void DrawRectInfo(Graphics g)
         {
             if (_rectInfos == null || _rectInfos.Count <= 0) return;    //검사 정보가 없으면 종료

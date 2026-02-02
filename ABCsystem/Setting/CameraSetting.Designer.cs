@@ -36,7 +36,7 @@
             // btnApply
             // 
             this.btnApply.Font = new System.Drawing.Font("Segoe UI", 9.163636F);
-            this.btnApply.Location = new System.Drawing.Point(292, 99);
+            this.btnApply.Location = new System.Drawing.Point(283, 98);
             this.btnApply.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(78, 30);
