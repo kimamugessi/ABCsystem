@@ -16,9 +16,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Point = System.Drawing.Point; // 추가: Point는 이제 System.Drawing.Point로 인식됨
-using Size = System.Drawing.Size;   // 추가: Size는 이제 System.Drawing.Size로 인식됨
-
 
 namespace ABCsystem.UIControl
 {
