@@ -21,6 +21,7 @@ namespace ABCsystem
     //public partial class CameraForm: Form
     public partial class CameraForm : Form
     {
+        public ImageViewCtrl ImageViewer => this.imageViewer;
         // MainForm에서 "panel의 화면좌표 bounds"를 제공해줄 함수
         public Func<Rectangle> GetConstraintBoundsScreen { get; set; }
 
@@ -105,14 +106,10 @@ namespace ABCsystem
             switch (e.ActionType)
             {
                 case EntityActionType.Select:
-                    // 1. 선택된 UID 리스트 가져오기
                     var selectedUids = imageViewer.GetSelectedUids();
-
-                    // 2. 트리 폼 강조 표시 (기존 코드)
                     var modelTreeForm = FormManager.GetForm<ModelTreeForm>();
                     modelTreeForm?.SelectNodesByUids(selectedUids);
 
-                    // ★ 3. [보완] 속성창(PropertiesForm) 데이터 즉시 갱신 ★
                     if (selectedUids.Count > 0)
                     {
                         string firstUid = selectedUids[0];
@@ -129,6 +126,10 @@ namespace ABCsystem
                                 propForm.ShowProperty(selectedWin);
                             }
                         }
+                    }
+                    else
+                    {
+                        Global.Inst.InspStage.SelectInspWindow(null);
                     }
                     break;
                 case EntityActionType.Inspect:
@@ -148,15 +149,27 @@ namespace ABCsystem
                     Global.Inst.InspStage.ModifyInspWindow(e.InspWindow, e.Rect);
                     break;
                 case EntityActionType.Delete:
-                    // ROI에 딸린 검사 결과(엣지점/윤곽점/텍스트) 먼저 제거
                     if (e.InspWindow != null)
                         imageViewer.RemoveResultsByWindowUid(e.InspWindow.UID);
+
+                    if (Global.Inst.CurTeachWindow != null && e.InspWindow != null &&
+                        Global.Inst.CurTeachWindow.UID == e.InspWindow.UID)
+                    {
+                        Global.Inst.InspStage.SelectInspWindow(null);
+                    }
+
                     Global.Inst.InspStage.DelInspWindow(e.InspWindow);
                     break;
                 case EntityActionType.DeleteList:
-                    // 여러 ROI의 결과를 한 번에 제거
                     if (e.InspWindowList != null)
                         imageViewer.RemoveResultsByWindowUids(e.InspWindowList.Select(w => w?.UID));
+
+                    if (Global.Inst.CurTeachWindow != null && e.InspWindowList != null &&
+                        e.InspWindowList.Any(w => w != null && w.UID == Global.Inst.CurTeachWindow.UID))
+                    {
+                        Global.Inst.InspStage.SelectInspWindow(null);
+                    }
+
                     Global.Inst.InspStage.DelInspWindow(e.InspWindowList);
                     break;
             }

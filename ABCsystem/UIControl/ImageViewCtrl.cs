@@ -16,6 +16,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Point = System.Drawing.Point; // 추가: Point는 이제 System.Drawing.Point로 인식됨
+using Size = System.Drawing.Size;   // 추가: Size는 이제 System.Drawing.Size로 인식됨
+
 
 namespace ABCsystem.UIControl
 {
@@ -135,9 +138,6 @@ namespace ABCsystem.UIControl
         // 외부 여백 또는 추가 확장 사이즈 설정
         private Size _extSize = new Size(0, 0);
 
-        // [라인 측정] 일반 라인 그리기 기능 활성화 여부
-        private bool _drawLineEnabled = false;
-        // [라인 측정] 수직 높이 측정을 위한 데이터 세트 리스트 (점들의 집합)
         private List<DiagramEntity[]> _heightLineList = new List<DiagramEntity[]>();
         // [라인 측정] 수직 높이 측정선 렌더링 활성화 여부
         private bool _drawVerticalEnabled = false;
@@ -150,6 +150,11 @@ namespace ABCsystem.UIControl
 
         private List<InspWindow> _inspWindowList = new List<InspWindow>();
 
+        public List<DiagramEntity[]> GetHeightLineList()
+        {
+            return _heightLineList;
+        }
+
         public void SetInspWindowList(List<InspWindow> inspWindowList)
         {
             // 외부(InspStage 등)에서 받은 리스트를 컨트롤 내부 변수에 저장
@@ -159,7 +164,6 @@ namespace ABCsystem.UIControl
             this.Invalidate();
         }
 
-        // 생성자
         public ImageViewCtrl()
         {
             InitializeComponent();
@@ -192,17 +196,8 @@ namespace ABCsystem.UIControl
 
             switch (inspWindowType)
             {
-                case InspWindowType.Base:
+                case InspWindowType.NewROI:
                     color = Color.LightBlue;
-                    break;
-                case InspWindowType.Body:
-                    color = Color.Red;
-                    break;
-                case InspWindowType.Sub:
-                    color = Color.Orange;
-                    break;
-                case InspWindowType.ID:
-                    color = Color.Magenta;
                     break;
             }
 
@@ -324,14 +319,15 @@ namespace ABCsystem.UIControl
                     g.DrawImage(_bitmapImage, ImageRect);
 
                     DrawDiagram(g);
-                    e.Graphics.DrawImage(Canvas, 0, 0); //캔버스를 UserControl 화면에 표시
+                    DrawHeightLine(g); //새 수직선 (ROI3 기준) 
+
+                    e.Graphics.DrawImage(Canvas, 0, 0); // 캔버스를 UserControl 화면에 표시
                 }
             }
             DrawHeightLine(e.Graphics); //새 수직선 (ROI3 기준) 
         }
 
-        //EdgeAlgorithm에서 검출된 엣지 포인트를 가져오는 함수
-        private PointF GetEdgePoint(DiagramEntity entity)
+        public PointF GetEdgePoint(DiagramEntity entity)
         {
             if (entity?.LinkedWindow != null)   //1. 엔티티에 연결된 InspWindow 확인
             {
@@ -412,7 +408,7 @@ namespace ABCsystem.UIControl
                     currentLineStatus = "NO CAP";
                     lineColor = Color.Red;
                 }
-                else if (pixelLength >= 350 && pixelLength <= 360)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
+                else if (pixelLength >= 350 && pixelLength <= 380)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
                 {
                     currentLineStatus = "OK";
                     lineColor = Color.Lime;
@@ -477,7 +473,9 @@ namespace ABCsystem.UIControl
         }
 
 
-        // 화면에 판정 텍스트를 그리는 별도 함수 (그림자 효과 포함)
+        /// <summary>
+        /// 화면에 판정 텍스트를 그리는 별도 함수 (그림자 효과 포함)
+        /// </summary>
         private void DrawStatusText(Graphics g, string text, Font font, Color color, float x, float y)
         {
             // 그림자 (검은색)
@@ -588,19 +586,59 @@ namespace ABCsystem.UIControl
             {
                 float fontSize = 20.0f;
                 Color stateColor = Color.FromArgb(255, 128, 0);
-                PointF textPos = new PointF(20,Height-40);
+                PointF textPos = new PointF(20, Height - 40);
                 DrawText(g, WorkingState, textPos, fontSize, stateColor);
             }
 
             //#13_INSP_RESULT#5 검사 양불판정 갯수 화면에 표시
             if (_inspectResultCount.Total > 0)
             {
-                string resultText = $"Total: {_inspectResultCount.Total}\r\nOK: {_inspectResultCount.OK}\r\nNG: {_inspectResultCount.NG}";
+                double ngRate = ((double)_inspectResultCount.NG / _inspectResultCount.Total) * 100;
+                string resultText = $"TOTAL : {_inspectResultCount.Total}\n" +
+                        $"OK    : {_inspectResultCount.OK}\n" +
+                        $"NG    : {_inspectResultCount.NG}\n" +
+                        $"RATE  : {ngRate:F1}%";
 
                 float fontSize = 12.0f;
-                Color resultColor = Color.FromArgb(255, 255, 255);
-                PointF textPos = new PointF(Width -120, 10);
-                DrawText(g, resultText, textPos, fontSize, resultColor);
+                using (Font font = new Font("Consolas", fontSize, FontStyle.Bold)) // 숫자가 일정한 Consolas 권장
+                {
+                    // 텍스트의 실제 가로/세로 크기 측정
+                    SizeF textSize = g.MeasureString(resultText, font);
+
+                    int padding = 15; // 박스 안쪽 여백
+                    int margin = 80;  // 화면 끝에서 띄울 거리
+
+                    // 3. 배경 박스 좌표 계산 (우측 상단 고정)
+                    // 화면 너비(Width)에서 박스 너비와 마진을 빼서 X좌표 결정
+                    float boxWidth = textSize.Width + (padding * 2);
+                    float boxHeight = textSize.Height + (padding * 2);
+                    float boxX = Width - boxWidth - margin;
+                    float boxY = 20;
+
+                    RectangleF boxRect = new RectangleF(boxX, boxY, boxWidth, boxHeight);
+
+                    // 4. 그리기 작업 (SmoothingMode 설정으로 테두리를 부드럽게)
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                    // 배경 그리기 (반투명 검정: 180 정도가 적당히 비치고 잘 보임)
+                    using (SolidBrush backBrush = new SolidBrush(Color.FromArgb(180, 0, 0, 0)))
+                    {
+                        g.FillRectangle(backBrush, boxRect);
+                    }
+
+                    // 테두리 그리기 (흰색)
+                    using (Pen borderPen = new Pen(Color.White, 2.0f))
+                    {
+                        g.DrawRectangle(borderPen, boxRect.X, boxRect.Y, boxRect.Width, boxRect.Height);
+                    }
+
+                    // 텍스트 그리기 (흰색)
+                    using (SolidBrush textBrush = new SolidBrush(Color.White))
+                    {
+                        // 박스 시작 좌표에 패딩만큼 더해서 텍스트 배치
+                        g.DrawString(resultText, font, textBrush, boxRect.X + padding, boxRect.Y + padding);
+                    }
+                }
             }
         }
 
@@ -1243,8 +1281,8 @@ namespace ABCsystem.UIControl
 
             //song : 원하는 것만 남기기
             // 엣지 점: UsePoint == true
-            // BaseROI: (예시) inspectType == InspectType.InspNone 이면서 rect가 유효한 것
-            // BaseROI가 어떤 inspectType/decision으로 들어오는지에 따라 조건을 조정해야 함
+            // NewROIROI: (예시) inspectType == InspectType.InspNone 이면서 rect가 유효한 것
+            // NewROIROI가 어떤 inspectType/decision으로 들어오는지에 따라 조건을 조정해야 함
             var filtered = rectInfos.Where(x =>
                 x.UsePoint == true || (
                 x.UsePoint == false &&
@@ -1465,7 +1503,6 @@ namespace ABCsystem.UIControl
             }
         }
 
-
         private void DeleteSelEntity()
         {
             List<InspWindow> selected = _multiSelectedEntities
@@ -1475,10 +1512,15 @@ namespace ABCsystem.UIControl
 
             if (selected.Count > 0)
             {
-                // 1. 다중 선택된 항목 중 선 그리기와 관련된 ROI가 있는지 확인하고 초기화
                 foreach (var entity in _multiSelectedEntities)
                 {
                     CheckAndResetLineRois(entity);
+
+                    // [추가] 다중 선택된 각 ROI의 알고리즘 데이터 삭제
+                    if (entity.LinkedWindow != null)
+                    {
+                        entity.LinkedWindow.AlgorithmList.Clear();
+                    }
                 }
 
                 DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.DeleteList, selected));
@@ -1488,13 +1530,18 @@ namespace ABCsystem.UIControl
                 InspWindow linkedWindow = _selEntity.LinkedWindow;
                 if (linkedWindow == null) return;
 
-                // 2. 단일 선택된 항목이 선 그리기와 관련된 ROI인지 확인하고 초기화
                 CheckAndResetLineRois(_selEntity);
+
+                // [추가] 단일 선택된 ROI의 알고리즘 데이터 삭제
+                linkedWindow.AlgorithmList.Clear();
 
                 DiagramEntityEvent?.Invoke(this, new DiagramEntityEventArgs(EntityActionType.Delete, linkedWindow));
             }
 
-            // 삭제 후 화면 갱신
+            // [중요] 삭제 후 메인 화면의 검사 결과 잔상을 지우기 위해 호출
+            Global.Inst.InspStage.RedrawMainView();
+
+            // 현재 컨트롤(ImageViewCtrl) 갱신
             Invalidate();
         }
 

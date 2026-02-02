@@ -18,8 +18,6 @@ namespace ABCsystem
 {
     public partial class PropertiesForm : Form
     {
-        //song
-        private InspWindow _curWindow;
 
         //속성탭을 관리하기 위한 딕셔너리
         Dictionary<string, TabPage> _allTabs = new Dictionary<string, TabPage>();
@@ -64,7 +62,6 @@ namespace ABCsystem
             {
                 case InspectType.InspBinary:
                     BinaryProp blobProp = new BinaryProp();
-
                     blobProp.RangeChanged += RangeSlider_RangeChanged;
                     //blobProp.PropertyChanged += PropertyChanged;
                     blobProp.ImageChannelChanged += ImageChannelChanged;
@@ -89,6 +86,7 @@ namespace ABCsystem
             }
             return curProp;
         }
+
 
         public void ShowProperty(InspWindow window)
         {

@@ -205,9 +205,6 @@ namespace ABCsystem.Algorithm
             OutEdgeCount = 0; _pickedEdgePoints.Clear();
             HasAnchor = false; AnchorPoint = InvalidPoint;
 
-            // Align 결과 초기화
-            HasAnchor = false;
-            AnchorPoint = InvalidPoint;
 
             // 원본 취득
             Mat srcImage = Global.Inst.InspStage.GetMat(0, ImageChannel);

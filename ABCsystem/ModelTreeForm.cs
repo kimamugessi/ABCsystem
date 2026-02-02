@@ -38,7 +38,7 @@ namespace ABCsystem
             _contextMenu = new ContextMenuStrip();
 
             List<InspWindowType> windowTypeList;
-            windowTypeList = new List<InspWindowType> { InspWindowType.Base, InspWindowType.Body, InspWindowType.Sub, InspWindowType.ID};
+            windowTypeList = new List<InspWindowType> { InspWindowType.NewROI};
             
             foreach (InspWindowType windowType in windowTypeList)
                 _contextMenu.Items.Add(new ToolStripMenuItem(windowType.ToString(), null, AddNode_Click) { Tag = windowType });
@@ -81,30 +81,45 @@ namespace ABCsystem
         }
 
         //현재 모델 전체의 ROI를 트리 모델에 업데이트
+        // ModelTreeForm.cs 내부
         public void UpdateDiagramEntity()
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(UpdateDiagramEntity));
+                return;
+            }
+
+            SLogger.Write("ModelTree Update Started..."); // 시작 로그
+
+            tvModelTree.BeginUpdate(); // 성능 및 깜빡임 방지
             tvModelTree.Nodes.Clear();
+
             TreeNode rootNode = tvModelTree.Nodes.Add("Root");
 
-            Model model = Global.Inst.InspStage.CurModel;
-            List<InspWindow> windowList = model.InspWindowList;
-            if (windowList.Count <= 0)
-                return;
-
-            foreach (InspWindow window in model.InspWindowList)
+            var model = Global.Inst.InspStage.CurModel;
+            if (model == null)
             {
-                if (window == null)
-                    continue;
-
-                string uid = window.UID;
-
-                TreeNode node = new TreeNode(uid);
-                rootNode.Nodes.Add(node);
+                SLogger.Write("Update Failed: CurModel is Null");
+                tvModelTree.EndUpdate();
+                return;
             }
+
+            // 리스트가 비어있어도 Root는 보이게 됨
+            if (model.InspWindowList != null)
+            {
+                foreach (InspWindow window in model.InspWindowList)
+                {
+                    if (window == null) continue;
+                    rootNode.Nodes.Add(new TreeNode(window.UID));
+                }
+            }
+
             tvModelTree.ExpandAll();
-            SLogger.Write($"CurModel null? {Global.Inst.InspStage.CurModel == null}");
-            SLogger.Write($"InspWindowList count: {Global.Inst.InspStage.CurModel?.InspWindowList?.Count}");
-        } 
+            tvModelTree.EndUpdate();
+            SLogger.Write($"Form ID: {this.GetHashCode()}, IsVisible: {this.Visible}, Parent: {this.Parent?.Name}");
+            SLogger.Write($"ModelTree Update Finished. Count: {model.InspWindowList?.Count ?? 0}");
+        }
 
         // ModelTreeForm.cs
 

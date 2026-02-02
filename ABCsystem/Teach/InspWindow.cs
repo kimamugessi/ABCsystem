@@ -164,6 +164,13 @@ namespace ABCsystem.Teach
 
         public InspAlgorithm FindInspAlgorithm(InspectType inspType)
         {
+            // 에지 검출인 경우 두 타입을 모두 허용하여 검색
+            if (inspType == InspectType.InspEdge || inspType == InspectType.InspAlignEdge)
+            {
+                return AlgorithmList.Find(algo =>
+                    algo.InspectType == InspectType.InspEdge ||
+                    algo.InspectType == InspectType.InspAlignEdge);
+            }
             return AlgorithmList.Find(algo => algo.InspectType == inspType);
         }
 

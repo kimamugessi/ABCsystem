@@ -14,19 +14,16 @@ namespace ABCsystem.Core
         InspMatch,
         InspFilter,
         InspAIModule,
-        InspCount,
-        InspEdge, // Edge 찾기
-        InspAlignEdge  // 기준점용 Edge 추가
+        InspEdge = 4,
+        InspAlignEdge = 5,
+        InspCount = 6,
     }
 
     //#10_INSPWINDOW#4 InspWindow 정의
     public enum InspWindowType
     {
         None = 0,
-        Base,
-        Body,
-        Sub,
-        ID
+        NewROI
     }
 
     public enum DecisionType

@@ -1,7 +1,7 @@
 ﻿using ABCsystem.Algorithm;
-using ABCsystem.Teach;
 using ABCsystem.Core;
 using ABCsystem.Setting;
+using ABCsystem.Teach;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,19 +18,27 @@ namespace ABCsystem
 {
     public partial class RunForm: Form
     {
-
-        // RunForm.cs 내부 (클래스 멤버)
-        private InspWindow _edgeWin;
-        private EdgeAlgorithm _edgeAlgo;
-        private bool _edgeUiBinding = false; // cb 이벤트 재진입 방지용
+        private InspWindow _win;
+        private EdgeAlgorithm _algo;
 
         public RunForm()
         {
             InitializeComponent();
 
-            cbEdgeType.SelectedIndex = 0;
             btnEdge.Click += btnEdge_Click;
             cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+
+            // ROI 선택 변경 이벤트 구독
+            Global.Inst.InspStage.SelectedInspWindowChanged += OnSelectedWindowChanged;
+
+            // 폼 닫힐 때 구독 해제(메모리/중복호출 방지)
+            this.FormClosed += (s, e) =>
+            {
+                Global.Inst.InspStage.SelectedInspWindowChanged -= OnSelectedWindowChanged;
+            };
+
+            // RunForm이 이미 떠있을 때 현재 선택 ROI 반영
+            OnSelectedWindowChanged(Global.Inst.CurTeachWindow);
         }
 
         private void btnGrab_Click(object sender, EventArgs e)
@@ -45,7 +53,8 @@ namespace ABCsystem
 
             if (SettingXml.Inst.CamType == Grab.CameraType.None)
             {
-                bool cycleMode = chkCycleMode.Checked;
+                bool cycleMode = SettingXml.Inst.CycleMode;
+                //bool cycleMode = chkCycleMode.Checked;
                 Global.Inst.InspStage.CycleInspect(cycleMode);
             }
             else
@@ -89,92 +98,84 @@ namespace ABCsystem
 
         }
 
+        public void SetAlgorithm(InspWindow win, EdgeAlgorithm algo)
+        {
+            _win = win;
+            _algo = algo;
+
+            cbEdgeType.SelectedIndexChanged -= cbEdgeType_SelectedIndexChanged;
+            cbEdgeType.Items.Clear();
+
+            // 아이템을 무조건 추가 (ROI를 선택했을 때 목록이 비어있지 않게 함)
+            cbEdgeType.Items.AddRange(new object[] { "→", "←", "↑", "↓" });
+
+            if (_win == null || _algo == null)
+            {
+                // 알고리즘이 없더라도 기본적으로 첫 번째 아이템 선택
+                cbEdgeType.SelectedIndex = 0;
+                cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+                return;
+            }
+
+            _algo.UseAsAlignment = false;
+            cbEdgeType.SelectedItem = ToArrow(_algo.ScanDir);
+
+            if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedIndex = 0;
+
+            cbEdgeType.SelectedIndexChanged += cbEdgeType_SelectedIndexChanged;
+        }
+
         private void btnEdge_Click(object sender, EventArgs e)
         {
             var win = Global.Inst.CurTeachWindow;
+            if (win == null) return;
+
+            // 1. 기존 알고리즘 제거
+            win.AlgorithmList.RemoveAll(a => a.InspectType == InspectType.InspEdge || a.InspectType == InspectType.InspAlignEdge);
+
+            // 2. 새로운 알고리즘 객체 생성
+            EdgeAlgorithm newAlgo = new EdgeAlgorithm();
+
+            // 수정된 부분: SelectedItem이 null인지 확인하고, null이면 기본값 "→" 사용
+            string selectedArrow = "→";
+            if (cbEdgeType.SelectedItem != null)
+            {
+                selectedArrow = cbEdgeType.SelectedItem.ToString();
+            }
+            newAlgo.ScanDir = FromArrow(selectedArrow);
+
+            win.AlgorithmList.Add(newAlgo);
+
+            // 3. 검사 실행
+            Global.Inst.InspStage.InspWorker.TryInspect(win, newAlgo.InspectType);
+            Global.Inst.InspStage.RedrawMainView();
+        }
+        private void ApplyComboToAlgorithm()
+        {
+            if (_algo == null || _win == null) return;
+
+            // 선택된 텍스트가 "←" 인지 디버깅으로 확인해보세요.
+            string sel = cbEdgeType.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(sel)) return;
+
+            _algo.ScanDir = FromArrow(sel);
+        }
+
+        private void OnSelectedWindowChanged(InspWindow win)
+        {
             if (win == null)
             {
-                SLogger.Write("[EDGE_BTN] CurTeachWindow is null");
+                SetAlgorithm(null, null);   // 콤보 비우기
                 return;
             }
 
-            var algo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
-            if (algo == null)
-            {
-                SLogger.Write($"[EDGE_BTN] EdgeAlgorithm not found. win={win.UID} type={win.InspWindowType}");
-                return;
-            }
-
-            algo.UseAsAlignment = false;
-
-            var arrow = cbEdgeType.SelectedItem?.ToString();
-            if (!string.IsNullOrWhiteSpace(arrow))
-                algo.ScanDir = FromArrow(arrow);
-
-            if (algo.EdgeThreshold <= 0)
-                algo.EdgeThreshold = 30;
-
-            SLogger.Write($"[EDGE_BTN] run win={win.UID} scanDir={algo.ScanDir} thr={algo.EdgeThreshold}");
-
-            Global.Inst.InspStage.InspWorker.TryInspect(win, InspectType.InspEdge);
-            Global.Inst.InspStage.RedrawMainView();
+            var edgeAlgo = win.FindInspAlgorithm(InspectType.InspEdge) as EdgeAlgorithm;
+            SetAlgorithm(win, edgeAlgo);    // 콤보 채우고 방향/Align 세팅
         }
 
         private void cbEdgeType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_edgeUiBinding) return;
-
             ApplyComboToAlgorithm();
-        }
-
-        private void ApplyComboToAlgorithm()
-        {
-            if (_edgeAlgo == null || _edgeWin == null) return;
-
-            _edgeAlgo.UseAsAlignment = false;
-
-            string arrow = cbEdgeType.SelectedItem?.ToString();
-            if (string.IsNullOrWhiteSpace(arrow))
-            {
-                _edgeAlgo.ScanDir = EdgeAlgorithm.ScanDirection.LeftToRight; // 기본 → 
-                return;
-            }
-
-            _edgeAlgo.ScanDir = FromArrow(arrow);
-        }
-
-        public void SetEdgeAlgorithm(InspWindow win, EdgeAlgorithm algo)
-        {
-            _edgeWin = win;
-            _edgeAlgo = algo;
-
-            _edgeUiBinding = true;
-            try
-            {
-                cbEdgeType.Items.Clear();
-
-                if (_edgeWin == null || _edgeAlgo == null)
-                {
-                    cbEdgeType.Enabled = false;
-                    btnEdge.Enabled = false;
-
-                    cbEdgeType.SelectedIndex = 0;
-                    return;
-                }
-
-                cbEdgeType.Enabled = true;
-                btnEdge.Enabled = true;
-
-                _edgeAlgo.UseAsAlignment = false;
-
-                var arrow = ToArrow(_edgeAlgo.ScanDir);
-                cbEdgeType.SelectedItem = arrow ?? "→";
-                if (cbEdgeType.SelectedItem == null) cbEdgeType.SelectedItem = "→";
-            }
-            finally
-            {
-                _edgeUiBinding = false;
-            }
         }
 
         private static EdgeAlgorithm.ScanDirection FromArrow(string arrow)

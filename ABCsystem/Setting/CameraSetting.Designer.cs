@@ -31,9 +31,6 @@
             this.btnApply = new System.Windows.Forms.Button();
             this.cbCameraType = new System.Windows.Forms.ComboBox();
             this.lbCameraType = new System.Windows.Forms.Label();
-            this.lbExposure = new System.Windows.Forms.Label();
-            this.tbExposure = new System.Windows.Forms.TextBox();
-            this.lbExpUnit = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnApply
@@ -69,44 +66,12 @@
             this.lbCameraType.TabIndex = 3;
             this.lbCameraType.Text = "카메라 종류";
             // 
-            // lbExposure
-            // 
-            this.lbExposure.AutoSize = true;
-            this.lbExposure.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.lbExposure.Location = new System.Drawing.Point(13, 59);
-            this.lbExposure.Name = "lbExposure";
-            this.lbExposure.Size = new System.Drawing.Size(60, 18);
-            this.lbExposure.TabIndex = 3;
-            this.lbExposure.Text = "노출시간";
-            // 
-            // tbExposure
-            // 
-            this.tbExposure.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.tbExposure.Location = new System.Drawing.Point(100, 56);
-            this.tbExposure.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tbExposure.Name = "tbExposure";
-            this.tbExposure.Size = new System.Drawing.Size(122, 26);
-            this.tbExposure.TabIndex = 6;
-            // 
-            // lbExpUnit
-            // 
-            this.lbExpUnit.AutoSize = true;
-            this.lbExpUnit.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
-            this.lbExpUnit.Location = new System.Drawing.Point(229, 60);
-            this.lbExpUnit.Name = "lbExpUnit";
-            this.lbExpUnit.Size = new System.Drawing.Size(27, 18);
-            this.lbExpUnit.TabIndex = 3;
-            this.lbExpUnit.Text = "ms";
-            // 
             // CameraSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tbExposure);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.cbCameraType);
-            this.Controls.Add(this.lbExpUnit);
-            this.Controls.Add(this.lbExposure);
             this.Controls.Add(this.lbCameraType);
             this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -122,8 +87,5 @@
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.ComboBox cbCameraType;
         private System.Windows.Forms.Label lbCameraType;
-        private System.Windows.Forms.Label lbExposure;
-        private System.Windows.Forms.TextBox tbExposure;
-        private System.Windows.Forms.Label lbExpUnit;
     }
 }
