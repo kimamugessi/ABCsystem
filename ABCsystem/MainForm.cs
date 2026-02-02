@@ -589,7 +589,7 @@ namespace ABCsystem
             int w = colW;
             int h = (int)(bounds.Height * 0.21);
 
-            int yOffset = 8;
+            int yOffset = 0;
 
             int x = colX;
             int y;
