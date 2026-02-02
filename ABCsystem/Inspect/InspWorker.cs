@@ -163,11 +163,7 @@ namespace ABCsystem.Inspect
                 string fileName = $"Insp_No_{idx + 1:D4}";
 
                 // 별도 스레드에서 지연 후 저장 (UI 렌더링 대기)
-                Task.Run(async () =>
-                {
-                    await Task.Delay(200);
-                    SaveDefectImage(status, fileName);
-                });
+                SaveDefectImage(status, fileName);
             }
         }
 
@@ -179,19 +175,16 @@ namespace ABCsystem.Inspect
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
                 string fullPath = Path.Combine(dir, $"{fileName}_{DateTime.Now:HHmmss_fff}.jpg");
-                var cameraForm = FormManager.GetForm<CameraForm>();
 
-                cameraForm?.Invoke(new Action(() =>
+                // UI 캡처 대신 현재 검사 중인 원본 이미지를 직접 가져와 저장
+                // Mat 데이터는 UI 변경의 영향을 받지 않습니다.
+                using (var mat = Global.Inst.InspStage.GetMat(0, 0)) // 채널에 맞춰 수정
                 {
-                    var viewer = cameraForm.ImageViewer;
-                    if (viewer == null) return;
-
-                    using (Bitmap bmp = new Bitmap(viewer.Width, viewer.Height))
+                    if (mat != null && !mat.IsDisposed)
                     {
-                        viewer.DrawToBitmap(bmp, new Rectangle(0, 0, viewer.Width, viewer.Height));
-                        bmp.Save(fullPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        mat.SaveImage(fullPath);
                     }
-                }));
+                }
             }
             catch (Exception ex)
             {
