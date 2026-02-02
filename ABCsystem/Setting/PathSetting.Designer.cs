@@ -55,7 +55,7 @@
             this.txtImageDir.Location = new System.Drawing.Point(93, 57);
             this.txtImageDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtImageDir.Name = "txtImageDir";
-            this.txtImageDir.Size = new System.Drawing.Size(210, 26);
+            this.txtImageDir.Size = new System.Drawing.Size(210, 31);
             this.txtImageDir.TabIndex = 12;
             this.txtImageDir.TextChanged += new System.EventHandler(this.txtImageDir_TextChanged);
             // 
@@ -65,7 +65,7 @@
             this.lbImageDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.lbImageDir.Location = new System.Drawing.Point(14, 62);
             this.lbImageDir.Name = "lbImageDir";
-            this.lbImageDir.Size = new System.Drawing.Size(77, 18);
+            this.lbImageDir.Size = new System.Drawing.Size(107, 25);
             this.lbImageDir.TabIndex = 11;
             this.lbImageDir.Text = "이미지 경로";
             this.lbImageDir.Click += new System.EventHandler(this.lbImageDir_Click);
@@ -100,7 +100,7 @@
             this.txtModelDir.Location = new System.Drawing.Point(93, 15);
             this.txtModelDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtModelDir.Name = "txtModelDir";
-            this.txtModelDir.Size = new System.Drawing.Size(210, 26);
+            this.txtModelDir.Size = new System.Drawing.Size(210, 31);
             this.txtModelDir.TabIndex = 8;
             this.txtModelDir.TextChanged += new System.EventHandler(this.txtModelDir_TextChanged);
             // 
@@ -110,14 +110,14 @@
             this.lbModelDir.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.lbModelDir.Location = new System.Drawing.Point(14, 20);
             this.lbModelDir.Name = "lbModelDir";
-            this.lbModelDir.Size = new System.Drawing.Size(64, 18);
+            this.lbModelDir.Size = new System.Drawing.Size(89, 25);
             this.lbModelDir.TabIndex = 7;
             this.lbModelDir.Text = "모델 경로";
             this.lbModelDir.Click += new System.EventHandler(this.lbModelDir_Click);
             // 
             // PathSetting
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnSelImageDir);
             this.Controls.Add(this.txtImageDir);
@@ -129,7 +129,7 @@
             this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "PathSetting";
-            this.Size = new System.Drawing.Size(391, 161);
+            this.Size = new System.Drawing.Size(432, 161);
             this.ResumeLayout(false);
             this.PerformLayout();
 
