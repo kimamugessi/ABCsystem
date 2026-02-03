@@ -118,38 +118,65 @@ namespace ABCsystem.Inspect
 
         private string CalculateJudge(out bool isDefect)
         {
-            isDefect = true; // 기본값 NG
-            var viewer = FormManager.GetForm<CameraForm>()?.ImageViewer;
-            var heightLines = viewer?.GetHeightLineList();
+            isDefect = false;
+            var cameraForm = FormManager.GetForm<CameraForm>();
+            if (cameraForm == null) return "NG";
 
-            if (heightLines == null || heightLines.Count == 0) return "NG";
+            var viewer = cameraForm.ImageViewer;
+            var heightLines = viewer.GetHeightLineList(); // List<DiagramEntity[]>
 
-            foreach (var lineSet in heightLines)
+            // 3. DrawHeightLine과 동일한 수식으로 이미지 판정
+            string imageStatus = "OK"; // 기본값은 OK
+
+            if (heightLines == null || heightLines.Count == 0)
             {
-                if (lineSet == null || lineSet.Length < 3) continue;
+                imageStatus = "NG"; // 검사 라인이 없으면 NG 처리
+            }
+            else
+            {
+                foreach (var lineSet in heightLines)
+                {
+                    if (lineSet == null || lineSet.Length < 3) continue;
 
-                PointF p1 = viewer.GetEdgePoint(lineSet[0]);
-                PointF p2 = viewer.GetEdgePoint(lineSet[1]);
-                PointF p3 = viewer.GetEdgePoint(lineSet[2]);
+                    // 좌표 획득 (Public으로 변경한 메서드 사용)
+                    PointF vP1 = viewer.GetEdgePoint(lineSet[0]);
+                    PointF vP2 = viewer.GetEdgePoint(lineSet[1]);
+                    PointF vP3 = viewer.GetEdgePoint(lineSet[2]);
 
-                float dx = p2.X - p1.X;
-                float dy = p2.Y - p1.Y;
+                    float dx = vP2.X - vP1.X;
+                    float dy = vP2.Y - vP1.Y;
 
-                if (Math.Abs(dx) < 0.0001f) return "NG";
+                    if (Math.Abs(dx) > 0.0001f)
+                    {
+                        float slope = Math.Abs(dy / dx);
+                        if (slope > 0.1f) { imageStatus = "NG"; break; } // 기울기 불량
 
-                // 기울기 판정
-                if (Math.Abs(dy / dx) > SLOPE_LIMIT) return "NG";
+                        float targetY = vP1.Y + (dy / dx) * (vP3.X - vP1.X);
+                        float pixelLength = Math.Abs(targetY - vP3.Y);
 
-                // 수직 거리(Gap) 판정
-                float targetY = p1.Y + (dy / dx) * (p3.X - p1.X);
-                float dist = Math.Abs(targetY - p3.Y);
-
-                if (dist >= GAP_NO_CAP) return "NO CAP";
-                if (dist < GAP_OK_MIN || dist > GAP_OK_MAX) return "NG";
+                        // --- DrawHeightLine 판정 기준과 100% 동일화 ---
+                        if (pixelLength >= 500)    //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
+                        {
+                            imageStatus = "NO CAP"; // NO CAP은 불량으로 간주
+                            break;
+                        }
+                        else if (pixelLength >= 350 && pixelLength <= 380)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
+                        {
+                            // 이 라인은 OK, 다음 라인 계속 체크
+                        }
+                        else
+                        {
+                            imageStatus = "NG";
+                            break;
+                        }
+                    }
+                    else { imageStatus = "NG"; break; }
+                }
             }
 
-            isDefect = false;
-            return "OK";
+            // 최종 isDefect 설정
+            isDefect = (imageStatus != "OK");
+            return imageStatus;
         }
 
         private void ProcessResult(string status, bool isDefect)
