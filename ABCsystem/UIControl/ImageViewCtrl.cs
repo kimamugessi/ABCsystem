@@ -244,6 +244,8 @@ namespace ABCsystem.UIControl
                     _bitmapImage.Dispose();   // 기존 이미지 해제 후 교체
                     _bitmapImage = bitmap;
                     Invalidate();
+                    Update();
+                    System.Threading.Thread.Sleep(30);
                     return;
                 }
                 _bitmapImage.Dispose(); //birmap 객체가 사요하던 메모리 리소스 해제
@@ -256,6 +258,9 @@ namespace ABCsystem.UIControl
                 ResizeCanvas();
             }
             FitImageToScreen();
+            Invalidate();
+            Update();
+            System.Threading.Thread.Sleep(20);
         }
 
         // 이미지 화면에 맞게 조정 함수

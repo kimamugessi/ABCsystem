@@ -63,7 +63,7 @@ namespace ABCsystem.Inspect
                 while (!token.IsCancellationRequested)
                 {
                     Global.Inst.InspStage.OneCycle();
-
+                    Thread.Sleep(500);
                     int total = Global.Inst.InspStage.GetFileCount();
                     int current = Global.Inst.InspStage.GetCurrentFileIndex();
 
@@ -74,7 +74,7 @@ namespace ABCsystem.Inspect
                         break;
                     }
 
-                    Thread.Sleep(200);
+                    Thread.Sleep(300);
                 }
             }
             catch (Exception ex)
