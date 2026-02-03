@@ -128,7 +128,7 @@
             this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "CommunicatorSetting";
-            this.Size = new System.Drawing.Size(328, 232);
+            this.Size = new System.Drawing.Size(428, 192);
             this.Load += new System.EventHandler(this.CommunicatorSetting_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

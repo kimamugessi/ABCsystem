@@ -65,15 +65,14 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "CameraForm";
-            this.Text = "CameraForm";
+            this.Text = "Camera";
             this.Resize += new System.EventHandler(this.CameraForm_Resize);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private UIControl.ImageViewCtrl imageViewer;
         private UIControl.MainViewToolbar mainViewToolbar;
+        private UIControl.ImageViewCtrl imageViewer;
     }
 }

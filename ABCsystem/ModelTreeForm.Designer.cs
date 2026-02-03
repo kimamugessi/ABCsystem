@@ -52,7 +52,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "ModelTreeForm";
-            this.Text = "ROI";
+            this.Text = "Teaching ROI";
             this.ResumeLayout(false);
 
         }

@@ -55,7 +55,7 @@
             this.txtImageDir.Location = new System.Drawing.Point(105, 57);
             this.txtImageDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtImageDir.Name = "txtImageDir";
-            this.txtImageDir.Size = new System.Drawing.Size(188, 31);
+            this.txtImageDir.Size = new System.Drawing.Size(210, 31);
             this.txtImageDir.TabIndex = 12;
             this.txtImageDir.TextChanged += new System.EventHandler(this.txtImageDir_TextChanged);
             // 
@@ -100,7 +100,7 @@
             this.txtModelDir.Location = new System.Drawing.Point(105, 15);
             this.txtModelDir.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.txtModelDir.Name = "txtModelDir";
-            this.txtModelDir.Size = new System.Drawing.Size(188, 31);
+            this.txtModelDir.Size = new System.Drawing.Size(210, 31);
             this.txtModelDir.TabIndex = 8;
             this.txtModelDir.TextChanged += new System.EventHandler(this.txtModelDir_TextChanged);
             // 
@@ -129,7 +129,7 @@
             this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163636F);
             this.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.Name = "PathSetting";
-            this.Size = new System.Drawing.Size(436, 160);
+            this.Size = new System.Drawing.Size(432, 161);
             this.ResumeLayout(false);
             this.PerformLayout();
 
