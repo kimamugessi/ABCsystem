@@ -227,7 +227,7 @@ namespace ABCsystem
             // 우측 컬럼 폭: panel 오른쪽 끝까지 채우기
             w = bounds.Right - x - margin;
             if (w < newModel.Width) w = newModel.Width;
-            h = 200;
+            h = 215;
 
             // 화면 밖 보정
             if (x + w > bounds.Right - margin) w = bounds.Right - margin - x;
@@ -579,7 +579,7 @@ namespace ABCsystem
             // 우측 컬럼 폭: 티칭창 기준
             int colW = (_modelTreeForm != null && !_modelTreeForm.IsDisposed && _modelTreeForm.Visible)
                 ? _modelTreeForm.Width
-                : (int)(bounds.Width * 0.27);
+                : (int)(bounds.Width * 0.25);
 
             // 우측 컬럼 x: CameraForm 오른쪽 기준
             int colX;
@@ -590,9 +590,9 @@ namespace ABCsystem
 
             // SetupForm 크기
             int w = colW;
-            int h = (int)(bounds.Height * 0.25);
+            int h = (int)(bounds.Height * 0.21);
 
-            int yOffset = 8;
+            int yOffset = 0;
 
             int x = colX;
             int y;
@@ -686,8 +686,8 @@ namespace ABCsystem
             int margin = 12;
 
             // 티칭창 크기: 패널의 25~30% 정도 (취향)
-            int w = (int)(bounds.Width * 0.27);
-            int h = (int)(bounds.Height * 0.15);
+            int w = (int)(bounds.Width * 0.275);
+            int h = (int)(bounds.Height * 0.19);
 
             int x;
             int y;

@@ -53,6 +53,7 @@ namespace ABCsystem
 
             if (SettingXml.Inst.CamType == Grab.CameraType.None)
             {
+                //bool cycleMode = SettingXml.Inst.CycleMode;
                 bool cycleMode = chkCycleMode.Checked;
                 Global.Inst.InspStage.CycleInspect(cycleMode);
             }

@@ -75,6 +75,15 @@ namespace ABCsystem.Util
             return GetImagePath();
         }
 
+        // ImageLoader.cs 내부에 추가
+        public string GetCurrentImagePath()
+        {
+            // 리스트가 없거나 인덱스가 유효하지 않으면 빈 문자열 반환
+            if (_sortedImages == null || _grabIndex < 0 || _grabIndex >= _sortedImages.Count)
+                return "";
+
+            return _sortedImages[_grabIndex];
+        }
 
         #region Dispose
 

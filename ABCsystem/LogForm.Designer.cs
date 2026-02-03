@@ -35,22 +35,22 @@
             // listBoxLogs
             // 
             this.listBoxLogs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBoxLogs.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163635F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.listBoxLogs.Font = new System.Drawing.Font("Segoe UI", 9.163635F);
             this.listBoxLogs.FormattingEnabled = true;
-            this.listBoxLogs.ItemHeight = 23;
+            this.listBoxLogs.ItemHeight = 25;
             this.listBoxLogs.Location = new System.Drawing.Point(0, 0);
             this.listBoxLogs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.listBoxLogs.Name = "listBoxLogs";
-            this.listBoxLogs.Size = new System.Drawing.Size(640, 450);
+            this.listBoxLogs.Size = new System.Drawing.Size(582, 489);
             this.listBoxLogs.TabIndex = 0;
             // 
             // LogForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(640, 450);
+            this.ClientSize = new System.Drawing.Size(582, 489);
             this.Controls.Add(this.listBoxLogs);
-            this.Font = new System.Drawing.Font("한컴산뜻돋움", 9.163635F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9.163635F);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "LogForm";

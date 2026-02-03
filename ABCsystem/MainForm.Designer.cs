@@ -131,7 +131,7 @@
             this.panelViewSubmenu.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelViewSubmenu.Location = new System.Drawing.Point(0, 650);
             this.panelViewSubmenu.Name = "panelViewSubmenu";
-            this.panelViewSubmenu.Size = new System.Drawing.Size(224, 150);
+            this.panelViewSubmenu.Size = new System.Drawing.Size(224, 100);
             this.panelViewSubmenu.TabIndex = 7;
             // 
             // btnLog
@@ -404,6 +404,7 @@
             // 
             this.panelOperation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(23)))), ((int)(((byte)(21)))), ((int)(((byte)(32)))));
             this.panelOperation.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelOperation.Font = new System.Drawing.Font("굴림", 10F);
             this.panelOperation.Location = new System.Drawing.Point(250, 484);
             this.panelOperation.Name = "panelOperation";
             this.panelOperation.Size = new System.Drawing.Size(700, 116);
@@ -414,6 +415,7 @@
             this.panelChildForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(30)))), ((int)(((byte)(45)))));
             this.panelChildForm.Controls.Add(this.panelChlid);
             this.panelChildForm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelChildForm.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.panelChildForm.Location = new System.Drawing.Point(250, 0);
             this.panelChildForm.Name = "panelChildForm";
             this.panelChildForm.Size = new System.Drawing.Size(700, 484);

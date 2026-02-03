@@ -39,9 +39,9 @@
             // 
             // btnCreate
             // 
-            this.btnCreate.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnCreate.Location = new System.Drawing.Point(290, 181);
-            this.btnCreate.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCreate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnCreate.Location = new System.Drawing.Point(266, 130);
+            this.btnCreate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(86, 35);
             this.btnCreate.TabIndex = 9;
@@ -51,38 +51,42 @@
             // 
             // txtModelInfo
             // 
-            this.txtModelInfo.Location = new System.Drawing.Point(106, 70);
-            this.txtModelInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.txtModelInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtModelInfo.Location = new System.Drawing.Point(106, 57);
+            this.txtModelInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtModelInfo.Name = "txtModelInfo";
-            this.txtModelInfo.Size = new System.Drawing.Size(270, 88);
+            this.txtModelInfo.Size = new System.Drawing.Size(246, 62);
             this.txtModelInfo.TabIndex = 8;
             this.txtModelInfo.Text = "";
             // 
             // txtModelName
             // 
-            this.txtModelName.Location = new System.Drawing.Point(106, 29);
-            this.txtModelName.Margin = new System.Windows.Forms.Padding(4);
+            this.txtModelName.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtModelName.Location = new System.Drawing.Point(106, 13);
+            this.txtModelName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtModelName.Name = "txtModelName";
-            this.txtModelName.Size = new System.Drawing.Size(270, 28);
+            this.txtModelName.Size = new System.Drawing.Size(246, 31);
             this.txtModelName.TabIndex = 7;
             // 
             // lbModelInfo
             // 
             this.lbModelInfo.AutoSize = true;
-            this.lbModelInfo.Location = new System.Drawing.Point(13, 74);
+            this.lbModelInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lbModelInfo.Location = new System.Drawing.Point(13, 61);
             this.lbModelInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbModelInfo.Name = "lbModelInfo";
-            this.lbModelInfo.Size = new System.Drawing.Size(86, 18);
+            this.lbModelInfo.Size = new System.Drawing.Size(89, 25);
             this.lbModelInfo.TabIndex = 6;
             this.lbModelInfo.Text = "모델 정보";
             // 
             // lbModelName
             // 
             this.lbModelName.AutoSize = true;
-            this.lbModelName.Location = new System.Drawing.Point(13, 34);
+            this.lbModelName.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lbModelName.Location = new System.Drawing.Point(13, 18);
             this.lbModelName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbModelName.Name = "lbModelName";
-            this.lbModelName.Size = new System.Drawing.Size(62, 18);
+            this.lbModelName.Size = new System.Drawing.Size(66, 25);
             this.lbModelName.TabIndex = 5;
             this.lbModelName.Text = "모델명";
             // 
@@ -100,15 +104,16 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(656, 388);
+            this.ClientSize = new System.Drawing.Size(411, 229);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.txtModelInfo);
             this.Controls.Add(this.txtModelName);
             this.Controls.Add(this.lbModelInfo);
             this.Controls.Add(this.lbModelName);
+            this.Font = new System.Drawing.Font("굴림", 9F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "NewModel";
             this.Text = "NewModel";
             this.ResumeLayout(false);

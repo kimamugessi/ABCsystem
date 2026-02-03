@@ -147,6 +147,10 @@ namespace ABCsystem.UIControl
 
         private List<InspWindow> _inspWindowList = new List<InspWindow>();
 
+        public Bitmap CanvasBitmap
+        {
+            get { return Canvas; }
+        }
         public List<DiagramEntity[]> GetHeightLineList()
         {
             return _heightLineList;
@@ -165,7 +169,10 @@ namespace ABCsystem.UIControl
         {
             InitializeComponent();
             initializeCanvas();
-
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                  ControlStyles.UserPaint |
+                  ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
             _contextMenu = new ContextMenuStrip();
             _contextMenu.Items.Add("Delete", null, OnDeleteClicked);
             _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
@@ -240,6 +247,8 @@ namespace ABCsystem.UIControl
                     _bitmapImage.Dispose();   // 기존 이미지 해제 후 교체
                     _bitmapImage = bitmap;
                     Invalidate();
+                    Update();
+                    System.Threading.Thread.Sleep(30);
                     return;
                 }
                 _bitmapImage.Dispose(); //birmap 객체가 사요하던 메모리 리소스 해제
@@ -252,6 +261,9 @@ namespace ABCsystem.UIControl
                 ResizeCanvas();
             }
             FitImageToScreen();
+            Invalidate();
+            Update();
+            System.Threading.Thread.Sleep(20);
         }
 
         // 이미지 화면에 맞게 조정 함수
@@ -400,12 +412,12 @@ namespace ABCsystem.UIControl
                 string currentLineStatus = "NG";
                 Color lineColor = Color.Red;
 
-                if (pixelLength >= 500) //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
+                if (pixelLength >= 950) //+기준 길이 조건에 따라 수정(텍스트 색상): 그외 빨강색
                 {
                     currentLineStatus = "NO CAP";
                     lineColor = Color.Red;
                 }
-                else if (pixelLength >= 350 && pixelLength <= 380)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
+                else if (pixelLength >= 820 && pixelLength <= 858)  //+기준 길이 조건에 따라 수정(텍스트 색상): 350px 이상 360px 이하 시 라임색
                 {
                     currentLineStatus = "OK";
                     lineColor = Color.Lime;
@@ -442,7 +454,7 @@ namespace ABCsystem.UIControl
                 PointF sStart = VirtualToScreen(vP3);   //세로선 시작점
                 PointF sEnd = VirtualToScreen(new PointF(vP3.X, targetY));  //세로선 끝점
 
-                Color drawColor = (pixelLength > 500) ? Color.White : lineColor;    //+기준 길이 조건에 따라 수정(NO CAP 길이): 500px 초과 시 흰색으로 그리기(시각적으로 숨김) 아닐 경우 lineColor에 따름(라임색 or 빨강색)
+                Color drawColor = (pixelLength > 950) ? Color.White : lineColor;    //+기준 길이 조건에 따라 수정(NO CAP 길이): 500px 초과 시 흰색으로 그리기(시각적으로 숨김) 아닐 경우 lineColor에 따름(라임색 or 빨강색)
 
                 using (Pen bluePen = new Pen(Color.Blue, 2f))   //가로선 그리기
                 {
@@ -640,6 +652,9 @@ namespace ABCsystem.UIControl
         }
 
         // 검사 정보(사각형 및 점 등) 그리기 함수
+        private string _finalStatus = "";    // 전체 판정 결과 저장 (OK, NG, NO CAP)
+private bool _isImageSaved = false;
+
         private void DrawRectInfo(Graphics g)
         {
             if (_rectInfos == null || _rectInfos.Count <= 0) return;    //검사 정보가 없으면 종료
