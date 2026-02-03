@@ -169,7 +169,10 @@ namespace ABCsystem.UIControl
         {
             InitializeComponent();
             initializeCanvas();
-
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                  ControlStyles.UserPaint |
+                  ControlStyles.AllPaintingInWmPaint, true);
+            this.UpdateStyles();
             _contextMenu = new ContextMenuStrip();
             _contextMenu.Items.Add("Delete", null, OnDeleteClicked);
             _contextMenu.Items.Add(new ToolStripSeparator()); //구분선
