@@ -241,22 +241,36 @@ namespace ABCsystem.Algorithm
         public override int GetResultRect(out List<DrawInspectInfo> resultArea)
         {
             resultArea = new List<DrawInspectInfo>();
-            if (_edgePoint.X < 0) return 0;
 
-            // Align 모드면 표시 타입을 Align으로
-            var drawType = UseAsAlignment ? InspectType.InspAlignEdge : InspectType.InspEdge;
+            try
+            {
+                if (_edgePoint.X < 0) return 0;
 
-            // 샘플 엣지 점들(노란색: DecisionType.Info)
-            foreach (var pt in _pickedEdgePoints)
-                resultArea.Add(new DrawInspectInfo(pt, "", InspectType.InspEdge, DecisionType.Info, ""));
+                // Align 모드면 표시 타입을 Align으로
+                var drawType = UseAsAlignment ? InspectType.InspAlignEdge : InspectType.InspEdge;
 
-            // 대표점 표시
-            if (UseAsAlignment)
-                resultArea.Add(new DrawInspectInfo(_edgePoint, "Anchor", drawType, DecisionType.Defect, ""));
-            else
-                resultArea.Add(new DrawInspectInfo(_edgePoint, $"Edge:{OutEdgeCount}", drawType, DecisionType.Good, ""));
+                // 샘플 엣지 점들(노란색: DecisionType.Info)
+                if (_pickedEdgePoints != null)
+                {
+                    foreach (var pt in _pickedEdgePoints)
+                    {
+                        resultArea.Add(new DrawInspectInfo(pt, "", InspectType.InspEdge, DecisionType.Info, ""));
+                    }
+                }
 
-            return resultArea.Count;
+                    // 대표점 표시
+                    if (UseAsAlignment)
+                        resultArea.Add(new DrawInspectInfo(_edgePoint, "Anchor", drawType, DecisionType.Defect, ""));
+                    else
+                        resultArea.Add(new DrawInspectInfo(_edgePoint, $"Edge:{OutEdgeCount}", drawType, DecisionType.Good, ""));
+
+                    return resultArea.Count;
+            }
+            catch (Exception ex)
+            {
+                SLogger.Write($"[GetResultRect ERROR] {ex}");
+                return 0;
+            }
         }
     }
 }

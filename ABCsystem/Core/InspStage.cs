@@ -741,6 +741,7 @@ namespace ABCsystem.Core
 
                         if (UseCamera)
                         {
+                            Task.Delay(100).Wait(); //짧은 딜레이 추가
                             if (!Grab(0))
                             {
                                 errMsg = string.Format("Failed to grab");
@@ -781,6 +782,8 @@ namespace ABCsystem.Core
                 SLogger.Write(errMsg, SLogger.LogType.Error);
             }
             RedrawMainView();
+
+
             //#WCF_FSM#6 비젼 -> 제어에 검사 완료 및 결과 전송
             VisionSequence.Inst.VisionCommand(Vision2Mmi.InspDone, isDefect);
         }
